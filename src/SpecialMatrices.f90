@@ -1,4 +1,5 @@
 module SpecialMatrices
+  use SpecialMatrices_Tridiagonal
   implicit none
   private
 
