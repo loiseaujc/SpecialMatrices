@@ -106,6 +106,24 @@ module SpecialMatrices_Tridiagonal
          ! Output vectors.
          real(wp) :: Y(size(X, 1), size(X, 2))
       end function tridiag_multi_spmv
+
+      pure module function symtridiag_spmv(A, x) result(y)
+         ! Input matrix.
+         type(SymTridiagonal), intent(in) :: A
+         ! Input vector.
+         real(wp), intent(in) :: x(:)
+         ! Output vector.
+         real(wp) :: y(size(x))
+      end function symtridiag_spmv
+
+      pure module function symtridiag_multi_spmv(A, X) result(Y)
+         ! Input matrix.
+         type(SymTridiagonal), intent(in) :: A
+         ! Input vectors.
+         real(wp), intent(in) :: X(:, :)
+         ! Output vectors.
+         real(wp) :: Y(size(X, 1), size(X, 2))
+      end function symtridiag_multi_spmv
    end interface
 
    !----------------------------------
@@ -124,6 +142,18 @@ module SpecialMatrices_Tridiagonal
          real(wp), intent(in) :: B(:, :)
          real(wp) :: X(size(B, 1), size(B, 2))
       end function tridiag_multi_solve
+
+      pure module function symtridiag_solve(A, b) result(x)
+         type(SymTridiagonal), intent(in) :: A
+         real(wp), intent(in) :: b(:)
+         real(wp) :: x(size(b))
+      end function symtridiag_solve
+
+      pure module function symtridiag_multi_solve(A, B) result(X)
+         type(SymTridiagonal), intent(in) :: A
+         real(wp), intent(in) :: B(:, :)
+         real(wp) :: X(size(B, 1), size(B, 2))
+      end function symtridiag_multi_solve
    end interface
 
    !-------------------------------------
@@ -137,6 +167,13 @@ module SpecialMatrices_Tridiagonal
          ! Output dense matrix.
          real(wp) :: B(A%n, A%n)
       end function tridiag_to_dense
+
+      pure module function symtridiag_to_dense(A) result(B)
+         ! Input tridiagonal matrix.
+         type(SymTridiagonal), intent(in) :: A
+         ! Output dense matrix.
+         real(wp) :: B(A%n, A%n)
+      end function symtridiag_to_dense
    end interface
 
    interface transpose
@@ -146,6 +183,13 @@ module SpecialMatrices_Tridiagonal
          ! Transposed matrix.
          type(Tridiagonal) :: B
       end function tridiag_transpose
+
+      pure module function symtridiag_transpose(A) result(B)
+         ! Input tridiagonal matrix.
+         type(SymTridiagonal), intent(in) :: A
+         ! Transposed matrix.
+         type(SymTridiagonal) :: B
+      end function symtridiag_transpose
    end interface
 
 contains
