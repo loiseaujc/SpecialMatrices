@@ -1,11 +1,11 @@
 module SpecialMatrices
-  use SpecialMatrices_Tridiagonal
-  implicit none
-  private
+   use SpecialMatrices_Tridiagonal
+   implicit none
+   private
 
-  public :: say_hello
+   public :: say_hello
 contains
-  subroutine say_hello
-    print *, "Hello, SpecialMatrices!"
-  end subroutine say_hello
+   subroutine say_hello
+      print *, "Hello, SpecialMatrices!"
+   end subroutine say_hello
 end module SpecialMatrices

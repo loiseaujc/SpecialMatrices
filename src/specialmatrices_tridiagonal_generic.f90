@@ -23,7 +23,7 @@ contains
       real(wp), intent(in) :: dl(:), d(:), du(:)
       ! Output matrix.
       type(Tridiagonal) :: A
-      A%n = size(d) ; A%dl = dl; A%d = d; A%du = du
+      A%n = size(d); A%dl = dl; A%d = d; A%du = du
       return
    end function construct_tridiag
 
@@ -84,23 +84,23 @@ contains
       ! Solution vector.
       real(wp) :: x(size(b))
       integer(int32) :: i, n
-      real(wp) :: w, dl(A%n-1), d(A%n), du(A%n-1), b_(A%n)
+      real(wp) :: w, dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n)
 
       ! Initialize arrays.
-      n = A%n ; dl = A%dl ; d = A%d ; du = A%du ; b_ = b
+      n = A%n; dl = A%dl; d = A%d; du = A%du; b_ = b
 
       ! Update matrix coefficients.
       do i = 2, n
-         w = dl(i-1) / d(i-1)
-         d(i) = d(i) - w*du(i-1)
-         b_(i) = b_(i) - w*b_(i-1)
-      enddo
+         w = dl(i - 1)/d(i - 1)
+         d(i) = d(i) - w*du(i - 1)
+         b_(i) = b_(i) - w*b_(i - 1)
+      end do
 
       ! Backward substitution.
-      x(n) = b_(n) / d(n)
-      do i = n-1, 1
-         x(i) = (b_(i) - du(i)*x(i+1)) / d(i)
-      enddo
+      x(n) = b_(n)/d(n)
+      do i = n - 1, 1
+         x(i) = (b_(i) - du(i)*x(i + 1))/d(i)
+      end do
 
       return
    end function tridiag_solve
@@ -113,9 +113,9 @@ contains
       ! Solution vectors.
       real(wp) :: X(size(B, 1), size(B, 2))
       integer :: i
-      do concurrent (i=1:size(B, 2))
+      do concurrent(i=1:size(B, 2))
          X(:, i) = tridiag_solve(A, B(:, i))
-      enddo
+      end do
    end function tridiag_multi_solve
 
    !-------------------------------------
