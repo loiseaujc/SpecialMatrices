@@ -2,12 +2,18 @@ module SpecialMatrices_Tridiagonal
    use stdlib_kinds, only: wp => dp, int32
    implicit none
    private
-
+   
+   ! --> Constructors.
    public :: Tridiagonal
-   public :: dense
+   public :: SymTridiagonal
+
+   ! --> Linear Algebra.
    public :: matmul
-   public :: transpose
    public :: solve
+   public :: transpose
+
+   ! --> Utility functions.
+   public :: dense
 
    !-------------------------------------------------------
    !-----     Base types for tridiagonal matrices     -----
@@ -18,6 +24,13 @@ module SpecialMatrices_Tridiagonal
       integer(int32) :: n
       ! Tridiagonal elements.
       real(wp), allocatable :: d(:), du(:), dl(:)
+   end type
+
+   type, public :: SymTridiagonal
+      ! Dimension of the matrix.
+      integer(int32) :: n
+      ! Tridiagonal elements.
+      real(wp), allocatable :: dv(:), ev(:)
    end type
 
    !--------------------------------
@@ -44,6 +57,31 @@ module SpecialMatrices_Tridiagonal
          integer(int32), intent(in) :: n
          type(Tridiagonal) :: A
       end function construct_constant_tridiag
+   end interface
+
+   interface SymTridiagonal
+      pure module function initialize_symtridiag(n) result(A)
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Output matrix.
+         type(SymTridiagonal) :: A
+      end function initialize_symtridiag
+
+      pure module function construct_symtridiag(dv, ev) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: dv(:), ev(:)
+         ! Output matrix.
+         type(SymTridiagonal) :: A
+      end function construct_symtridiag
+
+      pure module function construct_constant_symtridiag(d, e, n) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: d, e
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Output matrix.
+         type(SymTridiagonal) :: A
+      end function construct_constant_symtridiag
    end interface
 
    !------------------------------------------------------------
