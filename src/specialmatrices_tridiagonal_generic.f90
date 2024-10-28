@@ -1,4 +1,5 @@
 submodule(SpecialMatrices_Tridiagonal) GenericTridiagonal
+   use stdlib_linalg_lapack, only: gtsv
    implicit none(type, external)
 
 contains
@@ -83,24 +84,17 @@ contains
       real(wp), intent(in) :: b(:)
       ! Solution vector.
       real(wp) :: x(size(b))
-      integer(int32) :: i, n
-      real(wp) :: w, dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n)
+      integer :: i, n, nrhs, info
+      real(wp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
 
       ! Initialize arrays.
-      n = A%n; dl = A%dl; d = A%d; du = A%du; b_ = b
+      n = A%n; dl = A%dl; d = A%d; du = A%du; b_(:, 1) = b ; nrhs = 1
 
-      ! Update matrix coefficients.
-      do i = 2, n
-         w = dl(i - 1)/d(i - 1)
-         d(i) = d(i) - w*du(i - 1)
-         b_(i) = b_(i) - w*b_(i - 1)
-      end do
+      ! Solve the system.
+      call gtsv(n, nrhs, dl, d, du, b_, n, info)
 
-      ! Backward substitution.
-      x(n) = b_(n)/d(n)
-      do i = n - 1, 1
-         x(i) = (b_(i) - du(i)*x(i + 1))/d(i)
-      end do
+      ! Return the solution.
+      x = b_(:, 1)
 
       return
    end function tridiag_solve
@@ -112,10 +106,15 @@ contains
       real(wp), intent(in) :: B(:, :)
       ! Solution vectors.
       real(wp) :: X(size(B, 1), size(B, 2))
-      integer :: i
-      do concurrent(i=1:size(B, 2))
-         X(:, i) = tridiag_solve(A, B(:, i))
-      end do
+      integer :: i, n, nrhs, info
+      real(wp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
+
+      ! Initialize arrays.
+      n = A%n; dl = A%dl; d = A%d; du = A%du; nrhs = size(B, 2); X = B
+
+      ! Solve the systems.
+      call gtsv(n, nrhs, dl, d, du, X, n, info)
+
    end function tridiag_multi_solve
 
    !-------------------------------------
