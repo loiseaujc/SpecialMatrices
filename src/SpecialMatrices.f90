@@ -3,6 +3,26 @@ module SpecialMatrices
    implicit none
    private
 
+   !--------------------------------
+   !-----     Matrix types     -----
+   !--------------------------------
+
+   public :: Tridiagonal
+
+   !----------------------------------
+   !-----     Linear Algebra     -----
+   !----------------------------------
+
+   public :: matmul
+   public :: solve
+
+   !-------------------------------------
+   !-----     Utility functions     -----
+   !-------------------------------------
+
+   public :: transpose
+   public :: dense
+
    public :: say_hello
 contains
    subroutine say_hello
