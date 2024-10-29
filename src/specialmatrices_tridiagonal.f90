@@ -15,9 +15,25 @@ module SpecialMatrices_Tridiagonal
    ! --> Utility functions.
    public :: dense
 
-   !-------------------------------------------------------
-   !-----     Base types for tridiagonal matrices     -----
-   !-------------------------------------------------------
+   !-----------------------------------------------------------
+   !-----     Base types for bi/tri-diagonal matrices     -----
+   !-----------------------------------------------------------
+
+   type, public :: Diagonal
+      ! Dimension of the matrix.
+      integer(int32) :: n
+      ! Diagonal elements.
+      real(wp), allocatable :: dv(:)
+   end type
+
+   type, public :: Bidiagonal
+      ! Dimension of the matrix.
+      integer(int32) :: n
+      ! Diagonal elements.
+      real(wp), allocatable :: dv(:), ev(:)
+      ! Whether it is lower- or upper-bidiagonal.
+      character(len=1) :: which
+   end type
 
    type, public :: Tridiagonal
       ! Dimension of the matrix.
@@ -36,6 +52,31 @@ module SpecialMatrices_Tridiagonal
    !--------------------------------
    !-----     Constructors     -----
    !--------------------------------
+
+   interface Diagonal
+      pure module function initialize_diag(n) result(A)
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Output matrix.
+         type(Diagonal) :: A
+      end function initialize_diag
+
+      pure module function construct_diag(dv) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: dv(:)
+         ! Output matrix.
+         type(Diagonal) :: A
+      end function construct_diag
+
+      pure module function construct_constant_diag(d, n) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: d
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Output matrix.
+         type(Diagonal) :: A
+      end function construct_constant_diag
+   end interface
 
    interface Tridiagonal
       pure module function initialize_tridiag(n) result(A)
@@ -89,6 +130,24 @@ module SpecialMatrices_Tridiagonal
    !------------------------------------------------------------
 
    interface matmul
+      pure module function diag_spmv(A, x) result(y)
+         ! Input matrix.
+         type(Diagonal), intent(in) :: A
+         ! Input vector.
+         real(wp), intent(in) :: x(:)
+         ! Output vector.
+         real(wp) :: y(size(x))
+      end function diag_spmv
+
+      pure module function diag_multi_spmv(A, x) result(y)
+         ! Input matrix.
+         type(Diagonal), intent(in) :: A
+         ! Input vectors.
+         real(wp), intent(in) :: X(:, :)
+         ! Output vectors.
+         real(wp) :: Y(size(X, 1), size(X, 2))
+      end function diag_multi_spmv
+
       pure module function tridiag_spmv(A, x) result(y)
          ! Input matrix.
          type(Tridiagonal), intent(in) :: A
@@ -131,6 +190,18 @@ module SpecialMatrices_Tridiagonal
    !----------------------------------
 
    interface solve
+      pure module function diag_solve(A, b) result(x)
+         type(Diagonal), intent(in) :: A
+         real(wp), intent(in) :: b(:)
+         real(wp) :: x(size(b))
+      end function diag_solve
+
+      pure module function diag_multi_solve(A, B) result(X)
+         type(Diagonal), intent(in) :: A
+         real(wp), intent(in) :: B(:, :)
+         real(wp) :: X(size(B, 1), size(B, 2))
+      end function diag_multi_solve
+
       pure module function tridiag_solve(A, b) result(x)
          type(Tridiagonal), intent(in) :: A
          real(wp), intent(in) :: b(:)
@@ -161,6 +232,13 @@ module SpecialMatrices_Tridiagonal
    !-------------------------------------
 
    interface dense
+      pure module function diag_to_dense(A) result(B)
+         ! Input Diagonal matrix.
+         type(Diagonal), intent(in) :: A
+         ! Output dense matrix.
+         real(wp) :: B(A%n, A%n)
+      end function diag_to_dense
+
       pure module function tridiag_to_dense(A) result(B)
          ! Input tridiagonal matrix.
          type(Tridiagonal), intent(in) :: A
@@ -177,6 +255,13 @@ module SpecialMatrices_Tridiagonal
    end interface
 
    interface transpose
+      pure module function diag_transpose(A) result(B)
+         ! Input diagonal matrix.
+         type(Diagonal), intent(in) :: A
+         ! Output diagonal matrix.
+         type(Diagonal) :: B
+      end function diag_transpose
+
       pure module function tridiag_transpose(A) result(B)
          ! Input tridiagonal matrix.
          type(Tridiagonal), intent(in) :: A
