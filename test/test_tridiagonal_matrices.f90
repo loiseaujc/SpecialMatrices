@@ -27,7 +27,9 @@ contains
                     new_unittest("Diagonal matmul", test_diagonal_matmul),  &
                     new_unittest("Diagonal linear solver", test_diagonal_solve),  &
                     new_unittest("Tridiagonal matmul", test_tridiagonal_matmul),  &
-                    new_unittest("Tridiagonal linear solver", test_tridiagonal_solve)  &
+                    new_unittest("Tridiagonal linear solver", test_tridiagonal_solve),  &
+                    new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul),  &
+                    new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve)  &
                     ]
         return
     end subroutine collect_diagonal_testsuite
@@ -182,5 +184,75 @@ contains
     !--------------------------------------------------
     !-----     SYMMETRIC TRIDIAGONAL MATRICES     -----
     !--------------------------------------------------
+
+    subroutine test_symtridiagonal_matmul(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(SymTridiagonal) :: A
+        real(dp) :: dv(n), ev(n-1)
+
+        ! Initialize matrix.
+        call random_number(dv); call random_number(ev)
+        A = SymTridiagonal(dv, ev)
+
+        ! Matrix-vector product.
+        block
+        real(dp) :: x(n), y(n), y_dense(n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "SymTridiagonal matrix-vector product failed.")
+        if (allocated(error)) return
+        end block
+
+        ! Matrix-matrix product.
+        block
+        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "SymTridiagonal matrix-matrix product failed.")
+        end block
+        return
+    end subroutine test_symtridiagonal_matmul
+
+    subroutine test_symtridiagonal_solve(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(SymTridiagonal) :: A
+        real(dp) :: dv(n), ev(n-1)
+
+        ! Initialize matrix.
+        call random_number(dv); call random_number(ev)
+        A = SymTridiagonal(dv, ev)
+
+        ! Solve with a singe right-hand side vector.
+        block
+        real(dp) :: x(n), x_stdlib(n), b(n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "SymTridiagonal solve with a single rhs failed.")
+        if (allocated(error)) return
+        end block
+
+        block
+        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "SymTridiagonal solve with multiple rhs failed.")
+        end block
+
+        return
+    end subroutine test_symtridiagonal_solve
 
 end module
