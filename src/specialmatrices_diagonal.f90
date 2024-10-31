@@ -113,17 +113,17 @@ contains
       return
    end function diag_multi_solve
 
-   module subroutine diag_eig(A, lambda, vectors)
-      ! Input matrix.
-      type(Diagonal), intent(in) :: A
-      ! Eigenvalues.
-      real(wp), intent(out) :: lambda(A%n)
-      ! Eigenvectors.
-      real(wp), intent(out) :: vectors(A%n, A%n)
-
-      lambda = A%dv ; vectors = eye(A%n)
-      return
-   end subroutine diag_eig
+   ! module subroutine diag_eig(A, lambda, vectors)
+   !    ! Input matrix.
+   !    type(Diagonal), intent(in) :: A
+   !    ! Eigenvalues.
+   !    real(wp), intent(out) :: lambda(A%n)
+   !    ! Eigenvectors.
+   !    real(wp), intent(out) :: vectors(A%n, A%n)
+   !
+   !    lambda = A%dv ; vectors = eye(A%n)
+   !    return
+   ! end subroutine diag_eig
 
    !------------------------------------
    !-----     Utility function     -----
