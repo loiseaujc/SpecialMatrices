@@ -15,7 +15,7 @@ program Tester
 
     status = 0
 
-    testsuites = [ new_testsuite("Diagonal Matrices", collect_diagonal_testsuite) ]
+    testsuites = [ new_testsuite("Tridiagonal Matrices", collect_diagonal_testsuite) ]
 
     do is = 1, size(testsuites)
         write(output_unit, *)   "-----"
