@@ -1,5 +1,8 @@
 name: Docs
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -19,6 +22,8 @@ jobs:
         id: build
 
       - name: Deploy to GitHub Pages
+        permissions:
+          contents: write
         if: steps.build.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v4
         with:
