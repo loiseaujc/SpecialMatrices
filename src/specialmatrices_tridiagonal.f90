@@ -7,7 +7,7 @@ module SpecialMatrices_Tridiagonal
    public :: transpose
    public :: matmul
    public :: solve
-   public :: eig
+   ! public :: eig
 
    ! --> Utility functions.
    public :: dense
