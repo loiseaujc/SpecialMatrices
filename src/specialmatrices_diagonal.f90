@@ -104,7 +104,7 @@ contains
       real(dp), allocatable :: x(:)
       !! Solution vector.
       integer :: i, n
-      allocate(x, mold=b)
+      if (.not. allocated(x)) allocate(x, mold=b)
       do concurrent(i=1:A%n)
          x(i) = b(i) / A%dv(i)
       enddo
@@ -122,10 +122,10 @@ contains
       real(dp), allocatable :: X(:, :)
       !! Solution vectors.
       integer(ilp) :: i, j
-      real(dp) :: dv(A%n)
-      allocate(X, mold=B); dv = 1.0_dp / A%dv
+      real(dp) :: inv_dv(A%n)
+      if (.not. allocated(X)) allocate(X, mold=B); inv_dv = 1.0_dp / A%dv
       do concurrent(i=1:A%n, j=1:size(B, 2))
-         X(i, j) = B(i, j) / dv(i)
+         X(i, j) = B(i, j) * inv_dv(i)
       enddo
       return
    end function diag_multi_solve
