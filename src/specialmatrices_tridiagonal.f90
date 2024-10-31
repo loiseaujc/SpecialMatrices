@@ -7,7 +7,7 @@ module SpecialMatrices_Tridiagonal
    public :: transpose
    public :: matmul
    public :: solve
-   public :: eig
+   ! public :: eig
 
    ! --> Utility functions.
    public :: dense
@@ -114,7 +114,7 @@ module SpecialMatrices_Tridiagonal
          integer(int32), intent(in) :: n
          !! Dimension of the matrix.
          type(Diagonal) :: A
-         !! Output matrix.
+         !! Corresponding diagonal matrix.
       end function initialize_diag
 
       pure module function construct_diag(dv) result(A)
@@ -122,7 +122,7 @@ module SpecialMatrices_Tridiagonal
          real(wp), intent(in) :: dv(:)
          !! Diagonal elements of the matrix.
          type(Diagonal) :: A
-         !! Output matrix.
+         !! Corresponding diagonal matrix.
       end function construct_diag
 
       pure module function construct_constant_diag(d, n) result(A)
@@ -132,7 +132,7 @@ module SpecialMatrices_Tridiagonal
          integer(int32), intent(in) :: n
          !! Dimension of the matrix.
          type(Diagonal) :: A
-         !! Output matrix.
+         !! Corresponding diagonal matrix.
       end function construct_constant_diag
 
       module function construct_dense_to_diag(A) result(B)
@@ -140,7 +140,7 @@ module SpecialMatrices_Tridiagonal
          real(wp), intent(in) :: A(:, :)
          !! Dense [n x n] matrix from which to construct the `Diagonal` one.
          type(Diagonal) :: B
-         !! Output matrix.
+         !! Corresponding diagonal matrix.
       end function construct_dense_to_diag
    end interface
 
@@ -150,31 +150,21 @@ module SpecialMatrices_Tridiagonal
 
    interface Bidiagonal
       pure module function initialize_bidiag(n, which) result(A)
-         ! Dimension of the matrix.
          integer(int32), intent(in) :: n
-         ! Upper- or lower-bidiagonal.
          character(len=1), optional, intent(in) :: which
-         ! Output matrix.
          type(Bidiagonal) :: A
       end function initialize_bidiag
 
       pure module function construct_bidiag(dv, ev, which) result(A)
-         ! Diagonal elements.
          real(wp), intent(in) :: dv(:), ev(:)
-         ! Upper- or lower-bidiagonal.
          character(len=1), optional, intent(in) :: which
-         ! Output matrix.
          type(Bidiagonal) :: A
       end function construct_bidiag
 
       pure module function construct_constant_bidiag(d, e, n, which) result(A)
-         ! Diagonal elements.
          real(wp), intent(in) :: d, e
-         ! Dimension of the matrix.
          integer(int32), intent(in) :: n
-         ! Upper- or lower-bidiagonal.
          character(len=1), optional, intent(in) :: which
-         ! Output matrix.
          type(Bidiagonal) :: A
       end function construct_constant_bidiag
    end interface
@@ -184,16 +174,12 @@ module SpecialMatrices_Tridiagonal
 
    interface Tridiagonal
       pure module function initialize_tridiag(n) result(A)
-         ! Dimension of the matrix.
          integer(int32), intent(in) :: n
-         ! Output matrix.
          type(Tridiagonal) :: A
       end function initialize_tridiag
 
       pure module function construct_tridiag(dl, d, du) result(A)
-         ! Diagonals of the matrix.
          real(wp), intent(in) :: dl(:), d(:), du(:)
-         ! Output matrix.
          type(Tridiagonal) :: A
       end function construct_tridiag
 
@@ -210,25 +196,18 @@ module SpecialMatrices_Tridiagonal
 
    interface SymTridiagonal
       pure module function initialize_symtridiag(n) result(A)
-         ! Dimension of the matrix.
          integer(int32), intent(in) :: n
-         ! Output matrix.
          type(SymTridiagonal) :: A
       end function initialize_symtridiag
 
       pure module function construct_symtridiag(dv, ev) result(A)
-         ! Diagonal elements.
          real(wp), intent(in) :: dv(:), ev(:)
-         ! Output matrix.
          type(SymTridiagonal) :: A
       end function construct_symtridiag
 
       pure module function construct_constant_symtridiag(d, e, n) result(A)
-         ! Diagonal elements.
          real(wp), intent(in) :: d, e
-         ! Dimension of the matrix.
          integer(int32), intent(in) :: n
-         ! Output matrix.
          type(SymTridiagonal) :: A
       end function construct_constant_symtridiag
    end interface
@@ -265,7 +244,7 @@ module SpecialMatrices_Tridiagonal
       !! ```
       pure module function diag_spmv(A, x) result(y)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! if of `Diagonal` type and `x` and `y` are both rank-1 arrays.
+         !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(wp), intent(in) :: x(:)
@@ -276,7 +255,7 @@ module SpecialMatrices_Tridiagonal
 
       pure module function diag_multi_spmv(A, X) result(Y)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! if of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
+         !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(wp), intent(in) :: X(:, :)
@@ -286,56 +265,38 @@ module SpecialMatrices_Tridiagonal
       end function diag_multi_spmv
 
       pure module function bidiag_spmv(A, x) result(y)
-         ! Input matrix.
          type(Bidiagonal), intent(in) :: A
-         ! Input vector.
          real(wp), intent(in) :: x(:)
-         ! Output vector.
          real(wp) :: y(size(x))
       end function bidiag_spmv
 
       pure module function bidiag_multi_spmv(A, X) result(Y)
-         ! Input matrix.
          type(Bidiagonal), intent(in) :: A
-         ! Input vectors.
          real(wp), intent(in) :: X(:, :)
-         ! Output vectors.
          real(wp) :: Y(size(X, 1), size(X, 2))
       end function bidiag_multi_spmv
 
       pure module function tridiag_spmv(A, x) result(y)
-         ! Input matrix.
          type(Tridiagonal), intent(in) :: A
-         ! Input vector.
          real(wp), intent(in) :: x(:)
-         ! Output vector
          real(wp) :: y(size(x))
       end function tridiag_spmv
 
       pure module function tridiag_multi_spmv(A, X) result(Y)
-         ! Input matrix.
          type(Tridiagonal), intent(in) :: A
-         ! Input vectors.
          real(wp), intent(in) :: X(:, :)
-         ! Output vectors.
          real(wp) :: Y(size(X, 1), size(X, 2))
       end function tridiag_multi_spmv
 
       pure module function symtridiag_spmv(A, x) result(y)
-         ! Input matrix.
          type(SymTridiagonal), intent(in) :: A
-         ! Input vector.
          real(wp), intent(in) :: x(:)
-         ! Output vector.
          real(wp) :: y(size(x))
       end function symtridiag_spmv
 
       pure module function symtridiag_multi_spmv(A, X) result(Y)
-         ! Input matrix.
          type(SymTridiagonal), intent(in) :: A
-         ! Input vectors.
          real(wp), intent(in) :: X(:, :)
-         ! Output vectors.
          real(wp) :: Y(size(X, 1), size(X, 2))
       end function symtridiag_multi_spmv
    end interface
@@ -498,23 +459,17 @@ module SpecialMatrices_Tridiagonal
       end function diag_to_dense
 
       pure module function bidiag_to_dense(A) result(B)
-         ! Input Bidiagonal matrix.
          type(Bidiagonal), intent(in) :: A
-         ! Output dense matrix.
          real(wp) :: B(A%n, A%n)
       end function bidiag_to_dense
 
       pure module function tridiag_to_dense(A) result(B)
-         ! Input tridiagonal matrix.
          type(Tridiagonal), intent(in) :: A
-         ! Output dense matrix.
          real(wp) :: B(A%n, A%n)
       end function tridiag_to_dense
 
       pure module function symtridiag_to_dense(A) result(B)
-         ! Input tridiagonal matrix.
          type(SymTridiagonal), intent(in) :: A
-         ! Output dense matrix.
          real(wp) :: B(A%n, A%n)
       end function symtridiag_to_dense
    end interface
@@ -540,30 +495,25 @@ module SpecialMatrices_Tridiagonal
       !!
       !! `B`   :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function diag_transpose(A) result(B)
-         ! Input diagonal matrix.
+         !! Utility function to compute the transpose of a `Diagonal` matrix.
          type(Diagonal), intent(in) :: A
-         ! Output diagonal matrix.
+         !! Input Diagonal matrix.
          type(Diagonal) :: B
+         !! Tranpose of the original diagonal matrix.
       end function diag_transpose
 
       pure module function bidiag_transpose(A) result(B)
-         ! Input bidiagonal matrix.
          type(Bidiagonal), intent(in) :: A
-         ! Transposed matrix.
          type(Bidiagonal) :: B
       end function bidiag_transpose
 
       pure module function tridiag_transpose(A) result(B)
-         ! Input tridiagonal matrix.
          type(Tridiagonal), intent(in) :: A
-         ! Transposed matrix.
          type(Tridiagonal) :: B
       end function tridiag_transpose
 
       pure module function symtridiag_transpose(A) result(B)
-         ! Input tridiagonal matrix.
          type(SymTridiagonal), intent(in) :: A
-         ! Transposed matrix.
          type(SymTridiagonal) :: B
       end function symtridiag_transpose
    end interface

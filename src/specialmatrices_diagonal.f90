@@ -9,40 +9,44 @@ contains
    !--------------------------------
 
    pure module function initialize_diag(n) result(A)
-      ! Dimension of the matrix.
+      !! Utility function to construct a `Diagonal` matrix filled with zeros.
       integer(int32), intent(in) :: n
-      ! Output matrix.
+      !! Dimension of the matrix.
       type(Diagonal) :: A
+      !! Corresponding diagonal matrix.
       A%n = n; allocate(A%dv(n)); A%dv = 0.0_wp
       return
    end function initialize_diag
 
    pure module function construct_diag(dv) result(A)
-      ! Diagonal elements.
+      !! Utility function to construct a `Diagonal` matrix from a rank-1 array.
       real(wp), intent(in) :: dv(:)
-      ! Output matrix.
+      !! Diagonal element of the matrix.
       type(Diagonal) :: A
+      !! Corresponding diagonal matrix.
       A%n = size(dv); A%dv = dv
       return
    end function construct_diag
 
    pure module function construct_constant_diag(d, n) result(A)
-      ! Diagonal element.
+      !! Utility function to construct a `Diagonal` matrix with constant diagonal element.
       real(wp), intent(in) :: d
-      ! Dimension of the matrix.
+      !! Constant diagonal element of the matrix.
       integer(int32), intent(in) :: n
-      ! Output matrix.
+      !! Dimension of the matrix.
       type(Diagonal) :: A
+      !! Corresponding diagonal matrix.
       integer :: i
       A%n = n; A%dv = [(d, i=1, n)]
       return
    end function construct_constant_diag
 
    module function construct_dense_to_diag(A) result(B)
-      ! Input dense matrix.
+      !! Utility function to construct a `Diagonal` matrix from a rank-2 array.
       real(wp), intent(in) :: A(:, :)
-      ! Output diagonal matrix.
+      !! Dense [n x n] matrix from which to construct the `Diagonal` one.
       type(Diagonal) :: B
+      !! Corresponding diagonal matrix.
       B = Diagonal(diag(A))
       return
    end function construct_dense_to_diag
@@ -52,12 +56,14 @@ contains
    !------------------------------------------------------------
 
    pure module function diag_spmv(A, x) result(y)
-      ! Input matrix.
+      !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
+      !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
       type(Diagonal), intent(in) :: A
-      ! Input vector.
+      !! Input matrix.
       real(wp), intent(in) :: x(:)
-      ! Output vector.
+      !! Input vector.
       real(wp) :: y(size(x))
+      !! Output vector.
       integer :: i
       do concurrent(i=1:size(x))
          y(i) = A%dv(i) * x(i)
@@ -66,12 +72,14 @@ contains
    end function diag_spmv
 
    pure module function diag_multi_spmv(A, X) result(Y)
-      ! Input matrix.
+      !! Utility function to compute the matrix-vector product \( y = A x \) where \( A \)
+      !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
       type(Diagonal), intent(in) :: A
-      ! Iput vectors.
+      !! Input matrix.
       real(wp), intent(in) :: X(:, :)
-      ! Output vectors.
+      !! Input matrix (rank-2 array).
       real(wp) :: Y(size(X, 1), size(X, 2))
+      !! Output matrix (rank-2 array).
       integer :: i, j
       do concurrent(i=1:size(X, 1), j=1:size(X, 2))
          Y(i, j) = A%dv(i) * X(i, j)
@@ -84,12 +92,15 @@ contains
    !----------------------------------
 
    pure module function diag_solve(A, b) result(x)
-      ! Coefficient matrix.
+      !! Utility function to solve the linear system \( A x = b \) where \( A \) is of
+      !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
+      !! with the same type and dimension of `b`.
       type(Diagonal), intent(in) :: A
-      ! Right-hande side vector.
+      !! Coefficient matrix.
       real(wp), intent(in) :: b(:)
-      ! Solution vector.
+      !! Right-hande side vector.
       real(wp) :: x(size(b))
+      !! Solution vector.
       integer :: i
       do concurrent(i=1:A%n)
          x(i) = b(i) / A%dv(i)
@@ -98,12 +109,15 @@ contains
    end function diag_solve
 
    pure module function diag_multi_solve(A, B) result(X)
-      ! Coefficient matrix.
+      !! Utility function to solve a linear system with multiple right-hande sides where \( A \)
+      !! is of `Diagonal` type and `B` a rank-2 array. The solution `X` is also a rank-2 array
+      !! with the same type and dimensions as `B`.
       type(Diagonal), intent(in) :: A
-      ! Right-hand side vectors.
+      !! Coefficient matrix.
       real(wp), intent(in) :: B(:, :)
-      ! Solution vectors.
+      !! Right-hand side vectors.
       real(wp) :: X(size(B, 1), size(B, 2))
+      !! Solution vectors.
       integer(int32) :: i, j
       real(wp) :: dv(A%n)
       dv = 1.0_wp / A%dv
@@ -114,11 +128,8 @@ contains
    end function diag_multi_solve
 
    pure module subroutine diag_eig(A, lambda, vectors)
-      ! Input matrix.
       type(Diagonal), intent(in) :: A
-      ! Eigenvalues.
       real(wp), intent(out) :: lambda(A%n)
-      ! Eigenvectors.
       real(wp), intent(out) :: vectors(A%n, A%n)
 
       lambda = A%dv ; vectors = eye(A%n)
@@ -130,10 +141,11 @@ contains
    !------------------------------------
 
    pure module function diag_to_dense(A) result(B)
-      ! Input Diagonal matrix.
+      !! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
       type(Diagonal), intent(in) :: A
-      ! Output dense matrix.
+      !! Input diagonal matrix.
       real(wp) :: B(A%n, A%n)
+      !! Output dense rank-2 array.
       integer :: i
       B = 0.0_wp
       do concurrent(i=1:A%n)
@@ -142,10 +154,11 @@ contains
    end function diag_to_dense
 
    pure module function diag_transpose(A) result(B)
-      ! Input Diagonal matrix.
+      !! Utility function to compute the transpose of a `Diagonal` matrix.
       type(Diagonal), intent(in) :: A
-      ! Output matrix.
+      !! Input matrix.
       type(Diagonal) :: B
+      !! Transposed matrix.
       B = A
    end function diag_transpose
    
