@@ -26,6 +26,8 @@ contains
         testsuite = [ &
                     new_unittest("Diagonal matmul", test_diagonal_matmul),  &
                     new_unittest("Diagonal linear solver", test_diagonal_solve),  &
+                    new_unittest("Bidiagonal matmul", test_bidiagonal_matmul),  &
+                    new_unittest("Bidiagonal linear solver", test_bidiagonal_solve),  &
                     new_unittest("Tridiagonal matmul", test_tridiagonal_matmul),  &
                     new_unittest("Tridiagonal linear solver", test_tridiagonal_solve),  &
                     new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul),  &
@@ -106,6 +108,108 @@ contains
     !---------------------------------------
     !-----     BIDIAGONAL MATRICES     -----
     !---------------------------------------
+
+    subroutine test_bidiagonal_matmul(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(Bidiagonal) :: A
+        real(dp) :: dv(n), ev(n-1)
+
+        ! Initialize matrix.
+        call random_number(dv); call random_number(ev)
+        A = Bidiagonal(dv, ev)
+
+        ! Matrix-vector product with A lower bidiagonal.
+        block
+        real(dp) :: x(n), y(n), y_dense(n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Lower-bidiagonal matrix-vector product failed.")
+        if (allocated(error)) return
+
+        A%which = "U"
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Upper-bidiagonal matrix-vector product failed.")
+        if (allocated(error)) return
+        end block
+
+        ! Matrix-matrix product with A lower bidiagonal.
+        block
+        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Upper-bidiagonal matrix-matrix product failed.")
+        if (allocated(error)) return
+
+        A%which = "L"
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Lower-bidiagonal matrix-matrix product failed.")
+        end block
+        return
+    end subroutine test_Bidiagonal_matmul
+
+    subroutine test_bidiagonal_solve(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(Bidiagonal) :: A
+        real(dp) :: ev(n-1), dv(n)
+
+        ! Initialize matrix.
+        call random_number(ev); call random_number(dv)
+        A = Bidiagonal(dv, ev)
+
+        ! Solve with a singe right-hand side vector.
+        block
+        real(dp) :: x(n), x_stdlib(n), b(n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Lower-bidiagonal solve with a single rhs failed.")
+        if (allocated(error)) return
+
+        A%which = "U"
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Upper-bidiagonal solve with a single rhs failed.")
+        if (allocated(error)) return
+        end block
+
+        block
+        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Upper-bidiagonal solve with multiple rhs failed.")
+        if(allocated(error)) return
+
+        A%which = "L"
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Lower-bidiagonal solve with multiple rhs failed.")
+        end block
+
+        return
+    end subroutine test_bidiagonal_solve
 
     !----------------------------------------
     !-----     TRIDIAGONAL MATRICES     -----
