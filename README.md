@@ -1,6 +1,4 @@
-<img src="imgs/logo-white.png" style="align:center; width:512px" />
-
-
+<img src="imgs/logo_cropped.png" style="align:center; width:512px" />
 
 |                         **License**                          |                       **Build Status**                       |                      **Documentation**                       |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
