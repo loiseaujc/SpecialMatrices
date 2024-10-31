@@ -25,6 +25,7 @@ contains
 
         testsuite = [ &
                     new_unittest("Diagonal contructors", test_diagonal_constructors),  &
+                    new_unittest("Diagonal matmul", test_diagonal_matmul),  &
                     new_unittest("Diagonal linear solver", test_diagonal_solve)  &
                     ]
         return
@@ -55,6 +56,35 @@ contains
 
         return
     end subroutine test_diagonal_constructors
+
+    subroutine test_diagonal_matmul(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(Diagonal) :: A
+        real(dp) :: dv(n)
+
+        ! Initialize matrix.
+        call random_number(dv) ; A = Diagonal(dv)
+
+        ! Matrix-vector product.
+        block
+        real(dp) :: x(n), y(n), y_dense(n)
+        call random_number(x)
+        y = matmul(A, x) ; y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Diagonal matrix-vector product failed.")
+        if (allocated(error)) return
+        end block
+
+        ! Matrix-matrix product.
+        block
+        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Diagonal matrix-matrix product failed.")
+        end block
+        return
+    end subroutine test_diagonal_matmul
 
     subroutine test_diagonal_solve(error)
         type(error_type), allocatable, intent(out) :: error
