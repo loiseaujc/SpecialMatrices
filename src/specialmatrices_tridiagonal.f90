@@ -35,6 +35,8 @@ module SpecialMatrices_Tridiagonal
    end type
 
    type, public :: Tridiagonal
+      !! Base type used to define a `Tridiagonal` matrix of size [n x n] with diagonal elements
+      !! given by the rank-1 arrays `dl` (sub-diagonal), `d` (diagonal) and `du` (super-diagonal).
       integer(int32) :: n
       !! Dimension of the matrix.
       real(wp), allocatable :: d(:), du(:), dl(:)
@@ -173,21 +175,97 @@ module SpecialMatrices_Tridiagonal
 
 
    interface Tridiagonal
+      !! This interface provides different methods to construct a `Tridiagonal` matrix.
+      !! Only `double precision` is supported currently. Only the non-zero elements of
+      !! \( A \) are stored, i.e.
+      !!
+      !! \[
+      !!    A
+      !!    =
+      !!    \begin{bmatrix}
+      !!       d_1   &  du_1  \\
+      !!       dl_1  &  d_2      &  du_2  \\
+      !!             &  \ddots   &  \ddots   &  \ddots   \\
+      !!             &           &  dl_{n-2} &  d_{n-1}  &  du_{n-1} \\
+      !!             &           &           &  dl_{n-1} &  d_n
+      !!    \end{bmatrix}.
+      !! \]
+      !!
+      !! #### Syntax
+      !!
+      !! - Construct a `Tridiagonal` matrix filled with zeros:
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    type(Tridiagonal) :: A
+      !!
+      !!    A = Tridiagonal(n)
+      !! ```
+      !!
+      !! - Construct a `Tridiagonal` matrix from rank-1 arrays:
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n
+      !!    real(dp), allocatable :: dl(:), d(:), du(:)
+      !!    type(Tridiagonal) :: A
+      !!    integer :: i
+      !!
+      !!    dl = [(i, i=1, n)]; d = [(2*i, i=1, n)]; dl = [(3*i, i=1, n)]
+      !!    A = Tridiagonal(dl, d, du)
+      !! ```
+      !!
+      !! - Construct a `Tridiagonal` matrix with constant diagonals:
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n
+      !!    real(dp), parameter :: dl = 1.0_dp, d = 2.0_dp, du = 3.0_dp
+      !!    type(Tridiagonal) :: A
+      !!
+      !!    A = Tridiagonal(dl, d, du, n)
+      !! ```
+      !!
+      !! - Construct a `Tridiagonal` matrix from a standard Fortran rank-2 array:
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    real(dp) :: B(n, n)
+      !!    type(Tridiagonal) :: A
+      !!
+      !!    call random_number(B); A = Tridiagonal(B)
+      !! ```
       pure module function initialize_tridiag(n) result(A)
+         !! Utility function to construct a `Tridiagonal` matrix filled with zeros.
          integer(int32), intent(in) :: n
+         !! Dimension of the matrix.
          type(Tridiagonal) :: A
+         !! Corresponding tridiagonal matrix.
       end function initialize_tridiag
 
       pure module function construct_tridiag(dl, d, du) result(A)
+         !! Utility function to construct a `Tridiagonal` matrix from a set of rank-1 arrays.
          real(wp), intent(in) :: dl(:), d(:), du(:)
+         !! Diagonal elements of the matrix.
          type(Tridiagonal) :: A
+         !! Corresponding tridiagonal matrix.
       end function construct_tridiag
 
       pure module function construct_constant_tridiag(l, d, u, n) result(A)
+         !! Utility function to construct a `Tridiagonal` matrix with constant elements.
          real(wp), intent(in) :: l, d, u
+         !! Constant diagonal elements.
          integer(int32), intent(in) :: n
+         !! Dimension of the matrix.
          type(Tridiagonal) :: A
+         !! Corresponding tridiagonal matrix.
       end function construct_constant_tridiag
+
+      module function construct_dense_to_tridiag(A) result(B)
+         !! Utility function to construct a `Tridiagonal` matrix from a rank-2 array.
+         real(wp), intent(in) :: A(:, :)
+         !! Dense [n x n] matrix from which to construct the `Tridiagonal` one.
+         type(Tridiagonal) :: B
+         !! Corresponding tridiagonal matrix.
+      end function construct_dense_to_tridiag
    end interface
 
 
@@ -277,15 +355,25 @@ module SpecialMatrices_Tridiagonal
       end function bidiag_multi_spmv
 
       pure module function tridiag_spmv(A, x) result(y)
+         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
+         !! is of `Tridiagonal` type and `x` and `y` are both rank-1 arrays.
          type(Tridiagonal), intent(in) :: A
+         !! Input matrix.
          real(wp), intent(in) :: x(:)
+         !! Input vector.
          real(wp) :: y(size(x))
+         !! Output vector.
       end function tridiag_spmv
 
       pure module function tridiag_multi_spmv(A, X) result(Y)
+         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
+         !! is of `Tridiagonal` type and `X` and `Y` are both rank-2 arrays.
          type(Tridiagonal), intent(in) :: A
+         !! Input matrix.
          real(wp), intent(in) :: X(:, :)
+         !! Input matrix (rank-2 array).
          real(wp) :: Y(size(X, 1), size(X, 2))
+         !! Output matrix (rank-2 array).
       end function tridiag_multi_spmv
 
       pure module function symtridiag_spmv(A, x) result(y)
@@ -368,15 +456,27 @@ module SpecialMatrices_Tridiagonal
       
       ! Tridiagonal matrix solve.
       pure module function tridiag_solve(A, b) result(x)
+         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
+         !! `Tridiagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1
+         !! array with the same type and dimension as `b`.
          type(Tridiagonal), intent(in) :: A
+         !! Coefficient matrix.
          real(wp), intent(in) :: b(:)
+         !! Right-hand side vector.
          real(wp) :: x(size(b))
+         !! Solution vector.
       end function tridiag_solve
 
       pure module function tridiag_multi_solve(A, B) result(X)
+         !! Utility function to solve a linear system with multiple right-hand sides where
+         !! \( A \) is of `Tridiagonal` type and `B` a rank-2 array. The solution `X` is also
+         !! a rank-2 array with the same type and dimensions as `B`.
          type(Tridiagonal), intent(in) :: A
+         !! Coefficient matrix.
          real(wp), intent(in) :: B(:, :)
+         !! Right-hand side vectors.
          real(wp) :: X(size(B, 1), size(B, 2))
+         !! Solution vectors.
       end function tridiag_multi_solve
 
       
@@ -464,8 +564,11 @@ module SpecialMatrices_Tridiagonal
       end function bidiag_to_dense
 
       pure module function tridiag_to_dense(A) result(B)
+         !! Utility function to convert a `Tridiagonal` matrix to a regular rank-2 array.
          type(Tridiagonal), intent(in) :: A
+         !! Input tridiagonal matrix.
          real(wp) :: B(A%n, A%n)
+         !! Output dense rank-2 array.
       end function tridiag_to_dense
 
       pure module function symtridiag_to_dense(A) result(B)
@@ -496,6 +599,7 @@ module SpecialMatrices_Tridiagonal
       !! `B`   :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function diag_transpose(A) result(B)
          !! Utility function to compute the transpose of a `Diagonal` matrix.
+         !! The output matrix is also of `Diagonal` type.
          type(Diagonal), intent(in) :: A
          !! Input Diagonal matrix.
          type(Diagonal) :: B
@@ -508,8 +612,12 @@ module SpecialMatrices_Tridiagonal
       end function bidiag_transpose
 
       pure module function tridiag_transpose(A) result(B)
+         !! Utility function to compute the tranpose of a `Tridiagonal` matrix.
+         !! The output matrix is also of `Tridiagonal` type.
          type(Tridiagonal), intent(in) :: A
+         !! Input tridiagonal matrix.
          type(Tridiagonal) :: B
+         !! Transpose of the original tridiagonal matrix.
       end function tridiag_transpose
 
       pure module function symtridiag_transpose(A) result(B)
