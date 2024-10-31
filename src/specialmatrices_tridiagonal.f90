@@ -16,6 +16,8 @@ module SpecialMatrices_Tridiagonal
    !-----------------------------------------------------------
 
    type, public :: Diagonal
+      !! Base type used to define a `Diagonal` matrix of size [n x n] with diagonal given by the
+      !! rank-1 array `dv`.
       integer(int32) :: n
       !! Dimension of the matrix.
       real(wp), allocatable :: dv(:)
@@ -23,26 +25,26 @@ module SpecialMatrices_Tridiagonal
    end type
 
    type, public :: Bidiagonal
-      ! Dimension of the matrix.
       integer(int32) :: n
-      ! Diagonal elements.
+      !! Dimension of the matrix.
       real(wp), allocatable :: dv(:), ev(:)
-      ! Whether it is lower- or upper-bidiagonal.
+      !! Diagonal elements
       character(len=1) :: which
+      !! Whether it is lower- or upper-bidiagonal.
    end type
 
    type, public :: Tridiagonal
-      ! Dimension of the matrix.
       integer(int32) :: n
-      ! Tridiagonal elements.
+      !! Dimension of the matrix.
       real(wp), allocatable :: d(:), du(:), dl(:)
+      !! Tridiagonal elements.
    end type
 
    type, public :: SymTridiagonal
-      ! Dimension of the matrix.
       integer(int32) :: n
-      ! Tridiagonal elements.
+      !! Dimension of the matrix.
       real(wp), allocatable :: dv(:), ev(:)
+      !! Tridiagonal elements.
    end type
 
    !--------------------------------
@@ -50,34 +52,82 @@ module SpecialMatrices_Tridiagonal
    !--------------------------------
 
    interface Diagonal
+      !! This interface provides different methods to construct a `Diagonal` matrix.
+      !! Only `double precision` is supported currently.
+      !!
+      !! ### Syntax
+      !!
+      !! - Construct a `Diagonal` matrix filled with zeros:
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    type(Diagonal) :: A
+      !!
+      !!    A = Diagonal(n)
+      !! ```
+      !!
+      !! - Construct a `Diagonal` matrix from a vector.
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    real(dp), allocatable :: dv(:)
+      !!    type(Diagonal) :: A
+      !!    integer :: i
+      !!
+      !!    dv = [(i, i=1, n)]; A = Diagonal(dv)
+      !! ```
+      !!
+      !! - Construct a `Diagonal` matrix with constant diagonal element.
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    real(dp), parameter :: d = 2.0_dp
+      !!    type(Diagonal) :: A
+      !!
+      !!    A = Diagonal(d, n)
+      !! ```
+      !!
+      !! - Construct a `Diagonal` matrix from a standard Fortran rank-2 array.
+      !!
+      !! ```fortran
+      !!    integer, parameter :: n = 100
+      !!    real(dp) :: B(n, n)
+      !!    type(Diagonal) :: A
+      !!
+      !!    call random_number(B); A = Diagonal(B)
+      !! ```
       pure module function initialize_diag(n) result(A)
-         ! Dimension of the matrix.
+         !! Utility function to construct a `Diagonal` matrix filled with zeros.
          integer(int32), intent(in) :: n
-         ! Output matrix.
+         !! Dimension of the matrix.
          type(Diagonal) :: A
+         !! Output matrix.
       end function initialize_diag
 
       pure module function construct_diag(dv) result(A)
-         ! Diagonal elements.
+         !! Utility function to construct a `Diagonal` matrix from a rank-1 array.
          real(wp), intent(in) :: dv(:)
-         ! Output matrix.
+         !! Diagonal elements of the matrix.
          type(Diagonal) :: A
+         !! Output matrix.
       end function construct_diag
 
       pure module function construct_constant_diag(d, n) result(A)
-         ! Diagonal elements.
+         !! Utility function to construct a `Diagonal` matrix with constant diagonal element.
          real(wp), intent(in) :: d
-         ! Dimension of the matrix.
+         !! Constant diagonal element of the matrix.
          integer(int32), intent(in) :: n
-         ! Output matrix.
+         !! Dimension of the matrix.
          type(Diagonal) :: A
+         !! Output matrix.
       end function construct_constant_diag
 
       module function construct_dense_to_diag(A) result(B)
-         ! Input dense matrix.
+         !! Utility function to construct a `Diagonal` matrix from a rank-2 array.
          real(wp), intent(in) :: A(:, :)
-         ! Output matrix.
+         !! Dense [n x n] matrix from which to construct the `Diagonal` one.
          type(Diagonal) :: B
+         !! Output matrix.
       end function construct_dense_to_diag
    end interface
 
