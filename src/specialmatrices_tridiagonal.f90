@@ -309,6 +309,20 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_multi_solve
    end interface
 
+
+
+
+   interface eig
+      pure module subroutine diag_eig(A, lambda, vectors)
+         ! Input matrix.
+         type(Diagonal), intent(in) :: A
+         ! Eigenvalues.
+         real(wp), intent(out) :: lambda(A%n)
+         ! Eigenvectors.
+         real(wp), intent(out) :: vectors(A%n, A%n)
+      end subroutine diag_eig
+   end interface
+
    !-------------------------------------
    !-----     Utility functions     -----
    !-------------------------------------
