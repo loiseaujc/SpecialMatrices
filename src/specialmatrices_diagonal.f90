@@ -1,4 +1,5 @@
 submodule(SpecialMatrices_Tridiagonal) DiagonalMatrices
+   use stdlib_linalg, only: eye, diag
    implicit none(type, external)
 
 contains
@@ -36,6 +37,15 @@ contains
       A%n = n; A%dv = [(d, i=1, n)]
       return
    end function construct_constant_diag
+
+   module function construct_dense_to_diag(A) result(B)
+      ! Input dense matrix.
+      real(wp), intent(in) :: A(:, :)
+      ! Output diagonal matrix.
+      type(Diagonal) :: B
+      B = Diagonal(diag(A))
+      return
+   end function construct_dense_to_diag
 
    !------------------------------------------------------------
    !-----     Matrix-vector and matrix-matrix products     -----
@@ -96,13 +106,24 @@ contains
       real(wp) :: X(size(B, 1), size(B, 2))
       integer(int32) :: i, j
       real(wp) :: dv(A%n)
-
       dv = 1.0_wp / A%dv
       do concurrent(i=1:A%n, j=1:size(B, 2))
          X(i, j) = B(i, j) / dv(i)
       enddo
       return
    end function diag_multi_solve
+
+   module subroutine diag_eig(A, lambda, vectors)
+      ! Input matrix.
+      type(Diagonal), intent(in) :: A
+      ! Eigenvalues.
+      real(wp), intent(out) :: lambda(A%n)
+      ! Eigenvectors.
+      real(wp), intent(out) :: vectors(A%n, A%n)
+
+      lambda = A%dv ; vectors = eye(A%n)
+      return
+   end subroutine diag_eig
 
    !------------------------------------
    !-----     Utility function     -----
