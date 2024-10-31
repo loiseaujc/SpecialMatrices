@@ -25,6 +25,7 @@ module SpecialMatrices
    !-------------------------------------
 
    public :: dense
+   public :: shape
 
    public :: say_hello
 contains

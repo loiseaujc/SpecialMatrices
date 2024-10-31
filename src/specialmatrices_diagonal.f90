@@ -1,5 +1,7 @@
 submodule(SpecialMatrices_Tridiagonal) DiagonalMatrices
    use stdlib_linalg, only: eye, diag
+   use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling, LINALG_VALUE_ERROR, &
+      LINALG_INTERNAL_ERROR, LINALG_VALUE_ERROR
    implicit none(type, external)
 
 contains
@@ -10,17 +12,17 @@ contains
 
    pure module function initialize_diag(n) result(A)
       !! Utility function to construct a `Diagonal` matrix filled with zeros.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       !! Dimension of the matrix.
       type(Diagonal) :: A
       !! Corresponding diagonal matrix.
-      A%n = n; allocate(A%dv(n)); A%dv = 0.0_wp
+      A%n = n; allocate(A%dv(n)); A%dv = 0.0_dp
       return
    end function initialize_diag
 
    pure module function construct_diag(dv) result(A)
       !! Utility function to construct a `Diagonal` matrix from a rank-1 array.
-      real(wp), intent(in) :: dv(:)
+      real(dp), intent(in) :: dv(:)
       !! Diagonal element of the matrix.
       type(Diagonal) :: A
       !! Corresponding diagonal matrix.
@@ -30,9 +32,9 @@ contains
 
    pure module function construct_constant_diag(d, n) result(A)
       !! Utility function to construct a `Diagonal` matrix with constant diagonal element.
-      real(wp), intent(in) :: d
+      real(dp), intent(in) :: d
       !! Constant diagonal element of the matrix.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       !! Dimension of the matrix.
       type(Diagonal) :: A
       !! Corresponding diagonal matrix.
@@ -43,7 +45,7 @@ contains
 
    module function construct_dense_to_diag(A) result(B)
       !! Utility function to construct a `Diagonal` matrix from a rank-2 array.
-      real(wp), intent(in) :: A(:, :)
+      real(dp), intent(in) :: A(:, :)
       !! Dense [n x n] matrix from which to construct the `Diagonal` one.
       type(Diagonal) :: B
       !! Corresponding diagonal matrix.
@@ -60,9 +62,9 @@ contains
       !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
       type(Diagonal), intent(in) :: A
       !! Input matrix.
-      real(wp), intent(in) :: x(:)
+      real(dp), intent(in) :: x(:)
       !! Input vector.
-      real(wp) :: y(size(x))
+      real(dp) :: y(size(x))
       !! Output vector.
       integer :: i
       do concurrent(i=1:size(x))
@@ -76,9 +78,9 @@ contains
       !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
       type(Diagonal), intent(in) :: A
       !! Input matrix.
-      real(wp), intent(in) :: X(:, :)
+      real(dp), intent(in) :: X(:, :)
       !! Input matrix (rank-2 array).
-      real(wp) :: Y(size(X, 1), size(X, 2))
+      real(dp) :: Y(size(X, 1), size(X, 2))
       !! Output matrix (rank-2 array).
       integer :: i, j
       do concurrent(i=1:size(X, 1), j=1:size(X, 2))
@@ -97,11 +99,12 @@ contains
       !! with the same type and dimension of `b`.
       type(Diagonal), intent(in) :: A
       !! Coefficient matrix.
-      real(wp), intent(in) :: b(:)
+      real(dp), intent(in) :: b(:)
       !! Right-hande side vector.
-      real(wp) :: x(size(b))
+      real(dp), allocatable :: x(:)
       !! Solution vector.
-      integer :: i
+      integer :: i, n
+      allocate(x, mold=b)
       do concurrent(i=1:A%n)
          x(i) = b(i) / A%dv(i)
       enddo
@@ -114,13 +117,13 @@ contains
       !! with the same type and dimensions as `B`.
       type(Diagonal), intent(in) :: A
       !! Coefficient matrix.
-      real(wp), intent(in) :: B(:, :)
+      real(dp), intent(in) :: B(:, :)
       !! Right-hand side vectors.
-      real(wp) :: X(size(B, 1), size(B, 2))
+      real(dp) :: X(size(B, 1), size(B, 2))
       !! Solution vectors.
-      integer(int32) :: i, j
-      real(wp) :: dv(A%n)
-      dv = 1.0_wp / A%dv
+      integer(ilp) :: i, j
+      real(dp) :: dv(A%n)
+      dv = 1.0_dp / A%dv
       do concurrent(i=1:A%n, j=1:size(B, 2))
          X(i, j) = B(i, j) / dv(i)
       enddo
@@ -129,8 +132,8 @@ contains
 
    pure module subroutine diag_eig(A, lambda, vectors)
       type(Diagonal), intent(in) :: A
-      real(wp), intent(out) :: lambda(A%n)
-      real(wp), intent(out) :: vectors(A%n, A%n)
+      real(dp), intent(out) :: lambda(A%n)
+      real(dp), intent(out) :: vectors(A%n, A%n)
 
       lambda = A%dv ; vectors = eye(A%n)
       return
@@ -144,10 +147,10 @@ contains
       !! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
       type(Diagonal), intent(in) :: A
       !! Input diagonal matrix.
-      real(wp) :: B(A%n, A%n)
+      real(dp) :: B(A%n, A%n)
       !! Output dense rank-2 array.
       integer :: i
-      B = 0.0_wp
+      B = 0.0_dp
       do concurrent(i=1:A%n)
          B(i, i) = A%dv(i)
       enddo
@@ -161,5 +164,15 @@ contains
       !! Transposed matrix.
       B = A
    end function diag_transpose
+
+   pure module function diag_shape(A) result(shape)
+      !! Utility function to get the shape of a `Diagonal` matrix.
+      type(Diagonal), intent(in) :: A
+      !! Input matrix.
+      integer(ilp) :: shape(2)
+      !! Shape of the matrix.
+      shape = A%n
+      return
+   end function diag_shape
    
 end submodule DiagonalMatrices

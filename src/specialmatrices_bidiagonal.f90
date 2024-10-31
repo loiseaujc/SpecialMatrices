@@ -10,19 +10,19 @@ contains
 
    pure module function initialize_bidiag(n, which) result(A)
       ! Dimension of the matrix.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       ! Upper- or lower-bidiagonal.
       character(len=1), optional, intent(in) :: which
       ! Output matrix.
       type(Bidiagonal) :: A
       A%n = n; A%which = optval(which, "L")
-      allocate(A%dv(n), A%ev(n-1)); A%dv = 0.0_wp; A%ev = 0.0_wp
+      allocate(A%dv(n), A%ev(n-1)); A%dv = 0.0_dp; A%ev = 0.0_dp
       return
    end function initialize_bidiag
 
    pure module function construct_bidiag(dv, ev, which) result(A)
       ! Diagonal elements.
-      real(wp), intent(in) :: dv(:), ev(:)
+      real(dp), intent(in) :: dv(:), ev(:)
       ! Upper- or lower-bidiagonal.
       character(len=1), optional, intent(in) :: which
       ! Output matrix.
@@ -33,9 +33,9 @@ contains
 
    pure module function construct_constant_bidiag(d, e, n, which) result(A)
       ! Constant diagonal elements.
-      real(wp), intent(in) :: d, e
+      real(dp), intent(in) :: d, e
       ! Dimension of the matrix.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       ! Upper- or lower-bidiagonal.
       character(len=1), optional, intent(in) :: which
       ! Output matrix.

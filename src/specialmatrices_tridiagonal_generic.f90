@@ -11,18 +11,18 @@ contains
 
    pure module function initialize_tridiag(n) result(A)
       !! Utility function to construct a `Tridiagonal` matrix filled with zeros.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       !! Dimension of the matrix.
       type(Tridiagonal) :: A
       !! Corresponding tridiagonal matrix.
       A%n = n; allocate (A%d(n), A%du(n - 1), A%dl(n - 1))
-      A%d = 0.0_wp; A%du = 0.0_wp; A%dl = 0.0_wp
+      A%d = 0.0_dp; A%du = 0.0_dp; A%dl = 0.0_dp
       return
    end function initialize_tridiag
 
    pure module function construct_tridiag(dl, d, du) result(A)
       !! Utility function to construct a `Tridiagonal` matrix from rank-1 arrays.
-      real(wp), intent(in) :: dl(:), d(:), du(:)
+      real(dp), intent(in) :: dl(:), d(:), du(:)
       !! Diagonal elements of the matrix.
       type(Tridiagonal) :: A
       !! Corresponding tridiagonal matrix.
@@ -32,19 +32,19 @@ contains
 
    pure module function construct_constant_tridiag(l, d, u, n) result(A)
       !! Utility function to construct a `Tridiagonal` matrix with constant diagonals.
-      real(wp), intent(in) :: l, d, u
+      real(dp), intent(in) :: l, d, u
       !! Constant diagonal elements of the matrix.
-      integer(int32), intent(in) :: n
+      integer(ilp), intent(in) :: n
       !! Dimension of the matrix.
       type(Tridiagonal) :: A
       !! Corresponding tridiagonal matrix.
-      integer(int32) :: i
+      integer(ilp) :: i
       A%n = n; A%dl = [(l, i=1, n - 1)]; A%d = [(d, i=1, n)]; A%du = [(u, i=1, n - 1)]
    end function construct_constant_tridiag
 
    module function construct_dense_to_tridiag(A) result(B)
       !! Utility function to construct a `Tridiagonal` matrix from a rank-2 array.
-      real(wp), intent(in) :: A(:, :)
+      real(dp), intent(in) :: A(:, :)
       !! Dense [n x n] matrix from which to construct the `Tridiagonal` one.
       type(Tridiagonal) :: B
       !! Corresponding tridiagonal matrix.
@@ -61,9 +61,9 @@ contains
       !! is of `Tridiagonal` type and `x` and `y` are both rank-1 arrays.
       type(Tridiagonal), intent(in) :: A
       !! Input matrix.
-      real(wp), intent(in) :: x(:)
+      real(dp), intent(in) :: x(:)
       !! Input vector.
-      real(wp) :: y(size(x))
+      real(dp) :: y(size(x))
       !! Output vector.
       integer :: i, n
       n = size(x); y(1) = A%d(1)*x(1) + A%du(1)*x(2)
@@ -79,11 +79,11 @@ contains
       !!  is of `Tridiagonal` type and `X` and `Y` are both rank-2 arrays.
       type(Tridiagonal), intent(in) :: A
       !! Input matrix.
-      real(wp), intent(in) :: X(:, :)
+      real(dp), intent(in) :: X(:, :)
       !! Input matrix (rank-2 array).
-      real(wp) :: Y(size(X, 1), size(X, 2))
+      real(dp) :: Y(size(X, 1), size(X, 2))
       !! Output matrix (rank-2 array).
-      integer(int32) :: i
+      integer(ilp) :: i
       do concurrent(i=1:size(X, 2))
          Y(:, i) = tridiag_spmv(A, X(:, i))
       end do
@@ -100,12 +100,12 @@ contains
       !! with the same type and dimension as `b`.
       type(Tridiagonal), intent(in) :: A
       !! Coefficient matrix.
-      real(wp), intent(in) :: b(:)
+      real(dp), intent(in) :: b(:)
       !! Right-hand side vector.
-      real(wp) :: x(size(b))
+      real(dp) :: x(size(b))
       !! Solution vector.
       integer :: i, n, nrhs, info
-      real(wp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
+      real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
 
       ! Initialize arrays.
       n = A%n; dl = A%dl; d = A%d; du = A%du; b_(:, 1) = b ; nrhs = 1
@@ -124,10 +124,10 @@ contains
       !! \( A \) is of `Tridiagonal` type and `B` a rank-2 array. The solution `X` is also
       !! a rank-2 array with the same type and dimensions as `B`.
       type(Tridiagonal), intent(in) :: A
-      real(wp), intent(in) :: B(:, :)
-      real(wp) :: X(size(B, 1), size(B, 2))
+      real(dp), intent(in) :: B(:, :)
+      real(dp) :: X(size(B, 1), size(B, 2))
       integer :: i, n, nrhs, info
-      real(wp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
+      real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
 
       ! Initialize arrays.
       n = A%n; dl = A%dl; d = A%d; du = A%du; nrhs = size(B, 2); X = B
@@ -141,14 +141,23 @@ contains
    !-----     Utility functions     -----
    !-------------------------------------
 
+   pure module function tridiag_shape(A) result(shape)
+      type(Tridiagonal), intent(in) :: A
+      !! Input matrix.
+      integer(ilp) :: shape(2)
+      !! Shape of the matrix.
+      shape = A%n
+      return
+   end function tridiag_shape
+
    pure module function tridiag_to_dense(A) result(B)
       !! Utility function to convert a `Tridiagonal` matrix to a regular rank-2 array.
       type(Tridiagonal), intent(in) :: A
       !! Input tridiagonal matrix.
-      real(wp) :: B(A%n, A%n)
+      real(dp) :: B(A%n, A%n)
       !! Output dense rank-2 array.
       integer :: i, n
-      n = A%n; B = 0.0_wp
+      n = A%n; B = 0.0_dp
       B(1, 1) = A%d(1); B(1, 2) = A%du(1)
       do concurrent(i=2:n - 1)
          B(i, i - 1) = A%dl(i - 1)
