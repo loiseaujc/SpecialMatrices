@@ -68,7 +68,7 @@ contains
       integer :: i, n
       n = size(x); y(1) = A%d(1)*x(1) + A%du(1)*x(2)
       do concurrent(i=2:n - 1)
-         y(i) = A%dl(i)*x(i - 1) + A%d(i)*x(i) + A%du(i)*x(i + 1)
+         y(i) = A%dl(i-1)*x(i - 1) + A%d(i)*x(i) + A%du(i)*x(i + 1)
       end do
       y(n) = A%d(n)*x(n) + A%dl(n - 1)*x(n - 1)
       return
