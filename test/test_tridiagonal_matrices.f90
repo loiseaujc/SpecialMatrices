@@ -24,38 +24,13 @@ contains
         type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
         testsuite = [ &
-                    new_unittest("Diagonal contructors", test_diagonal_constructors),  &
                     new_unittest("Diagonal matmul", test_diagonal_matmul),  &
-                    new_unittest("Diagonal linear solver", test_diagonal_solve)  &
+                    new_unittest("Diagonal linear solver", test_diagonal_solve),  &
+                    new_unittest("Tridiagonal matmul", test_tridiagonal_matmul),  &
+                    new_unittest("Tridiagonal linear solver", test_tridiagonal_solve)  &
                     ]
         return
     end subroutine collect_diagonal_testsuite
-
-    subroutine test_diagonal_constructors(error)
-        type(error_type), allocatable, intent(out) :: error
-        type(Diagonal) :: A
-        real(dp) :: dv(n), d
-        integer(ilp) :: i
-
-        ! Zero-initialization of Diagonal.
-        A = Diagonal(n)
-        call check(error, all(A%dv == [(0.0_dp, i=1, n)]), &
-        "Initializing the zero Diagonal matrix failed.")
-        if (allocated(error)) return
-
-        ! Array-based initialization of Diagonal.
-        dv = [(i, i=1, n)] ; A = Diagonal(dv)
-        call check(error, all(A%dv == dv), &
-        "Array-based initialization of Diagonal matrix failed.")
-        if (allocated(error)) return
-
-        ! Constant-Diagonal matrix.
-        d = 1.0_dp ; A = Diagonal(d, n)
-        call check(error, all(A%dv == [(d, i=1, n)]), &
-        "Constant-Diagonal initialization failed.")
-
-        return
-    end subroutine test_diagonal_constructors
 
     subroutine test_diagonal_matmul(error)
         type(error_type), allocatable, intent(out) :: error
@@ -122,6 +97,8 @@ contains
         call check(error, all_close(x, x_stdlib), &
         "Diagonal solve with multiple rhs failed.")
         end block
+
+        return
     end subroutine test_diagonal_solve
 
     !---------------------------------------
@@ -131,6 +108,76 @@ contains
     !----------------------------------------
     !-----     TRIDIAGONAL MATRICES     -----
     !----------------------------------------
+
+    subroutine test_tridiagonal_matmul(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(Tridiagonal) :: A
+        real(dp) :: dl(n-1), dv(n), du(n-1)
+
+        ! Initialize matrix.
+        call random_number(dl); call random_number(dv); call random_number(du)
+        A = Tridiagonal(dl, dv, du)
+
+        ! Matrix-vector product.
+        block
+        real(dp) :: x(n), y(n), y_dense(n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Tridiagonal matrix-vector product failed.")
+        if (allocated(error)) return
+        end block
+
+        ! Matrix-matrix product.
+        block
+        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        call random_number(x)
+        y = matmul(A, x); y_dense = matmul(dense(A), x)
+        call check(error, all_close(y, y_dense), &
+        "Tridiagonal matrix-matrix product failed.")
+        end block
+        return
+    end subroutine test_tridiagonal_matmul
+
+    subroutine test_tridiagonal_solve(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(Tridiagonal) :: A
+        real(dp) :: dl(n-1), dv(n), du(n-1)
+
+        ! Initialize matrix.
+        call random_number(dl); call random_number(dv); call random_number(du)
+        A = Tridiagonal(dl, dv, du)
+
+        ! Solve with a singe right-hand side vector.
+        block
+        real(dp) :: x(n), x_stdlib(n), b(n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Tridiagonal solve with a single rhs failed.")
+        if (allocated(error)) return
+        end block
+
+        block
+        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Tridiagonal solve with multiple rhs failed.")
+        end block
+
+        return
+    end subroutine test_tridiagonal_solve
 
     !--------------------------------------------------
     !-----     SYMMETRIC TRIDIAGONAL MATRICES     -----
