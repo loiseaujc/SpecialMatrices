@@ -119,11 +119,11 @@ contains
       !! Coefficient matrix.
       real(dp), intent(in) :: B(:, :)
       !! Right-hand side vectors.
-      real(dp) :: X(size(B, 1), size(B, 2))
+      real(dp), allocatable :: X(:, :)
       !! Solution vectors.
       integer(ilp) :: i, j
       real(dp) :: dv(A%n)
-      dv = 1.0_dp / A%dv
+      allocate(X, mold=B); dv = 1.0_dp / A%dv
       do concurrent(i=1:A%n, j=1:size(B, 2))
          X(i, j) = B(i, j) / dv(i)
       enddo

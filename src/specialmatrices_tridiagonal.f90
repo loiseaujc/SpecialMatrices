@@ -1,5 +1,6 @@
 module SpecialMatrices_Tridiagonal
    use stdlib_linalg_constants, only: dp, ilp
+   use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling
    implicit none
    private
    
@@ -436,7 +437,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hande side vectors.
-         real(dp) :: X(size(B, 1), size(B, 2))
+         real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function diag_multi_solve
 
