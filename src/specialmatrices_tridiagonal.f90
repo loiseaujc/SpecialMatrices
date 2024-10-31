@@ -4,6 +4,8 @@ module SpecialMatrices_Tridiagonal
    private
    
    ! --> Constructors.
+   public :: Diagonal
+   public :: Bidiagonal
    public :: Tridiagonal
    public :: SymTridiagonal
 
@@ -76,7 +78,18 @@ module SpecialMatrices_Tridiagonal
          ! Output matrix.
          type(Diagonal) :: A
       end function construct_constant_diag
+
+      module function construct_dense_to_diag(A) result(B)
+         ! Input dense matrix.
+         real(wp), intent(in) :: A(:, :)
+         ! Output matrix.
+         type(Diagonal) :: B
+      end function construct_dense_to_diag
    end interface
+
+
+
+
 
    interface Tridiagonal
       pure module function initialize_tridiag(n) result(A)
@@ -99,6 +112,10 @@ module SpecialMatrices_Tridiagonal
          type(Tridiagonal) :: A
       end function construct_constant_tridiag
    end interface
+
+
+
+
 
    interface SymTridiagonal
       pure module function initialize_symtridiag(n) result(A)
@@ -139,7 +156,7 @@ module SpecialMatrices_Tridiagonal
          real(wp) :: y(size(x))
       end function diag_spmv
 
-      pure module function diag_multi_spmv(A, x) result(y)
+      pure module function diag_multi_spmv(A, X) result(Y)
          ! Input matrix.
          type(Diagonal), intent(in) :: A
          ! Input vectors.
@@ -147,6 +164,24 @@ module SpecialMatrices_Tridiagonal
          ! Output vectors.
          real(wp) :: Y(size(X, 1), size(X, 2))
       end function diag_multi_spmv
+
+      pure module function bidiag_spmv(A, x) result(y)
+         ! Input matrix.
+         type(Bidiagonal), intent(in) :: A
+         ! Input vector.
+         real(wp), intent(in) :: x(:)
+         ! Output vector.
+         real(wp) :: y(size(x))
+      end function bidiag_spmv
+
+      pure module function bidiag_multi_spmv(A, X) result(Y)
+         ! Input matrix.
+         type(Bidiagonal), intent(in) :: A
+         ! Input vectors.
+         real(wp), intent(in) :: X(:, :)
+         ! Output vectors.
+         real(wp) :: Y(size(X, 1), size(X, 2))
+      end function bidiag_multi_spmv
 
       pure module function tridiag_spmv(A, x) result(y)
          ! Input matrix.
@@ -190,6 +225,7 @@ module SpecialMatrices_Tridiagonal
    !----------------------------------
 
    interface solve
+      ! Diagonal matrix solve.
       pure module function diag_solve(A, b) result(x)
          type(Diagonal), intent(in) :: A
          real(wp), intent(in) :: b(:)
@@ -202,6 +238,22 @@ module SpecialMatrices_Tridiagonal
          real(wp) :: X(size(B, 1), size(B, 2))
       end function diag_multi_solve
 
+
+      ! Bidiagonal matrix solve.
+      pure module function bidiag_solve(A, b) result(x)
+         type(Bidiagonal), intent(in) :: A
+         real(wp), intent(in) :: b(:)
+         real(wp) :: x(size(b))
+      end function bidiag_solve
+
+      pure module function bidiag_multi_solve(A, B) result(X)
+         type(Bidiagonal), intent(in) :: A
+         real(wp), intent(in) :: B(:, :)
+         real(wp) :: X(size(B, 1), size(B, 2))
+      end function bidiag_multi_solve
+
+      
+      ! Tridiagonal matrix solve.
       pure module function tridiag_solve(A, b) result(x)
          type(Tridiagonal), intent(in) :: A
          real(wp), intent(in) :: b(:)
@@ -214,6 +266,8 @@ module SpecialMatrices_Tridiagonal
          real(wp) :: X(size(B, 1), size(B, 2))
       end function tridiag_multi_solve
 
+      
+      ! Symmetric Tridiagonal matrix solve.
       pure module function symtridiag_solve(A, b) result(x)
          type(SymTridiagonal), intent(in) :: A
          real(wp), intent(in) :: b(:)
@@ -239,6 +293,13 @@ module SpecialMatrices_Tridiagonal
          real(wp) :: B(A%n, A%n)
       end function diag_to_dense
 
+      pure module function bidiag_to_dense(A) result(B)
+         ! Input Bidiagonal matrix.
+         type(Bidiagonal), intent(in) :: A
+         ! Output dense matrix.
+         real(wp) :: B(A%n, A%n)
+      end function bidiag_to_dense
+
       pure module function tridiag_to_dense(A) result(B)
          ! Input tridiagonal matrix.
          type(Tridiagonal), intent(in) :: A
@@ -254,6 +315,10 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_to_dense
    end interface
 
+
+
+
+
    interface transpose
       pure module function diag_transpose(A) result(B)
          ! Input diagonal matrix.
@@ -261,6 +326,13 @@ module SpecialMatrices_Tridiagonal
          ! Output diagonal matrix.
          type(Diagonal) :: B
       end function diag_transpose
+
+      pure module function bidiag_transpose(A) result(B)
+         ! Input bidiagonal matrix.
+         type(Bidiagonal), intent(in) :: A
+         ! Transposed matrix.
+         type(Bidiagonal) :: B
+      end function bidiag_transpose
 
       pure module function tridiag_transpose(A) result(B)
          ! Input tridiagonal matrix.
