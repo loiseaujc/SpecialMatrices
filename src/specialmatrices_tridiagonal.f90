@@ -16,10 +16,10 @@ module SpecialMatrices_Tridiagonal
    !-----------------------------------------------------------
 
    type, public :: Diagonal
-      ! Dimension of the matrix.
       integer(int32) :: n
-      ! Diagonal elements.
+      !! Dimension of the matrix.
       real(wp), allocatable :: dv(:)
+      !! Diagonal elements of the matrix.
    end type
 
    type, public :: Bidiagonal
