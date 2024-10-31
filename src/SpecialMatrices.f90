@@ -7,12 +7,16 @@ module SpecialMatrices
    !-----     Matrix types     -----
    !--------------------------------
 
+   public :: Diagonal
+   public :: Bidiagonal
    public :: Tridiagonal
+   public :: SymTridiagonal
 
    !----------------------------------
    !-----     Linear Algebra     -----
    !----------------------------------
 
+   public :: transpose
    public :: matmul
    public :: solve
 
@@ -20,7 +24,6 @@ module SpecialMatrices
    !-----     Utility functions     -----
    !-------------------------------------
 
-   public :: transpose
    public :: dense
 
    public :: say_hello
