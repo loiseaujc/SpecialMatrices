@@ -3,12 +3,6 @@ module SpecialMatrices_Tridiagonal
    implicit none
    private
    
-   ! --> Constructors.
-   public :: Diagonal
-   public :: Bidiagonal
-   public :: Tridiagonal
-   public :: SymTridiagonal
-
    ! --> Linear Algebra.
    public :: matmul
    public :: solve
@@ -87,6 +81,40 @@ module SpecialMatrices_Tridiagonal
       end function construct_dense_to_diag
    end interface
 
+
+
+
+
+   interface Bidiagonal
+      pure module function initialize_bidiag(n, which) result(A)
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Upper- or lower-bidiagonal.
+         character(len=1), optional, intent(in) :: which
+         ! Output matrix.
+         type(Bidiagonal) :: A
+      end function initialize_bidiag
+
+      pure module function construct_bidiag(dv, ev, which) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: dv(:), ev(:)
+         ! Upper- or lower-bidiagonal.
+         character(len=1), optional, intent(in) :: which
+         ! Output matrix.
+         type(Bidiagonal) :: A
+      end function construct_bidiag
+
+      pure module function construct_constant_bidiag(d, e, n, which) result(A)
+         ! Diagonal elements.
+         real(wp), intent(in) :: d, e
+         ! Dimension of the matrix.
+         integer(int32), intent(in) :: n
+         ! Upper- or lower-bidiagonal.
+         character(len=1), optional, intent(in) :: which
+         ! Output matrix.
+         type(Bidiagonal) :: A
+      end function construct_constant_bidiag
+   end interface
 
 
 
