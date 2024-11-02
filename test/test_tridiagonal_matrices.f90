@@ -116,7 +116,7 @@ contains
 
         ! Initialize matrix.
         call random_number(dv); call random_number(ev)
-        A = Bidiagonal(dv, ev)
+        A = Bidiagonal(dv, ev, which="L")
 
         ! Matrix-vector product with A lower bidiagonal.
         block
@@ -126,15 +126,15 @@ contains
         call check(error, all_close(y, y_dense), &
         "Lower-bidiagonal matrix-vector product failed.")
         if (allocated(error)) return
-
-        A%which = "U"
+        ! Matrix-vector product wih A upper bidiaognal.
+        A = Bidiagonal(dv, ev, which="U")
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
         "Upper-bidiagonal matrix-vector product failed.")
         if (allocated(error)) return
         end block
 
-        ! Matrix-matrix product with A lower bidiagonal.
+        ! Matrix-matrix product with A upper bidiagonal.
         block
         real(dp) :: x(n, n), y(n, n), y_dense(n, n)
         call random_number(x)
@@ -142,8 +142,8 @@ contains
         call check(error, all_close(y, y_dense), &
         "Upper-bidiagonal matrix-matrix product failed.")
         if (allocated(error)) return
-
-        A%which = "L"
+        ! Matrix-matrix product with A lower bidiagonal.
+        A = Bidiagonal(dv, ev, which="L")
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
         "Lower-bidiagonal matrix-matrix product failed.")
@@ -158,7 +158,7 @@ contains
 
         ! Initialize matrix.
         call random_number(ev); call random_number(dv)
-        A = Bidiagonal(dv, ev)
+        A = Bidiagonal(dv, ev, which="L")
 
         ! Solve with a singe right-hand side vector.
         block
@@ -174,7 +174,7 @@ contains
         "Lower-bidiagonal solve with a single rhs failed.")
         if (allocated(error)) return
 
-        A%which = "U"
+        A = Bidiagonal(dv, ev, which="U")
         ! Solve with SpecialMatrices.
         x = solve(A, b)
         ! Solve with stdlib (dense).
@@ -198,7 +198,7 @@ contains
         "Upper-bidiagonal solve with multiple rhs failed.")
         if(allocated(error)) return
 
-        A%which = "L"
+        A = Bidiagonal(dv, ev, which="L")
         ! Solve with SpecialMatrices.
         x = solve(A, b)
         ! Solve with stdlib (dense).
