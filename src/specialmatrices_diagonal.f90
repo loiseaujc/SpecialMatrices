@@ -22,7 +22,7 @@ contains
 
    module procedure construct_constant_diag
       ! Utility function to construct a `Diagonal` matrix with constant diagonal element.
-      integer :: i
+      integer(ilp) :: i
       A%n = n; A%dv = [(d, i=1, n)]
    end procedure construct_constant_diag
 
@@ -38,7 +38,7 @@ contains
    module procedure diag_spmv
       ! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
       ! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
-      integer :: i
+      integer(ilp) :: i
       allocate(y, mold=x)
       do concurrent(i=1:size(x))
          y(i) = A%dv(i) * x(i)
@@ -48,7 +48,7 @@ contains
    module procedure diag_multi_spmv
       ! Utility function to compute the matrix-vector product \( y = A x \) where \( A \)
       ! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
-      integer :: i, j
+      integer(ilp) :: i, j
       allocate(Y, mold=X)
       do concurrent(i=1:size(X, 1), j=1:size(X, 2))
          Y(i, j) = A%dv(i) * X(i, j)
@@ -63,7 +63,7 @@ contains
       ! Utility function to solve the linear system \( A x = b \) where \( A \) is of
       ! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
       ! with the same type and dimension of `b`.
-      integer :: i, n
+      integer(ilp) :: i, n
       allocate(x, mold=b)
       do concurrent(i=1:A%n)
          x(i) = b(i) / A%dv(i)
@@ -92,7 +92,7 @@ contains
 
    module procedure diag_to_dense
       ! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
-      integer :: i
+      integer(ilp) :: i
       B = 0.0_dp
       do concurrent(i=1:A%n)
          B(i, i) = A%dv(i)

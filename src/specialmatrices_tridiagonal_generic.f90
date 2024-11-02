@@ -39,7 +39,7 @@ contains
    module procedure tridiag_spmv
       !! Utility procedure to compute the matrix-vector product \( y = Ax \) where \( A \)
       !! is of `Tridiagonal` type and `x` and `y` are both rank-1 arrays.
-      integer :: i, n
+      integer(ilp) :: i, n
       n = size(x); allocate(y, mold=x)
       y(1) = A%d(1)*x(1) + A%du(1)*x(2)
       do concurrent(i=2:n - 1)
@@ -66,7 +66,7 @@ contains
       !! Utility procedure to solve the linear system \( Ax = b \) where \( A \) is of
       !! `Tridiagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
       !! with the same type and dimension as `b`.
-      integer :: i, n, nrhs, info
+      integer(ilp) :: i, n, nrhs, info
       real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
       ! Initialize arrays.
       n = A%n; dl = A%dl; d = A%d; du = A%du; b_(:, 1) = b ; nrhs = 1
@@ -80,7 +80,7 @@ contains
       !! Utility procedure to solve a linear system with multiple right-hand sides where
       !! \( A \) is of `Tridiagonal` type and `B` a rank-2 array. The solution `X` is also
       !! a rank-2 array with the same type and dimensions as `B`.
-      integer :: i, n, nrhs, info
+      integer(ilp) :: i, n, nrhs, info
       real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
       ! Initialize arrays.
       n = A%n; dl = A%dl; d = A%d; du = A%du; nrhs = size(B, 2); X = B
@@ -98,7 +98,7 @@ contains
 
    module procedure tridiag_to_dense
       !! Utility procedure to convert a `Tridiagonal` matrix to a regular rank-2 array.
-      integer :: i, n
+      integer(ilp) :: i, n
       n = A%n; B = 0.0_dp
       B(1, 1) = A%d(1); B(1, 2) = A%du(1)
       do concurrent(i=2:n - 1)

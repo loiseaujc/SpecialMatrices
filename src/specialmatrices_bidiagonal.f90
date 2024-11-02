@@ -22,7 +22,7 @@ contains
 
    module procedure construct_constant_bidiag
       !! Utility procedure to construct a `Bidiagonal` matrix with constant elements.
-      integer :: i
+      integer(ilp) :: i
       A%n = n; A%which = optval(which, "L")
       A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n-1)]
    end procedure construct_constant_bidiag
@@ -61,7 +61,7 @@ contains
 
    module procedure bidiag_solve
       real(dp) :: dl(A%n-1), dv(A%n), du(A%n-1), b_(A%n, 1)
-      integer :: n, nrhs, info
+      integer(ilp) :: n, nrhs, info
       ! Initialize array.
       n = A%n; b_(:, 1) = b; nrhs = 1; dv = A%dv
       ! Dispatch based on upper- or lower-bidiagonal.
