@@ -21,6 +21,7 @@ module SpecialMatrices_Tridiagonal
    type, public :: Diagonal
       !! Base type used to define a `Diagonal` matrix of size [n x n] with diagonal given by the
       !! rank-1 array `dv`.
+      private
       integer(ilp) :: n
       !! Dimension of the matrix.
       real(dp), allocatable :: dv(:)
@@ -31,6 +32,7 @@ module SpecialMatrices_Tridiagonal
       !! Base type used to define a `Bidiagonal` matrix of size [n x n] with diagonals given by
       !! the rank-1 arrays `dv` and `ev`. The character `which` determines whether `ev` defines the
       !! sub-diagonal (`which = "L"`, default) or the super-diagonal (`which = "U"`).
+      private
       integer(ilp) :: n
       !! Dimension of the matrix.
       real(dp), allocatable :: dv(:), ev(:)
@@ -42,6 +44,7 @@ module SpecialMatrices_Tridiagonal
    type, public :: Tridiagonal
       !! Base type used to define a `Tridiagonal` matrix of size [n x n] with diagonal elements
       !! given by the rank-1 arrays `dl` (sub-diagonal), `d` (diagonal) and `du` (super-diagonal).
+      private
       integer(ilp) :: n
       !! Dimension of the matrix.
       real(dp), allocatable :: d(:), du(:), dl(:)
@@ -51,6 +54,7 @@ module SpecialMatrices_Tridiagonal
    type, public :: SymTridiagonal
       !! Base type used to define a `SymTridiagonal` matrix of size [n x n] with diagonal elements
       !! given by the rank-1 arrays `dv` (diagonal) and `ev` (sub- and super-diagonal).
+      private
       integer(ilp) :: n
       !! Dimension of the matrix.
       real(dp), allocatable :: dv(:), ev(:)
