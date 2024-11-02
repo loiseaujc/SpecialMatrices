@@ -596,7 +596,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
-         real(dp) :: x(size(b))
+         real(dp), allocatable :: x(:)
          !! Solution vector.
       end function bidiag_solve
 
@@ -608,7 +608,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hand side vectors.
-         real(dp) :: X(size(B, 1), size(B, 2))
+         real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function bidiag_multi_solve
 
@@ -622,7 +622,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
-         real(dp) :: x(size(b))
+         real(dp), allocatable :: x(:)
          !! Solution vector.
       end function tridiag_solve
 
@@ -634,7 +634,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hand side vectors.
-         real(dp) :: X(size(B, 1), size(B, 2))
+         real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function tridiag_multi_solve
 
@@ -648,7 +648,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hande side vector.
-         real(dp) :: x(size(b))
+         real(dp), allocatable :: x(:)
          !! Solution vector.
       end function symtridiag_solve
 
@@ -660,7 +660,7 @@ module SpecialMatrices_Tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hand side vectors.
-         real(dp) :: X(size(B, 1), size(B, 2))
+         real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function symtridiag_multi_solve
    end interface

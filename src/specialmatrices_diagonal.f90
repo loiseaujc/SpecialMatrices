@@ -64,7 +64,7 @@ contains
       ! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
       ! with the same type and dimension of `b`.
       integer :: i, n
-      if (.not. allocated(x)) allocate(x, mold=b)
+      allocate(x, mold=b)
       do concurrent(i=1:A%n)
          x(i) = b(i) / A%dv(i)
       enddo
@@ -76,7 +76,7 @@ contains
       ! with the same type and dimensions as `B`.
       integer(ilp) :: i, j
       real(dp) :: inv_dv(A%n)
-      if (.not. allocated(X)) allocate(X, mold=B); inv_dv = 1.0_dp / A%dv
+      allocate(X, mold=B); inv_dv = 1.0_dp / A%dv
       do concurrent(i=1:A%n, j=1:size(B, 2))
          X(i, j) = B(i, j) * inv_dv(i)
       enddo
