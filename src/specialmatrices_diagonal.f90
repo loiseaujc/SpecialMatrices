@@ -39,6 +39,7 @@ contains
       ! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
       ! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
       integer :: i
+      allocate(y, mold=x)
       do concurrent(i=1:size(x))
          y(i) = A%dv(i) * x(i)
       enddo
@@ -48,6 +49,7 @@ contains
       ! Utility function to compute the matrix-vector product \( y = A x \) where \( A \)
       ! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
       integer :: i, j
+      allocate(Y, mold=X)
       do concurrent(i=1:size(X, 1), j=1:size(X, 2))
          Y(i, j) = A%dv(i) * X(i, j)
       enddo

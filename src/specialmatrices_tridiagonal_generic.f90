@@ -40,7 +40,8 @@ contains
       !! Utility procedure to compute the matrix-vector product \( y = Ax \) where \( A \)
       !! is of `Tridiagonal` type and `x` and `y` are both rank-1 arrays.
       integer :: i, n
-      n = size(x); y(1) = A%d(1)*x(1) + A%du(1)*x(2)
+      n = size(x); allocate(y, mold=x)
+      y(1) = A%d(1)*x(1) + A%du(1)*x(2)
       do concurrent(i=2:n - 1)
          y(i) = A%dl(i-1)*x(i - 1) + A%d(i)*x(i) + A%du(i)*x(i + 1)
       end do
@@ -51,6 +52,7 @@ contains
       !! Utility procedure to compute the matrix-matrix product \( Y = AX \) where \( A \)
       !!  is of `Tridiagonal` type and `X` and `Y` are both rank-2 arrays.
       integer(ilp) :: i
+      allocate(Y, mold=X)
       do concurrent(i=1:size(X, 2))
          Y(:, i) = tridiag_spmv(A, X(:, i))
       end do

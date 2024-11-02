@@ -457,7 +457,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
-         real(dp) :: y(size(x))
+         real(dp), allocatable :: y(:)
          !! Output vector.
       end function diag_spmv
 
@@ -468,7 +468,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input matrix (rank-2 array).
-         real(dp) :: Y(size(X, 1), size(X, 2))
+         real(dp), allocatable :: Y(:, :)
          !! Output matrix (rank-2 array).
       end function diag_multi_spmv
 
@@ -479,7 +479,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
-         real(dp) :: y(size(x))
+         real(dp), allocatable :: y(:)
          !! Output vector.
       end function bidiag_spmv
 
@@ -490,7 +490,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input matrix (rank-2 array).
-         real(dp) :: Y(size(X, 1), size(X, 2))
+         real(dp), allocatable :: Y(:, :)
          !! Output matrix (rank-2 array).
       end function bidiag_multi_spmv
 
@@ -501,7 +501,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
-         real(dp) :: y(size(x))
+         real(dp), allocatable :: y(:)
          !! Output vector.
       end function tridiag_spmv
 
@@ -512,7 +512,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input matrix (rank-2 array).
-         real(dp) :: Y(size(X, 1), size(X, 2))
+         real(dp), allocatable :: Y(:, :)
          !! Output matrix (rank-2 array).
       end function tridiag_multi_spmv
 
@@ -523,7 +523,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
-         real(dp) :: y(size(x))
+         real(dp), allocatable :: y(:)
          !! Output vector.
       end function symtridiag_spmv
 
@@ -532,7 +532,7 @@ module SpecialMatrices_Tridiagonal
          !! is of `SymTridiagonal` type and `X` and `Y` are both rank-2 arrays.
          type(SymTridiagonal), intent(in) :: A
          real(dp), intent(in) :: X(:, :)
-         real(dp) :: Y(size(X, 1), size(X, 2))
+         real(dp), allocatable :: Y(:, :)
       end function symtridiag_multi_spmv
    end interface
 

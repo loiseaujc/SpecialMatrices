@@ -28,7 +28,8 @@ contains
 
    module procedure symtridiag_spmv
      integer :: i, n
-      n = size(x); y(1) = A%dv(1)*x(1) + A%ev(1)*x(2)
+      n = size(x); allocate(y, mold=x)
+      y(1) = A%dv(1)*x(1) + A%ev(1)*x(2)
       do concurrent (i=2:n-1)
          y(i) = A%ev(i-1)*x(i-1) + A%dv(i)*x(i) + A%ev(i)*x(i+1)
       enddo
@@ -37,6 +38,7 @@ contains
 
    module procedure symtridiag_multi_spmv
      integer(ilp) :: i
+      allocate(Y, mold=X)
       do concurrent(i=1:size(X,2))
          Y(:, i) = symtridiag_spmv(A, X(:, i))
       enddo

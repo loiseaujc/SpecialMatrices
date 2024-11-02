@@ -33,7 +33,7 @@ contains
 
    module procedure bidiag_spmv
       integer(ilp) :: i, n
-      n = size(x)
+      n = size(x); allocate(y, mold=x)
       if (A%which == "L") then
          y(1) = A%dv(1) * x(1)
          do concurrent (i=2:n)
@@ -49,7 +49,7 @@ contains
 
    module procedure bidiag_multi_spmv
       integer(ilp) :: i, n
-      n = size(x)
+      n = size(x); allocate(Y, mold=X)
       do concurrent (i=1:size(X, 2))
          Y(:, i) = bidiag_spmv(A, X(:, i))
       enddo
