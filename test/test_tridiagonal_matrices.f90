@@ -31,7 +31,8 @@ contains
                     new_unittest("Tridiagonal matmul", test_tridiagonal_matmul),  &
                     new_unittest("Tridiagonal linear solver", test_tridiagonal_solve),  &
                     new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul),  &
-                    new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve)  &
+                    new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve),  &
+                    new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_symtridiagonal_solve)  &
                     ]
         return
     end subroutine collect_diagonal_testsuite
@@ -358,5 +359,43 @@ contains
 
         return
     end subroutine test_symtridiagonal_solve
+
+    subroutine test_posdef_symtridiagonal_solve(error)
+        type(error_type), allocatable, intent(out) :: error
+        type(SymTridiagonal) :: A
+
+        ! Initialize matrix.
+        A = SymTridiagonal(2.0_dp, -1.0_dp, n, .true.)
+
+        ! Solve with a single right-hand side vector.
+        block
+        real(dp) :: x(n), x_stdlib(n), b(n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Pos. def. SymTridiagonal solve with a single rhs failed.")
+        if (allocated(error)) return
+        end block
+
+        block
+        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        ! Random rhs.
+        call random_number(b)
+        ! Solve with SpecialMatrices.
+        x = solve(A, b)
+        ! Solve with stdlib (dense).
+        x_stdlib = solve(dense(A), b)
+        ! Check error.
+        call check(error, all_close(x, x_stdlib), &
+        "Pos. def. SymTridiagonal solve with multiple rhs failed.")
+        end block
+
+        return
+    end subroutine test_posdef_symtridiagonal_solve
 
 end module

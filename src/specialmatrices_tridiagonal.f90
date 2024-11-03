@@ -59,6 +59,8 @@ module SpecialMatrices_Tridiagonal
       !! Dimension of the matrix.
       real(dp), allocatable :: dv(:), ev(:)
       !! Tridiagonal elements.
+      logical :: isposdef
+      !! Whether `A` is symmetric positive definite or not.
    end type
 
    !--------------------------------
@@ -401,20 +403,24 @@ module SpecialMatrices_Tridiagonal
          !! Corresponding symmetric tridiagonal matrix.
       end function initialize_symtridiag
 
-      pure module function construct_symtridiag(dv, ev) result(A)
+      pure module function construct_symtridiag(dv, ev, isposdef) result(A)
          !! Utility function to create a `SymTridiagonal` matrix from rank-1 arrays.
          real(dp), intent(in) :: dv(:), ev(:)
          !! Diagonal elements of the matrix.
+         logical, optional, intent(in) :: isposdef
+         !! Whether `A` is symmetric positive definite or not.
          type(SymTridiagonal) :: A
          !! Corresponding symmetric tridiagonal matrix.
       end function construct_symtridiag
 
-      pure module function construct_constant_symtridiag(d, e, n) result(A)
+      pure module function construct_constant_symtridiag(d, e, n, isposdef) result(A)
          !! Utility function to create a `SymTridiagonal` matrix with constant diagonal elements.
          real(dp), intent(in) :: d, e
          !! Constant diagonal elements of the matrix.
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
+         logical, optional, intent(in) :: isposdef
+         !! Whether `A` is symmetric positive definite or not.
          type(SymTridiagonal) :: A
          !! Corresponding symmetric tridiagonal matrix.
       end function construct_constant_symtridiag
