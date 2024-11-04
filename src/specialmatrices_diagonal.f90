@@ -55,6 +55,22 @@ contains
    end do
    end procedure diag_multi_spmv
 
+   module procedure diag_spmv_ip
+   integer(ilp) :: i
+   do concurrent(i=1:size(x))
+      y(i) = A%dv(i)*x(i)
+   end do
+   return
+   end procedure diag_spmv_ip
+
+   module procedure diag_multi_spmv_ip
+   integer(ilp) :: i, j
+   do concurrent(i=1:size(X, 1), j=1:size(X, 2))
+      Y(i, j) = A%dv(i)*X(i, j)
+   end do
+   return
+   end procedure diag_multi_spmv_ip
+
    !----------------------------------
    !-----     Linear Algebra     -----
    !----------------------------------
@@ -94,7 +110,7 @@ contains
 
    module procedure diag_inv
    ! Utility function to compute the inverse of a `Diagonal` matrix \( A \).
-   B = dense(Diagonal(1.0_dp / A%dv))
+   B = dense(Diagonal(1.0_dp/A%dv))
    end procedure diag_inv
 
    !------------------------------------
@@ -104,7 +120,7 @@ contains
    module procedure diag_to_dense
    ! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
    integer(ilp) :: i
-   allocate(B(A%n, A%n)); B = 0.0_dp
+   allocate (B(A%n, A%n)); B = 0.0_dp
    do concurrent(i=1:A%n)
       B(i, i) = A%dv(i)
    end do

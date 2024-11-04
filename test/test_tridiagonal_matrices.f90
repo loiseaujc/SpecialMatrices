@@ -31,6 +31,7 @@ contains
                   new_unittest("Diagonal determinant", test_diagonal_det), &
                   new_unittest("Diagonal inverse", test_diagonal_inv), &
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
+                  new_unittest("Diagonal in-place matmul", test_diagonal_spmv_ip), &
                   new_unittest("Diagonal linear solver", test_diagonal_solve) &
                   ]
       return
@@ -107,6 +108,36 @@ contains
       end block
       return
    end subroutine test_diagonal_matmul
+
+   subroutine test_diagonal_spmv_ip(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+
+      ! Matrix-vector product.
+      block
+         real(dp), allocatable :: x(:), y(:), y_dense(:)
+         allocate (x(n), y(n)); call random_number(x)
+         call spmv_ip(y, A, x); y_dense = matmul(dense(A), x)
+         call check(error, all_close(y, y_dense), &
+                    "in-place Diagonal matrix-vector product failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Matrix-matrix product.
+      block
+         real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+         allocate (x(n, n), y(n, n))
+         call random_number(x)
+         call spmv_ip(y, A, x); y_dense = matmul(dense(A), x)
+         call check(error, all_close(y, y_dense), &
+                    "in-place Diagonal matrix-matrix product failed.")
+      end block
+      return
+   end subroutine test_diagonal_spmv_ip
 
    subroutine test_diagonal_solve(error)
       type(error_type), allocatable, intent(out) :: error

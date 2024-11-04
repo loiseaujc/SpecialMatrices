@@ -20,7 +20,7 @@ module SpecialMatrices
    public :: det
    public :: trace
    public :: inv
-   public :: matmul
+   public :: matmul, spmv_ip
    public :: solve
 
    !-------------------------------------

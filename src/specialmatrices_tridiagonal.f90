@@ -9,7 +9,7 @@ module SpecialMatrices_Tridiagonal
    public :: det
    public :: trace
    public :: inv
-   public :: matmul
+   public :: matmul, spmv_ip
    public :: solve
 
    ! --> Utility functions.
@@ -528,6 +528,30 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_multi_spmv
    end interface
 
+   interface spmv_ip
+      module subroutine diag_spmv_ip(y, A, x)
+         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
+         !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays. Note that this
+         !! function performs this product in-place, i.e. `y` needs to be pre-allocated and
+         !! will be modified by the call.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(in) :: x(:)
+         !! Input vector.
+         real(dp), intent(out) :: y(:)
+         !! Output vector.
+      end subroutine diag_spmv_ip
+
+      module subroutine diag_multi_spmv_ip(Y, A, X)
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(in) :: X(:, :)
+         !! Input vectors.
+         real(dp), intent(out) :: Y(:, :)
+         !! Output vectors.
+      end subroutine diag_multi_spmv_ip
+   end interface
+
    !----------------------------------
    !-----     Linear Algebra     -----
    !----------------------------------
@@ -843,7 +867,7 @@ module SpecialMatrices_Tridiagonal
          !! Input matrix.
          integer(ilp), intent(in) :: dim
          !! Dimension whose size needs to be known.
-         integer(ilp) :: arr_size 
+         integer(ilp) :: arr_size
       end function diag_size
    end interface
 
