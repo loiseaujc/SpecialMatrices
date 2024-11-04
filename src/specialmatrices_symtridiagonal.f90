@@ -100,6 +100,11 @@ contains
    module procedure symtridiag_shape
    shape(2) = A%n
    end procedure symtridiag_shape
+   
+   module procedure symtridiag_size
+   ! Utility function to get the size of a `SymTridiagonal` matrix along a given dimension.
+   arr_size = A%n
+   end procedure symtridiag_size
 
    module procedure symtridiag_scalar_multiplication
    B = A; B%dv = alpha*A%dv; B%ev = alpha*A%ev

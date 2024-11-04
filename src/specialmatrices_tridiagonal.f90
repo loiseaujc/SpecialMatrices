@@ -1083,6 +1083,15 @@ module SpecialMatrices_Tridiagonal
          !! Dimension whose size needs to be known.
          integer(ilp) :: arr_size
       end function diag_size
+
+      pure module function symtridiag_size(A, dim) result(arr_size)
+         !! Utility function to return the size of a `Diagonal` matrix along a given dimension.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         integer(ilp), intent(in) :: dim
+         !! Dimension whose size needs to be known.
+         integer(ilp) :: arr_size
+      end function symtridiag_size
    end interface
 
    interface shape
