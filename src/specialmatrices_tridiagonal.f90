@@ -3,7 +3,7 @@ module SpecialMatrices_Tridiagonal
    use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling
    implicit none
    private
-   
+
    ! --> Linear Algebra.
    public :: transpose
    public :: matmul
@@ -157,10 +157,6 @@ module SpecialMatrices_Tridiagonal
       end function construct_dense_to_diag
    end interface
 
-
-
-
-
    interface Bidiagonal
       !! This interface provides different methods to construct a `Bidiagonal` matrix.
       !! Only `double precision` is supported currently. Only the non-zero elements of
@@ -242,9 +238,6 @@ module SpecialMatrices_Tridiagonal
          !! Corresponding bidiagonal matrix.
       end function construct_constant_bidiag
    end interface
-
-
-
 
    interface Tridiagonal
       !! This interface provides different methods to construct a `Tridiagonal` matrix.
@@ -340,10 +333,6 @@ module SpecialMatrices_Tridiagonal
       end function construct_dense_to_tridiag
    end interface
 
-
-
-
-
    interface SymTridiagonal
       !! This interface provides different methods to construct a `SymTridiagonal` matrix.
       !! Only `double precision` is supported currently. Only the non-zero elements of
@@ -434,7 +423,7 @@ module SpecialMatrices_Tridiagonal
       !!
       !! The intrinsic `matmul` is overloaded both for matrix-vector and matrix-matrix products.
       !! For a matrix-matrix product \( C = AB \), only the matrix \( A \) has to be of the ones
-      !! of the types defined by `SpecialMatrices`. Both \( B \) and \( C \) need to be standard 
+      !! of the types defined by `SpecialMatrices`. Both \( B \) and \( C \) need to be standard
       !! Fortran rank-2 arrays. All the underlying functions are defined as `pure`.
       !!
       !! #### Syntax
@@ -548,7 +537,7 @@ module SpecialMatrices_Tridiagonal
       !! #### Syntax
       !!
       !! To solve a system with \( A \) being of one of the types defined by `SpecialMatrices`:
-      !! 
+      !!
       !! ```fortran
       !!    y = solve(A, x)
       !! ```
@@ -586,7 +575,6 @@ module SpecialMatrices_Tridiagonal
          !! Solution vectors.
       end function diag_multi_solve
 
-
       ! Bidiagonal matrix solve.
       pure module function bidiag_solve(A, b) result(x)
          !! Utility function to solve a linear system \( Ax = b \) where \( A \) is of
@@ -612,7 +600,6 @@ module SpecialMatrices_Tridiagonal
          !! Solution vectors.
       end function bidiag_multi_solve
 
-      
       ! Tridiagonal matrix solve.
       pure module function tridiag_solve(A, b) result(x)
          !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
@@ -638,7 +625,6 @@ module SpecialMatrices_Tridiagonal
          !! Solution vectors.
       end function tridiag_multi_solve
 
-      
       ! Symmetric Tridiagonal matrix solve.
       pure module function symtridiag_solve(A, b) result(x)
          !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
@@ -664,9 +650,6 @@ module SpecialMatrices_Tridiagonal
          !! Solution vectors.
       end function symtridiag_multi_solve
    end interface
-
-
-
 
    interface eig
       !! This interface overloads the `eig` interface from `stdlib_linalg` for solving a
@@ -754,10 +737,6 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_to_dense
    end interface
 
-
-
-
-
    interface transpose
       !! This interface overloads the Fortran `intrinsic` procedure to define the transpose
       !! operation for the various types defined in `SpecialMatrices`.
@@ -810,10 +789,6 @@ module SpecialMatrices_Tridiagonal
          !! Transpose of the original matrix.
       end function symtridiag_transpose
    end interface
-
-
-
-
 
    interface shape
       !! This interface provides methods to access the shape of a matrix \( A \) of one of
