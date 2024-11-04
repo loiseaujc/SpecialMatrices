@@ -88,6 +88,23 @@ contains
    return
    end procedure symtridiag_multi_spmv_ip
 
+   module procedure symtridiag_eigvalsh
+      call symtridiag_eigh_driver(A, lambda)
+   end procedure symtridiag_eigvalsh
+
+   module procedure symtridiag_eigh
+      call symtridiag_eigh_driver(A, lambda, vectors)
+   end procedure symtridiag_eigh
+
+   subroutine symtridiag_eigh_driver(A, lambda, vectors)
+      type(SymTridiagonal), intent(in) :: A
+      real(dp), allocatable, intent(out) :: lambda(:)
+      real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+
+      ! Local variables.
+      return
+   end subroutine symtridiag_eigh_driver
+
    !----------------------------------
    !-----     Linear Algebra     -----
    !----------------------------------

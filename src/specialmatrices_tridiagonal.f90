@@ -972,6 +972,14 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
       end function diag_eigvalsh
+
+      module function symtridiag_eigvalsh(A) result(lambda)
+         !! Utility function to compute the eigenvalues of a `SymTridiagonal` matrix.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), allocatable :: lambda(:)
+         !! Eigenvalues.
+      end function symtridiag_eigvalsh
    end interface
 
    interface eigh
@@ -1004,6 +1012,16 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable, optional, intent(out) :: vectors(:, :)
          !! Eigenvectors.
       end subroutine diag_eigh
+
+      module subroutine symtridiag_eigh(A, lambda, vectors)
+         !! Utility function to compute the eigenvalues and eigenvectors of a `SymTridiagonal` matrix.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), allocatable, intent(out) :: lambda(:)
+         !! Eigenvalues.
+         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+         !! Eigenvectors.
+      end subroutine symtridiag_eigh
    end interface
 
    !-------------------------------------
