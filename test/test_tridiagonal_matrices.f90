@@ -89,7 +89,7 @@ contains
       ! Matrix-vector product.
       block
          real(dp), allocatable :: x(:), y(:), y_dense(:)
-         allocate (x(n), y(n), y_dense(n)); call random_number(x)
+         allocate (x(n)); call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
                     "Diagonal matrix-vector product failed.")
@@ -99,7 +99,7 @@ contains
       ! Matrix-matrix product.
       block
          real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
-         allocate (x(n, n), y(n, n), y_dense(n, n))
+         allocate (x(n, n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -119,7 +119,7 @@ contains
       ! Solve with a single right-hand side vector.
       block
          real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-         allocate (x(n), x_stdlib(n), b(n))
+         allocate (b(n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -135,7 +135,7 @@ contains
       ! Solve with multiple right-hand side vectors.
       block
          real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-         allocate (x(n, n), x_stdlib(n, n), b(n, n))
+         allocate (b(n, n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -176,7 +176,7 @@ contains
       ! Matrix-vector product with A lower bidiagonal.
       block
          real(dp), allocatable :: x(:), y(:), y_dense(:)
-         allocate (x(n), y(n), y_dense(n))
+         allocate (x(n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -193,7 +193,7 @@ contains
       ! Matrix-matrix product with A upper bidiagonal.
       block
          real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
-         allocate (x(n, n), y(n, n), y_dense(n, n))
+         allocate (x(n, n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -221,7 +221,7 @@ contains
       ! Solve with a singe right-hand side vector.
       block
          real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-         allocate (x(n), x_stdlib(n), b(n))
+         allocate (b(n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -246,7 +246,7 @@ contains
 
       block
          real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-         allocate (x(n, n), x_stdlib(n, n), b(n, n))
+         allocate (b(n, n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -298,7 +298,7 @@ contains
       ! Matrix-vector product.
       block
          real(dp), allocatable :: x(:), y(:), y_dense(:)
-         allocate (x(n), y(n), y_dense(n))
+         allocate (x(n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -309,7 +309,7 @@ contains
       ! Matrix-matrix product.
       block
          real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
-         allocate (x(n, n), y(n, n), y_dense(n, n))
+         allocate (x(n, n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -331,7 +331,7 @@ contains
       ! Solve with a singe right-hand side vector.
       block
          real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-         allocate (x(n), x_stdlib(n), b(n))
+         allocate (b(n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -346,7 +346,7 @@ contains
 
       block
          real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-         allocate (x(n, n), x_stdlib(n, n), b(n, n))
+         allocate (b(n, n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -387,7 +387,7 @@ contains
       ! Matrix-vector product.
       block
          real(dp), allocatable :: x(:), y(:), y_dense(:)
-         allocate (x(n), y(n), y_dense(n))
+         allocate (x(n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -420,7 +420,7 @@ contains
       ! Solve with a singe right-hand side vector.
       block
          real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-         allocate (x(n), x_stdlib(n), b(n))
+         allocate (b(n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
@@ -435,7 +435,7 @@ contains
 
       block
          real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-         allocate (x(n, n), x_stdlib(n, n), b(n, n))
+         allocate (b(n, n))
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
