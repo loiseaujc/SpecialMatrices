@@ -753,7 +753,7 @@ module SpecialMatrices_Tridiagonal
          !! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
          type(Diagonal), intent(in) :: A
          !! Input diagonal matrix.
-         real(dp) :: B(A%n, A%n)
+         real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
       end function diag_to_dense
 

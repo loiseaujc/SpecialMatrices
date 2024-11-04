@@ -104,7 +104,7 @@ contains
    module procedure diag_to_dense
    ! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
    integer(ilp) :: i
-   B = 0.0_dp
+   allocate(B(A%n, A%n)); B = 0.0_dp
    do concurrent(i=1:A%n)
       B(i, i) = A%dv(i)
    end do
