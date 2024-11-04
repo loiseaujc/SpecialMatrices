@@ -540,6 +540,7 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
+                  new_unittest("SymTridiagonal scalar multiplication", test_symtridiagonal_scalar_multiplication), &
                   new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
                   new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve), &
                   new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_symtridiagonal_solve) &
@@ -660,5 +661,31 @@ contains
 
       return
    end subroutine test_posdef_symtridiagonal_solve
+
+   subroutine test_symtridiagonal_scalar_multiplication(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A, B
+      real(dp), allocatable :: dv(:), ev(:)
+      real(dp) :: alpha
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
+      A = SymTriDiagonal(dv, ev)
+      call random_number(alpha)
+
+      ! Scalar-matrix multiplication.
+      B = alpha*A
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "alpha*SymTridiagonal failed.")
+      if (allocated(error)) return
+
+      ! Matrix-scalar multipliation.
+      B = A*alpha
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "SymTridiagonal*alpha failed.")
+      return
+   end subroutine test_symtridiagonal_scalar_multiplication
 
 end module

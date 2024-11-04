@@ -101,4 +101,13 @@ contains
    shape(2) = A%n
    end procedure symtridiag_shape
 
+   module procedure symtridiag_scalar_multiplication
+   B = A; B%dv = alpha*A%dv; B%ev = alpha*A%ev
+   if (alpha <= 0.0_dp) B%isposdef = .false.
+   end procedure symtridiag_scalar_multiplication
+
+   module procedure symtridiag_scalar_multiplication_bis
+   B = symtridiag_scalar_multiplication(alpha, A)
+   end procedure symtridiag_scalar_multiplication_bis
+
 end submodule SymmetricTridiagonal

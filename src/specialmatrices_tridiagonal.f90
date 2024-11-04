@@ -1137,10 +1137,24 @@ module SpecialMatrices_Tridiagonal
 
       pure module function diag_scalar_multiplication_bis(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a `Diagonal` matrix.
-         real(dp), intent(in) :: alpha
          type(Diagonal), intent(in) :: A
+         real(dp), intent(in) :: alpha
          type(Diagonal) :: B
       end function diag_scalar_multiplication_bis
+
+      pure module function symtridiag_scalar_multiplication(alpha, A) result(B)
+         !! Utility function to perform a scalar multiplication with a `SymTridiagonal` matrix.
+         real(dp), intent(in) :: alpha
+         type(SymTridiagonal), intent(in) :: A
+         type(SymTridiagonal) :: B
+      end function symtridiag_scalar_multiplication
+
+      pure module function symtridiag_scalar_multiplication_bis(A, alpha) result(B)
+         !! Utility function to perform a scalar multiplication with a `SymTridiagonal` matrix.
+         type(SymTridiagonal), intent(in) :: A
+         real(dp), intent(in) :: alpha
+         type(SymTridiagonal) :: B
+      end function symtridiag_scalar_multiplication_bis
    end interface
 
 contains
