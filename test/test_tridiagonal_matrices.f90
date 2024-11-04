@@ -27,6 +27,7 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
+                  new_unittest("Diagonal scalar multiplication", test_diagonal_scalar_multiplication), &
                   new_unittest("Diagonal trace", test_diagonal_trace), &
                   new_unittest("Diagonal determinant", test_diagonal_det), &
                   new_unittest("Diagonal inverse", test_diagonal_inv), &
@@ -41,6 +42,31 @@ contains
                   ]
       return
    end subroutine collect_diagonal_testsuite
+
+   subroutine test_diagonal_scalar_multiplication(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A, B
+      real(dp), allocatable :: dv(:)
+      real(dp) :: alpha
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+      call random_number(alpha)
+
+      ! Scalar-matrix multiplication.
+      B = alpha*A
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "alpha*Diagonal failed.")
+      if (allocated(error)) return
+
+      ! Matrix-scalar multipliation.
+      B = A*alpha
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "Diagonal*alpha failed.")
+      return
+   end subroutine test_diagonal_scalar_multiplication
 
    subroutine test_diagonal_trace(error)
       type(error_type), allocatable, intent(out) :: error
@@ -516,7 +542,7 @@ contains
       testsuite = [ &
                   new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
                   new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve), &
-                  new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_symtridiagonal_solve)  &                  
+                  new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_symtridiagonal_solve) &
                   ]
       return
    end subroutine collect_symtridiagonal_testsuite
@@ -597,42 +623,42 @@ contains
       return
    end subroutine test_symtridiagonal_solve
 
-    subroutine test_posdef_symtridiagonal_solve(error)
-        type(error_type), allocatable, intent(out) :: error
-        type(SymTridiagonal) :: A
+   subroutine test_posdef_symtridiagonal_solve(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
 
-        ! Initialize matrix.
-        A = SymTridiagonal(2.0_dp, -1.0_dp, n, .true.)
+      ! Initialize matrix.
+      A = SymTridiagonal(2.0_dp, -1.0_dp, n, .true.)
 
-        ! Solve with a single right-hand side vector.
-        block
-        real(dp) :: x(n), x_stdlib(n), b(n)
-        ! Random rhs.
-        call random_number(b)
-        ! Solve with SpecialMatrices.
-        x = solve(A, b)
-        ! Solve with stdlib (dense).
-        x_stdlib = solve(dense(A), b)
-        ! Check error.
-        call check(error, all_close(x, x_stdlib), &
-        "Pos. def. SymTridiagonal solve with a single rhs failed.")
-        if (allocated(error)) return
-        end block
+      ! Solve with a single right-hand side vector.
+      block
+         real(dp) :: x(n), x_stdlib(n), b(n)
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "Pos. def. SymTridiagonal solve with a single rhs failed.")
+         if (allocated(error)) return
+      end block
 
-        block
-        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
-        ! Random rhs.
-        call random_number(b)
-        ! Solve with SpecialMatrices.
-        x = solve(A, b)
-        ! Solve with stdlib (dense).
-        x_stdlib = solve(dense(A), b)
-        ! Check error.
-        call check(error, all_close(x, x_stdlib), &
-        "Pos. def. SymTridiagonal solve with multiple rhs failed.")
-        end block
+      block
+         real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "Pos. def. SymTridiagonal solve with multiple rhs failed.")
+      end block
 
-        return
-    end subroutine test_posdef_symtridiagonal_solve
+      return
+   end subroutine test_posdef_symtridiagonal_solve
 
 end module

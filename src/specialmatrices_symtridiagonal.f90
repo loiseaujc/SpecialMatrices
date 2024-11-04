@@ -10,17 +10,17 @@ contains
    !--------------------------------
 
    module procedure initialize_symtridiag
-      A%n = n; allocate(A%dv(n), A%ev(n-1))
-      A%dv = 0.0_dp; A%ev = 0.0_dp; A%isposdef = .false.
+   A%n = n; allocate (A%dv(n), A%ev(n - 1))
+   A%dv = 0.0_dp; A%ev = 0.0_dp; A%isposdef = .false.
    end procedure initialize_symtridiag
 
    module procedure construct_symtridiag
-      A%n = size(dv); A%dv = dv; A%ev = ev; A%isposdef = optval(isposdef, .false.)
+   A%n = size(dv); A%dv = dv; A%ev = ev; A%isposdef = optval(isposdef, .false.)
    end procedure construct_symtridiag
 
    module procedure construct_constant_symtridiag
-      integer(ilp) :: i
-      A%n = n; A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n-1)]; A%isposdef = optval(isposdef, .false.)
+   integer(ilp) :: i
+   A%n = n; A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n - 1)]; A%isposdef = optval(isposdef, .false.)
    end procedure construct_constant_symtridiag
 
    !------------------------------------------------------------
@@ -50,31 +50,31 @@ contains
    !----------------------------------
 
    module procedure symtridiag_solve
-      integer(ilp) :: i, n, nrhs, info
-      real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
-      ! Initialize arrays.
-      n = A%n; dl = A%ev; d = A%dv; du = A%ev; b_(:, 1) = b ; nrhs = 1
-      ! Solve the system.
-      if (A%isposdef) then
-         call ptsv(n, nrhs, d, du, b_, n, info)
-      else
-         call gtsv(n, nrhs, dl, d, du, b_, n, info)
-      endif
-      ! Return the solution.
-      x = b_(:, 1)
+   integer(ilp) :: i, n, nrhs, info
+   real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1), b_(A%n, 1)
+   ! Initialize arrays.
+   n = A%n; dl = A%ev; d = A%dv; du = A%ev; b_(:, 1) = b; nrhs = 1
+   ! Solve the system.
+   if (A%isposdef) then
+      call ptsv(n, nrhs, d, du, b_, n, info)
+   else
+      call gtsv(n, nrhs, dl, d, du, b_, n, info)
+   end if
+   ! Return the solution.
+   x = b_(:, 1)
    end procedure symtridiag_solve
 
    module procedure symtridiag_multi_solve
-      integer(ilp) :: i, n, nrhs, info
-      real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
-      ! Initialize arrays.
-      n = A%n; dl = A%ev; d = A%dv; du = A%ev; nrhs = size(B, 2); X = B
-      ! Solve the systems.
-      if (A%isposdef) then
-         call ptsv(n, nrhs, d, du, X, n, info)
-      else
-         call gtsv(n, nrhs, dl, d, du, X, n, info)
-      endif
+   integer(ilp) :: i, n, nrhs, info
+   real(dp) :: dl(A%n - 1), d(A%n), du(A%n - 1)
+   ! Initialize arrays.
+   n = A%n; dl = A%ev; d = A%dv; du = A%ev; nrhs = size(B, 2); X = B
+   ! Solve the systems.
+   if (A%isposdef) then
+      call ptsv(n, nrhs, d, du, X, n, info)
+   else
+      call gtsv(n, nrhs, dl, d, du, X, n, info)
+   end if
    end procedure symtridiag_multi_solve
 
    !-------------------------------------

@@ -18,6 +18,7 @@ module SpecialMatrices_Tridiagonal
    public :: dense
    public :: shape
    public :: size
+   public :: operator(*)
 
    !-----------------------------------------------------------
    !-----     Base types for bi/tri-diagonal matrices     -----
@@ -1124,6 +1125,22 @@ module SpecialMatrices_Tridiagonal
          integer(ilp) :: shape(2)
          !! Shape of the matrix.
       end function symtridiag_shape
+   end interface
+
+   interface operator(*)
+      pure module function diag_scalar_multiplication(alpha, A) result(B)
+         !! Utility function to perform a scalar multiplication with a `Diagonal` matrix.
+         real(dp), intent(in) :: alpha
+         type(Diagonal), intent(in) :: A
+         type(Diagonal) :: B
+      end function diag_scalar_multiplication
+
+      pure module function diag_scalar_multiplication_bis(A, alpha) result(B)
+         !! Utility function to perform a scalar multiplication with a `Diagonal` matrix.
+         real(dp), intent(in) :: alpha
+         type(Diagonal), intent(in) :: A
+         type(Diagonal) :: B
+      end function diag_scalar_multiplication_bis
    end interface
 
 contains

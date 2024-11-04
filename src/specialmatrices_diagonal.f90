@@ -201,4 +201,12 @@ contains
    arr_size = A%n
    end procedure diag_size
 
+   module procedure diag_scalar_multiplication
+   B = A; B%dv = alpha*A%dv
+   end procedure diag_scalar_multiplication
+
+   module procedure diag_scalar_multiplication_bis
+   B = A; B%dv = alpha*A%dv
+   end procedure diag_scalar_multiplication_bis
+
 end submodule DiagonalMatrices
