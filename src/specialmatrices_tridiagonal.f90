@@ -15,6 +15,7 @@ module SpecialMatrices_Tridiagonal
    ! --> Utility functions.
    public :: dense
    public :: shape
+   public :: size
 
    !-----------------------------------------------------------
    !-----     Base types for bi/tri-diagonal matrices     -----
@@ -833,6 +834,17 @@ module SpecialMatrices_Tridiagonal
          type(SymTridiagonal) :: B
          !! Transpose of the original matrix.
       end function symtridiag_transpose
+   end interface
+
+   interface size
+      pure module function diag_size(A, dim) result(arr_size)
+         !! Utility function to return the size of a `Diagonal` matrix along a given dimension.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         integer(ilp), intent(in) :: dim
+         !! Dimension whose size needs to be known.
+         integer(ilp) :: arr_size 
+      end function diag_size
    end interface
 
    interface shape

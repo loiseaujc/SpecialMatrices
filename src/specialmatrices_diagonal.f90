@@ -120,4 +120,9 @@ contains
    shape = A%n
    end procedure diag_shape
 
+   module procedure diag_size
+   ! Utility function to get the size of a `Diagonal` matrix along a given dimension.
+   arr_size = A%n
+   end procedure diag_size
+
 end submodule DiagonalMatrices
