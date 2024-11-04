@@ -8,6 +8,7 @@ module SpecialMatrices_Tridiagonal
    public :: transpose
    public :: det
    public :: trace
+   public :: inv
    public :: matmul
    public :: solve
 
@@ -679,7 +680,7 @@ module SpecialMatrices_Tridiagonal
 
    interface trace
       !! This interface overloads the `trace` interface from `stdlib_linalg` to compute the trace
-      !! of a matrix \( A \) whose type one of the types provided by `SpecialMatrices`.
+      !! of a matrix \( A \) whose type is one of the types provided by `SpecialMatrices`.
       !!
       !! #### Syntax
       !!
@@ -700,6 +701,32 @@ module SpecialMatrices_Tridiagonal
          real(dp) :: tr
          !! Trace of the matrix.
       end function diag_trace
+   end interface
+
+   interface inv
+      !! This interface overloads the `inv` interface from `stdlib_linalg` to compute the inverse
+      !! of a matrix \( A \) whose type is one of the types provided by `SpecialMatrices`. Note
+      !! that the inverse is returned as a standard Fortran rank-2 array.
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    B = inv(A)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! `B`   :  Inverse of the matrix \(A\). It is a standard Fortran rank-2 array.
+      pure module function diag_inv(A) result(B)
+         !! Utility function to compute the inverse of a `Diagonal` matrix.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), allocatable :: B(:, :)
+         !! Inverse of the matrix.
+      end function diag_inv
    end interface
 
    !-------------------------------------

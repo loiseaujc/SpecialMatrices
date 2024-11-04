@@ -2,7 +2,7 @@ module TestTridiag
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: det, trace, solve
+   use stdlib_linalg, only: det, trace, inv, solve
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -26,6 +26,7 @@ contains
       testsuite = [ &
                   new_unittest("Diagonal trace", test_diagonal_trace), &
                   new_unittest("Diagonal determinant", test_diagonal_det), &
+                  new_unittest("Diagonal inverse", test_diagonal_inv), &
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
                   new_unittest("Diagonal linear solver", test_diagonal_solve), &
                   new_unittest("Bidiagonal matmul", test_bidiagonal_matmul), &
@@ -65,6 +66,20 @@ contains
                  "Diagonal det failed.")
       return
    end subroutine test_diagonal_det
+
+   subroutine test_diagonal_inv(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Intialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, all_close(inv(dense(A)), inv(A)), &
+                 "Diagonal inv failed.")
+      return
+   end subroutine test_diagonal_inv
 
    subroutine test_diagonal_matmul(error)
       type(error_type), allocatable, intent(out) :: error

@@ -92,6 +92,11 @@ contains
    tr = sum(A%dv)
    end procedure diag_trace
 
+   module procedure diag_inv
+   ! Utility function to compute the inverse of a `Diagonal` matrix \( A \).
+   B = dense(Diagonal(1.0_dp / A%dv))
+   end procedure diag_inv
+
    !------------------------------------
    !-----     Utility function     -----
    !------------------------------------
