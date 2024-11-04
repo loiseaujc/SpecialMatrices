@@ -10,7 +10,7 @@ module TestTridiag
    implicit none
    private
 
-   integer, parameter :: n = 5
+   integer, parameter :: n = 512
 
    public :: collect_diagonal_testsuite
    public :: collect_bidiagonal_testsuite
