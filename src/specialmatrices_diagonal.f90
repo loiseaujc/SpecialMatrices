@@ -163,6 +163,16 @@ contains
    lambda = A%dv; call sort(lambda)
    end procedure diag_eigvalsh
 
+   module procedure diag_eigh
+   ! Utility function to compute the eigenvalues and eigenvectors of a real `Diagonal`
+   ! matrix \( A \).
+   integer(ilp) :: index(A%n)
+   lambda = A%dv; call sort_index(lambda, index)
+   if (present(vectors)) then
+      vectors = eye(A%n); vectors = vectors(:, index)
+   end if
+   end procedure diag_eigh
+
    !------------------------------------
    !-----     Utility function     -----
    !------------------------------------

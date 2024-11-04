@@ -23,7 +23,7 @@ module SpecialMatrices
    public :: matmul, spmv_ip
    public :: solve, solve_ip
    public :: svd, svdvals
-   public :: eigvalsh
+   public :: eigh, eigvalsh
 
    !-------------------------------------
    !-----     Utility functions     -----

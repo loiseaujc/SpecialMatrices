@@ -12,7 +12,7 @@ module SpecialMatrices_Tridiagonal
    public :: matmul, spmv_ip
    public :: solve, solve_ip
    public :: svd, svdvals
-   public :: eigvalsh
+   public :: eigh, eigvalsh
 
    ! --> Utility functions.
    public :: dense
@@ -910,7 +910,7 @@ module SpecialMatrices_Tridiagonal
       !!
       !! #### Arguments
       !!
-      !! `A`   :  `real-valued matrix of `Diagonal` or `SymTridiagonal` type.
+      !! `A`   :  `real`-valued matrix of `Diagonal` or `SymTridiagonal` type.
       !!          It is an `intent(in)` argument.
       !!
       !! `lambda` :  Vector of eigenvalues in increasing order.
@@ -921,6 +921,38 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
       end function diag_eigvalsh
+   end interface
+
+   interface eigh
+      !! This interface overloads the `eigh` interface from `stdlib_linalg` to compute the
+      !! eigenvalues and eigenvectors of a real-valued matrix \(A\) whose type is `Diagonal`
+      !! or `SymTridiagonal`.
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    call eigh(A, lambda [, vectors])
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! `A`   : `real`-valued matrix of `Diagonal` or `SymTridiagonal` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
+      !!             It is an `intent(out)` argument.
+      !!
+      !! `vectors` (optional) :  Rank-2 array of the same kind as `A` returning the eigenvectors
+      !!                         of `A`. It is an `intent(out)` argument.
+      module subroutine diag_eigh(A, lambda, vectors)
+         !! Utility function to compute the eigenvalues and eigenvectors of a `Diagonal` matrix.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), allocatable, intent(out) :: lambda(:)
+         !! Eigenvalues.
+         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+         !! Eigenvectors.
+      end subroutine diag_eigh
    end interface
 
    !-------------------------------------

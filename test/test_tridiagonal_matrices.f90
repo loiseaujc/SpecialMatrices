@@ -36,7 +36,8 @@ contains
                   new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip), &
                   new_unittest("Diagonal svdvals", test_diagonal_svdvals), &
                   new_unittest("Diagonal svd", test_diagonal_svd), &
-                  new_unittest("Diagonal eigvalsh", test_diagonal_eigvalsh) &
+                  new_unittest("Diagonal eigvalsh", test_diagonal_eigvalsh), &
+                  new_unittest("Diagonal eigh", test_diagonal_eigh) &
                   ]
       return
    end subroutine collect_diagonal_testsuite
@@ -276,6 +277,24 @@ contains
                  "Diagonal eigvalsh failed.")
       return
    end subroutine test_diagonal_eigvalsh
+
+   subroutine test_diagonal_eigh(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:), Amat(:, :)
+      real(dp), allocatable :: lambda(:), vectors(:, :)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+      ! Compute singular value decomposition.
+      call eigh(A, lambda, vectors)
+      ! Check error.
+      allocate (Amat(n, n)); Amat = 0.0_dp
+      Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
+      call check(error, all_close(dense(A), Amat), &
+                 "Diagonal eigh failed.")
+      return
+   end subroutine test_diagonal_eigh
 
    !---------------------------------------
    !-----     BIDIAGONAL MATRICES     -----
