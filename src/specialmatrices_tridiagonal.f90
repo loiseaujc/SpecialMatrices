@@ -389,6 +389,12 @@ module SpecialMatrices_Tridiagonal
       !!
       !!    A = SymTridiagonal(d, e, n)
       !! ```
+      !!
+      !! - If \( A \) is known to be symmetric positive definite, it can be constructed as
+      !!
+      !! ```fortran
+      !!    A = SymTridiagonal(dv, ev, ifposdef=.true.)
+      !! ```
       pure module function initialize_symtridiag(n) result(A)
          !! Utility function to create a `SymTridiagonal` matrix filled with zeros.
          integer(ilp), intent(in) :: n
