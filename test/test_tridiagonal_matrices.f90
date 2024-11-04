@@ -39,15 +39,15 @@ contains
     subroutine test_diagonal_matmul(error)
         type(error_type), allocatable, intent(out) :: error
         type(Diagonal) :: A
-        real(dp) :: dv(n)
+        real(dp), allocatable :: dv(:)
 
         ! Initialize matrix.
-        call random_number(dv) ; A = Diagonal(dv)
+        allocate(dv(n)); call random_number(dv) ; A = Diagonal(dv)
 
         ! Matrix-vector product.
         block
-        real(dp) :: x(n), y(n), y_dense(n)
-        call random_number(x)
+        real(dp), allocatable :: x(:), y(:), y_dense(:)
+        allocate(x(n), y(n), y_dense(n)); call random_number(x)
         y = matmul(A, x) ; y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
         "Diagonal matrix-vector product failed.")
@@ -56,7 +56,8 @@ contains
 
         ! Matrix-matrix product.
         block
-        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+        allocate(x(n, n), y(n, n), y_dense(n, n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -68,14 +69,15 @@ contains
     subroutine test_diagonal_solve(error)
         type(error_type), allocatable, intent(out) :: error
         type(Diagonal) :: A
-        real(dp) :: dv(n)
+        real(dp), allocatable :: dv(:)
         
         ! Initialize matrix.
-        call random_number(dv); A = Diagonal(dv)
+        allocate(dv(n)); call random_number(dv); A = Diagonal(dv)
 
         ! Solve with a single right-hand side vector.
         block
-        real(dp) :: x(n), x_stdlib(n), b(n)
+        real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+        allocate(x(n), x_stdlib(n), b(n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -90,7 +92,8 @@ contains
 
         ! Solve with multiple right-hand side vectors.
         block
-        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+        allocate(x(n, n), x_stdlib(n, n), b(n, n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -112,15 +115,17 @@ contains
     subroutine test_bidiagonal_matmul(error)
         type(error_type), allocatable, intent(out) :: error
         type(Bidiagonal) :: A
-        real(dp) :: dv(n), ev(n-1)
+        real(dp), allocatable :: dv(:), ev(:)
 
         ! Initialize matrix.
+        allocate(dv(n), ev(n-1))
         call random_number(dv); call random_number(ev)
         A = Bidiagonal(dv, ev, which="L")
 
         ! Matrix-vector product with A lower bidiagonal.
         block
-        real(dp) :: x(n), y(n), y_dense(n)
+        real(dp), allocatable :: x(:), y(:), y_dense(:)
+        allocate(x(n), y(n), y_dense(n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -136,7 +141,8 @@ contains
 
         ! Matrix-matrix product with A upper bidiagonal.
         block
-        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+        allocate(x(n, n), y(n, n), y_dense(n, n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -154,15 +160,17 @@ contains
     subroutine test_bidiagonal_solve(error)
         type(error_type), allocatable, intent(out) :: error
         type(Bidiagonal) :: A
-        real(dp) :: ev(n-1), dv(n)
+        real(dp), allocatable :: ev(:), dv(:)
 
         ! Initialize matrix.
+        allocate(ev(n-1), dv(n))
         call random_number(ev); call random_number(dv)
         A = Bidiagonal(dv, ev, which="L")
 
         ! Solve with a singe right-hand side vector.
         block
-        real(dp) :: x(n), x_stdlib(n), b(n)
+        real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+        allocate(x(n), x_stdlib(n), b(n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -186,7 +194,8 @@ contains
         end block
 
         block
-        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+        allocate(x(n, n), x_stdlib(n, n), b(n, n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -218,15 +227,17 @@ contains
     subroutine test_tridiagonal_matmul(error)
         type(error_type), allocatable, intent(out) :: error
         type(Tridiagonal) :: A
-        real(dp) :: dl(n-1), dv(n), du(n-1)
+        real(dp), allocatable :: dl(:), dv(:), du(:)
 
         ! Initialize matrix.
+        allocate(dl(n-1), dv(n), du(n-1))
         call random_number(dl); call random_number(dv); call random_number(du)
         A = Tridiagonal(dl, dv, du)
 
         ! Matrix-vector product.
         block
-        real(dp) :: x(n), y(n), y_dense(n)
+        real(dp), allocatable :: x(:), y(:), y_dense(:)
+        allocate(x(n), y(n), y_dense(n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -236,7 +247,8 @@ contains
 
         ! Matrix-matrix product.
         block
-        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+        allocate(x(n, n), y(n, n), y_dense(n, n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -248,15 +260,17 @@ contains
     subroutine test_tridiagonal_solve(error)
         type(error_type), allocatable, intent(out) :: error
         type(Tridiagonal) :: A
-        real(dp) :: dl(n-1), dv(n), du(n-1)
+        real(dp), allocatable :: dl(:), dv(:), du(:)
 
         ! Initialize matrix.
+        allocate(dl(n-1), dv(n), du(n-1))
         call random_number(dl); call random_number(dv); call random_number(du)
         A = Tridiagonal(dl, dv, du)
 
         ! Solve with a singe right-hand side vector.
         block
-        real(dp) :: x(n), x_stdlib(n), b(n)
+        real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+        allocate(x(n), x_stdlib(n), b(n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -270,7 +284,8 @@ contains
         end block
 
         block
-        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+        allocate(x(n, n), x_stdlib(n, n), b(n, n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -292,15 +307,17 @@ contains
     subroutine test_symtridiagonal_matmul(error)
         type(error_type), allocatable, intent(out) :: error
         type(SymTridiagonal) :: A
-        real(dp) :: dv(n), ev(n-1)
+        real(dp), allocatable :: dv(:), ev(:)
 
         ! Initialize matrix.
+        allocate(dv(n), ev(n-1))
         call random_number(dv); call random_number(ev)
         A = SymTridiagonal(dv, ev)
 
         ! Matrix-vector product.
         block
-        real(dp) :: x(n), y(n), y_dense(n)
+        real(dp), allocatable :: x(:), y(:), y_dense(:)
+        allocate(x(n), y(n), y_dense(n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -310,7 +327,8 @@ contains
 
         ! Matrix-matrix product.
         block
-        real(dp) :: x(n, n), y(n, n), y_dense(n, n)
+        real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+        allocate(x(n, n), y(n, n), y_dense(n, n))
         call random_number(x)
         y = matmul(A, x); y_dense = matmul(dense(A), x)
         call check(error, all_close(y, y_dense), &
@@ -322,15 +340,17 @@ contains
     subroutine test_symtridiagonal_solve(error)
         type(error_type), allocatable, intent(out) :: error
         type(SymTridiagonal) :: A
-        real(dp) :: dv(n), ev(n-1)
+        real(dp), allocatable :: dv(:), ev(:)
 
         ! Initialize matrix.
+        allocate(dv(n), ev(n-1))
         call random_number(dv); call random_number(ev)
         A = SymTridiagonal(dv, ev)
 
         ! Solve with a singe right-hand side vector.
         block
-        real(dp) :: x(n), x_stdlib(n), b(n)
+        real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+        allocate(x(n), x_stdlib(n), b(n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
@@ -344,7 +364,8 @@ contains
         end block
 
         block
-        real(dp) :: x(n, n), x_stdlib(n, n), b(n, n)
+        real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+        allocate(x(n, n), x_stdlib(n, n), b(n, n))
         ! Random rhs.
         call random_number(b)
         ! Solve with SpecialMatrices.
