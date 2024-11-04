@@ -45,6 +45,24 @@ contains
    end do
    end procedure symtridiag_multi_spmv
 
+   module procedure symtridiag_spmv_ip
+   integer(ilp) :: i, n
+   n = size(x)
+   y(1) = A%dv(1)*x(1) + A%ev(1)*x(2)
+   do concurrent(i=2:n - 1)
+      y(i) = A%ev(i - 1)*x(i - 1) + A%dv(i)*x(i) + A%ev(i)*x(i + 1)
+   end do
+   y(n) = A%dv(n)*x(n) + A%ev(n - 1)*x(n - 1)
+   return
+   end procedure symtridiag_spmv_ip
+
+   module procedure symtridiag_multi_spmv_ip
+   integer(ilp) :: i
+   do concurrent(i=1:size(X, 2))
+      call symtridiag_spmv_ip(Y(:, i), A, X(:, i))
+   end do
+   end procedure symtridiag_multi_spmv_ip
+
    !----------------------------------
    !-----     Linear Algebra     -----
    !----------------------------------

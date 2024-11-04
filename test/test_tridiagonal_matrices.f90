@@ -542,6 +542,7 @@ contains
       testsuite = [ &
                   new_unittest("SymTridiagonal scalar multiplication", test_symtridiagonal_scalar_multiplication), &
                   new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
+                  new_unittest("SymTridiagonal in-place matmul", test_symtridiagonal_matmul_ip), &
                   new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve), &
                   new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_symtridiagonal_solve) &
                   ]
@@ -572,7 +573,7 @@ contains
       ! Matrix-matrix product.
       block
          real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
-         allocate (x(n, n), y(n, n), y_dense(n, n))
+         allocate (x(n, n))
          call random_number(x)
          y = matmul(A, x); y_dense = matmul(dense(A), x)
          call check(error, all_close(y, y_dense), &
@@ -580,6 +581,39 @@ contains
       end block
       return
    end subroutine test_symtridiagonal_matmul
+
+   subroutine test_symtridiagonal_matmul_ip(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n - 1))
+      call random_number(dv); call random_number(ev)
+      A = SymTridiagonal(dv, ev)
+
+      ! Matrix-vector product.
+      block
+         real(dp), allocatable :: x(:), y(:), y_dense(:)
+         allocate (x(n), y(n))
+         call random_number(x)
+         call spmv_ip(y, A, x); y_dense = matmul(dense(A), x)
+         call check(error, all_close(y, y_dense), &
+                    "in-place SymTridiagonal matrix-vector product failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Matrix-matrix product.
+      block
+         real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
+         allocate (x(n, n), y(n, n))
+         call random_number(x)
+         call spmv_ip(Y, A, X); y_dense = matmul(dense(A), x)
+         call check(error, all_close(y, y_dense), &
+                    "in-place SymTridiagonal matrix-matrix product failed.")
+      end block
+      return
+   end subroutine test_symtridiagonal_matmul_ip
 
    subroutine test_symtridiagonal_solve(error)
       type(error_type), allocatable, intent(out) :: error

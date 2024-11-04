@@ -570,7 +570,7 @@ module SpecialMatrices_Tridiagonal
       !! ```fortran
       !!    call spmv_ip(C, A, B)
       !! ```
-      module subroutine diag_spmv_ip(y, A, x)
+      pure module subroutine diag_spmv_ip(y, A, x)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
          !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays. Note that this
          !! function performs this product in-place, i.e. `y` needs to be pre-allocated and
@@ -583,7 +583,7 @@ module SpecialMatrices_Tridiagonal
          !! Input vector.
       end subroutine diag_spmv_ip
 
-      module subroutine diag_multi_spmv_ip(Y, A, X)
+      pure module subroutine diag_multi_spmv_ip(Y, A, X)
          !! Utility function to compute the matrix-matrix product \( Y = AX \) where \( A \)
          !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
          real(dp), intent(out) :: Y(:, :)
@@ -593,6 +593,28 @@ module SpecialMatrices_Tridiagonal
          real(dp), intent(in) :: X(:, :)
          !! Input vectors.
       end subroutine diag_multi_spmv_ip
+
+      pure module subroutine symtridiag_spmv_ip(y, A, x)
+         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
+         !! is of `SymTridiagonal` type and `x` and `y` are both rank-1 arrays.
+         real(dp), intent(out) :: y(:)
+         !! Output vector.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(in) :: x(:)
+         !! Input vector.
+      end subroutine symtridiag_spmv_ip
+
+      pure module subroutine symtridiag_multi_spmv_ip(Y, A, X)
+         !! Utility function to compute the matrix-vector product \( Y = AX \) where \( A \)
+         !! is of `SymTridiagonal` type and `x` and `y` are both rank-2 arrays.
+         real(dp), intent(out) :: Y(:, :)
+         !! Output vector.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(in) :: X(:, :)
+         !! Input vector.
+      end subroutine symtridiag_multi_spmv_ip
    end interface
 
    !----------------------------------
