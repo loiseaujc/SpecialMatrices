@@ -12,6 +12,7 @@ module SpecialMatrices_Tridiagonal
    public :: matmul, spmv_ip
    public :: solve, solve_ip
    public :: svd, svdvals
+   public :: eigvalsh
 
    ! --> Utility functions.
    public :: dense
@@ -849,7 +850,7 @@ module SpecialMatrices_Tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `s`   :  Vector of singular values sorted in decreasing order.
-      module function diag_svdvals(A) result(s)
+      pure module function diag_svdvals(A) result(s)
          !! Utility function to compute the singular values of a `Diagonal` matrix.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
@@ -895,6 +896,31 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable, optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
       end subroutine diag_svd
+   end interface
+
+   interface eigvalsh
+      !! This interface overloads the `eigvalsh` interface from `stdlib_linalg` to compute the
+      !! eigenvalues of a real-valued matrix \( A \) whose type is `Diagonal` or `SymTridiagonal`.
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    lambda = eigvalsh(A)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! `A`   :  `real-valued matrix of `Diagonal` or `SymTridiagonal` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! `lambda` :  Vector of eigenvalues in increasing order.
+      module function diag_eigvalsh(A) result(lambda)
+         !! Utility function to compute the eigenvalues of a real `Diagonal` matrix.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp), allocatable :: lambda(:)
+         !! Eigenvalues.
+      end function diag_eigvalsh
    end interface
 
    !-------------------------------------

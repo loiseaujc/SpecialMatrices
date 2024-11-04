@@ -158,6 +158,11 @@ contains
    vt = vt(index, :)
    end procedure diag_svd
 
+   module procedure diag_eigvalsh
+   ! Utility function to compute the eigenvalues of a real `Diagonal` matrix \( A \).
+   lambda = A%dv; call sort(lambda)
+   end procedure diag_eigvalsh
+
    !------------------------------------
    !-----     Utility function     -----
    !------------------------------------

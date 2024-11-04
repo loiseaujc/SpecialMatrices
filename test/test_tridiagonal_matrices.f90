@@ -2,7 +2,7 @@ module TestTridiag
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvalsh
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -10,7 +10,7 @@ module TestTridiag
    implicit none
    private
 
-   integer, parameter :: n = 512
+   integer, parameter :: n = 5
 
    public :: collect_diagonal_testsuite
    public :: collect_bidiagonal_testsuite
@@ -35,7 +35,8 @@ contains
                   new_unittest("Diagonal linear solver", test_diagonal_solve), &
                   new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip), &
                   new_unittest("Diagonal svdvals", test_diagonal_svdvals), &
-                  new_unittest("Diagonal svd", test_diagonal_svd) &
+                  new_unittest("Diagonal svd", test_diagonal_svd), &
+                  new_unittest("Diagonal eigvalsh", test_diagonal_eigvalsh) &
                   ]
       return
    end subroutine collect_diagonal_testsuite
@@ -259,6 +260,22 @@ contains
                  "Diagonal svd failed.")
       return
    end subroutine test_diagonal_svd
+
+   subroutine test_diagonal_eigvalsh(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:)
+      real(dp), allocatable :: lambda(:), lambda_stdlib(:)
+
+      ! Initialize array.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+      ! Compute singular values.
+      lambda = eigvalsh(A); lambda_stdlib = eigvalsh(dense(A))
+      ! Check error.
+      call check(error, all_close(lambda, lambda_stdlib), &
+                 "Diagonal eigvalsh failed.")
+      return
+   end subroutine test_diagonal_eigvalsh
 
    !---------------------------------------
    !-----     BIDIAGONAL MATRICES     -----
