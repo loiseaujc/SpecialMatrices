@@ -6,9 +6,10 @@ module SpecialMatrices_Tridiagonal
 
    ! --> Linear Algebra.
    public :: transpose
+   public :: det
+   public :: trace
    public :: matmul
    public :: solve
-   ! public :: eig
 
    ! --> Utility functions.
    public :: dense
@@ -651,37 +652,54 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_multi_solve
    end interface
 
-   interface eig
-      !! This interface overloads the `eig` interface from `stdlib_linalg` for solving a
-      !! generalized eigenvalue problem \( A x = \lambda x \) where \( A \) is of one of the types
-      !! provided by `SpecialMatrices`. Whenever possible, eigensolvers specialized for the
-      !! particular matrix structure are being used. If not, \( A \) is converted to a standard
-      !! rank-2 array and the eigenpairs are computed using the `eig` from `stdlib_linalg`.
+   interface det
+      !! This interface overloads the `det` interface from `stdlib_linag` to compute the
+      !! determinant \(\det(A)\) where \(A\) is of one of the types provided by `SpecialMatrices`.
       !!
       !! #### Syntax
       !!
       !! ```fortran
-      !!    call eig(A, lambda, vectors)
+      !!    d = det(A)
       !! ```
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type. It
-      !!          is an `intent(in)` argument.
+      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
+      !!          It is in an `intent(in)` argument.
       !!
-      !! `lambda` :  `complex` rank-1 array containing the eigenvalues of \( A \). It is an
-      !!             `intent(out)` argument.
-      !!
-      !! `vectors`   :  `complex` rank-2 array containing th eigenvectors of \( A \). It is an
-      !!                `intent(out)` argument.
-      pure module subroutine diag_eig(A, lambda, vectors)
+      !! `determinant`  :  Determinant of the matrix.
+      pure module function diag_det(A) result(determinant)
+         !! Utility function to compute the determinant of a `Diagonal` matrix.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), intent(out) :: lambda(A%n)
-         !! Eigenvalues.
-         real(dp), intent(out) :: vectors(A%n, A%n)
-         !! Eigenvectors.
-      end subroutine diag_eig
+         real(dp) :: determinant
+         !! Determinant of the matrix.
+      end function diag_det
+   end interface
+
+   interface trace
+      !! This interface overloads the `trace` interface from `stdlib_linalg` to compute the trace
+      !! of a matrix \( A \) whose type one of the types provided by `SpecialMatrices`.
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    tr = trace(A)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! `tr`  :  Trace of the matrix.
+      pure module function diag_trace(A) result(tr)
+         !! Utility function to compute the trace of a `Diagonal` matrix.
+         type(Diagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp) :: tr
+         !! Trace of the matrix.
+      end function diag_trace
    end interface
 
    !-------------------------------------

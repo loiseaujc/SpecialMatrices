@@ -82,9 +82,15 @@ contains
    end do
    end procedure diag_multi_solve
 
-   module procedure diag_eig
-   lambda = A%dv; vectors = eye(A%n)
-   end procedure diag_eig
+   module procedure diag_det
+   ! Utility function to compute the determinant of a `Diagonal` matrix \( A \).
+   determinant = product(A%dv)
+   end procedure diag_det
+
+   module procedure diag_trace
+   ! Utility function to compute the trace of a `Diagonal` matrix \( A \).
+   tr = sum(A%dv)
+   end procedure diag_trace
 
    !------------------------------------
    !-----     Utility function     -----

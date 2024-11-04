@@ -17,6 +17,8 @@ module SpecialMatrices
    !----------------------------------
 
    public :: transpose
+   public :: det
+   public :: trace
    public :: matmul
    public :: solve
 
