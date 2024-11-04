@@ -1,5 +1,6 @@
 submodule(SpecialMatrices_Tridiagonal) SymmetricTridiagonal
-   use stdlib_linalg_lapack, only: gtsv
+   use stdlib_optval, only: optval
+   use stdlib_linalg_lapack, only: gtsv, ptsv
    implicit none(type, external)
 
 contains
@@ -10,16 +11,16 @@ contains
 
    module procedure initialize_symtridiag
       A%n = n; allocate(A%dv(n), A%ev(n-1))
-      A%dv = 0.0_dp; A%ev = 0.0_dp
+      A%dv = 0.0_dp; A%ev = 0.0_dp; A%isposdef = .false.
    end procedure initialize_symtridiag
 
    module procedure construct_symtridiag
-      A%n = size(dv); A%dv = dv; A%ev = ev
+      A%n = size(dv); A%dv = dv; A%ev = ev; A%isposdef = optval(isposdef, .false.)
    end procedure construct_symtridiag
 
    module procedure construct_constant_symtridiag
       integer(ilp) :: i
-      A%n = n; A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n-1)]
+      A%n = n; A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n-1)]; A%isposdef = optval(isposdef, .false.)
    end procedure construct_constant_symtridiag
 
    !------------------------------------------------------------
@@ -54,7 +55,11 @@ contains
       ! Initialize arrays.
       n = A%n; dl = A%ev; d = A%dv; du = A%ev; b_(:, 1) = b ; nrhs = 1
       ! Solve the system.
-      call gtsv(n, nrhs, dl, d, du, b_, n, info)
+      if (A%isposdef) then
+         call ptsv(n, nrhs, d, du, b_, n, info)
+      else
+         call gtsv(n, nrhs, dl, d, du, b_, n, info)
+      endif
       ! Return the solution.
       x = b_(:, 1)
    end procedure symtridiag_solve
@@ -65,7 +70,11 @@ contains
       ! Initialize arrays.
       n = A%n; dl = A%ev; d = A%dv; du = A%ev; nrhs = size(B, 2); X = B
       ! Solve the systems.
-      call gtsv(n, nrhs, dl, d, du, X, n, info)
+      if (A%isposdef) then
+         call ptsv(n, nrhs, d, du, X, n, info)
+      else
+         call gtsv(n, nrhs, dl, d, du, X, n, info)
+      endif
    end procedure symtridiag_multi_solve
 
    !-------------------------------------
