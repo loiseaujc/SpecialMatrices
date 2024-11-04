@@ -13,6 +13,9 @@ module TestTridiag
    integer, parameter :: n = 512
 
    public :: collect_diagonal_testsuite
+   public :: collect_bidiagonal_testsuite
+   public :: collect_tridiagonal_testsuite
+   public :: collect_symtridiagonal_testsuite
 
 contains
 
@@ -28,13 +31,7 @@ contains
                   new_unittest("Diagonal determinant", test_diagonal_det), &
                   new_unittest("Diagonal inverse", test_diagonal_inv), &
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
-                  new_unittest("Diagonal linear solver", test_diagonal_solve), &
-                  new_unittest("Bidiagonal matmul", test_bidiagonal_matmul), &
-                  new_unittest("Bidiagonal linear solver", test_bidiagonal_solve), &
-                  new_unittest("Tridiagonal matmul", test_tridiagonal_matmul), &
-                  new_unittest("Tridiagonal linear solver", test_tridiagonal_solve), &
-                  new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
-                  new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve) &
+                  new_unittest("Diagonal linear solver", test_diagonal_solve) &
                   ]
       return
    end subroutine collect_diagonal_testsuite
@@ -156,6 +153,15 @@ contains
    !---------------------------------------
    !-----     BIDIAGONAL MATRICES     -----
    !---------------------------------------
+   subroutine collect_bidiagonal_testsuite(testsuite)
+      type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+      testsuite = [ &
+                  new_unittest("Bidiagonal matmul", test_bidiagonal_matmul), &
+                  new_unittest("Bidiagonal linear solver", test_bidiagonal_solve) &
+                  ]
+      return
+   end subroutine collect_bidiagonal_testsuite
 
    subroutine test_bidiagonal_matmul(error)
       type(error_type), allocatable, intent(out) :: error
@@ -269,6 +275,16 @@ contains
    !-----     TRIDIAGONAL MATRICES     -----
    !----------------------------------------
 
+   subroutine collect_tridiagonal_testsuite(testsuite)
+      type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+      testsuite = [ &
+                  new_unittest("Tridiagonal matmul", test_tridiagonal_matmul), &
+                  new_unittest("Tridiagonal linear solver", test_tridiagonal_solve) &
+                  ]
+      return
+   end subroutine collect_tridiagonal_testsuite
+
    subroutine test_tridiagonal_matmul(error)
       type(error_type), allocatable, intent(out) :: error
       type(Tridiagonal) :: A
@@ -348,6 +364,15 @@ contains
    !--------------------------------------------------
    !-----     SYMMETRIC TRIDIAGONAL MATRICES     -----
    !--------------------------------------------------
+   subroutine collect_symtridiagonal_testsuite(testsuite)
+      type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+      testsuite = [ &
+                  new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
+                  new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve) &
+                  ]
+      return
+   end subroutine collect_symtridiagonal_testsuite
 
    subroutine test_symtridiagonal_matmul(error)
       type(error_type), allocatable, intent(out) :: error
