@@ -17,8 +17,13 @@ module SpecialMatrices
    !----------------------------------
 
    public :: transpose
-   public :: matmul
-   public :: solve
+   public :: det
+   public :: trace
+   public :: inv
+   public :: matmul, spmv_ip
+   public :: solve, solve_ip
+   public :: svd, svdvals
+   public :: eigh, eigvalsh
 
    !-------------------------------------
    !-----     Utility functions     -----
@@ -26,6 +31,7 @@ module SpecialMatrices
 
    public :: dense
    public :: shape
+   public :: size
 
    public :: say_hello
 contains
