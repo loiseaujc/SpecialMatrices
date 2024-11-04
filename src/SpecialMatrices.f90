@@ -22,6 +22,7 @@ module SpecialMatrices
    public :: inv
    public :: matmul, spmv_ip
    public :: solve, solve_ip
+   public :: svd, svdvals
 
    !-------------------------------------
    !-----     Utility functions     -----

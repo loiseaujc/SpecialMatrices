@@ -2,7 +2,7 @@ module TestTridiag
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: det, trace, inv, solve
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -33,7 +33,9 @@ contains
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
                   new_unittest("Diagonal in-place matmul", test_diagonal_spmv_ip), &
                   new_unittest("Diagonal linear solver", test_diagonal_solve), &
-                  new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip) &
+                  new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip), &
+                  new_unittest("Diagonal svdvals", test_diagonal_svdvals), &
+                  new_unittest("Diagonal svd", test_diagonal_svd) &
                   ]
       return
    end subroutine collect_diagonal_testsuite
@@ -223,6 +225,40 @@ contains
 
       return
    end subroutine test_diagonal_solve_ip
+
+   subroutine test_diagonal_svdvals(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:)
+      real(dp), allocatable :: s(:), s_stdlib(:)
+
+      ! Initialize array.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+      ! Compute singular values.
+      s = svdvals(A); s_stdlib = svdvals(dense(A))
+      ! Check error.
+      call check(error, all_close(s, s_stdlib), &
+                 "Diagonal svdvals failed.")
+      return
+   end subroutine test_diagonal_svdvals
+
+   subroutine test_diagonal_svd(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:), Amat(:, :)
+      real(dp), allocatable :: u(:, :), s(:), vt(:, :)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+      ! Compute singular value decomposition.
+      call svd(A, u, s, vt)
+      ! Check error.
+      allocate (Amat(n, n)); Amat = 0.0_dp
+      Amat = matmul(u, matmul(diag(s), vt))
+      call check(error, all_close(dense(A), Amat), &
+                 "Diagonal svd failed.")
+      return
+   end subroutine test_diagonal_svd
 
    !---------------------------------------
    !-----     BIDIAGONAL MATRICES     -----

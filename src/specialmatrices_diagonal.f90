@@ -1,5 +1,6 @@
 submodule(SpecialMatrices_Tridiagonal) DiagonalMatrices
    use stdlib_linalg, only: eye, diag
+   use stdlib_sorting, only: sort, sort_index
    use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling, LINALG_VALUE_ERROR, &
                                   LINALG_INTERNAL_ERROR, LINALG_VALUE_ERROR
    implicit none(type, external)
@@ -136,6 +137,26 @@ contains
    ! Utility function to compute the inverse of a `Diagonal` matrix \( A \).
    B = dense(Diagonal(1.0_dp/A%dv))
    end procedure diag_inv
+
+   module procedure diag_svdvals
+   ! Utility function to compute the singular values of a `Diagonal` matrix \( A \).
+   s = abs(A%dv); call sort(s, reverse=.true.)
+   end procedure diag_svdvals
+
+   module procedure diag_svd
+   ! Utility function to compute the singular values of a `Diagonal` matrix \( A \).
+   integer(ilp) :: i, index(A%n)
+   ! Compute the singular values and sort them in decreasing order.
+   s = abs(A%dv); call sort_index(s, index, reverse=.true.)
+   ! Compute the left singular vectors.
+   u = eye(A%n); u = u(:, index)
+   ! Compute the right singular vectors.
+   vt = eye(A%n); 
+   do concurrent(i=1:A%n, A%dv(i) < 0.0_dp)
+      vt(i, i) = -1.0_dp
+   end do
+   vt = vt(index, :)
+   end procedure diag_svd
 
    !------------------------------------
    !-----     Utility function     -----
