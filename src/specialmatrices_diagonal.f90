@@ -98,6 +98,30 @@ contains
    end do
    end procedure diag_multi_solve
 
+   module procedure diag_solve_ip
+   ! Utility function to solve *in-place* a linear system with multiple right-hande sides where
+   ! \( A \) is of `Diagonal` type and `B` a rank-2 array. The solution `X` is also a rank-2 array
+   ! with the same type and dimensions as `B`.
+   integer(ilp) :: i
+   do concurrent(i=1:A%n)
+      x(i) = b(i)/A%dv(i)
+   end do
+   return
+   end procedure diag_solve_ip
+
+   module procedure diag_multi_solve_ip
+   ! Utility function to solve a linear system with multiple right-hande sides where \( A \)
+   ! is of `Diagonal` type and `B` a rank-2 array. The solution `X` is also a rank-2 array
+   ! with the same type and dimensions as `B`.
+   integer(ilp) :: i, j
+   real(dp) :: inv_dv(A%n)
+   inv_dv = 1.0_dp/A%dv
+   do concurrent(i=1:A%n, j=1:size(B, 2))
+      X(i, j) = inv_dv(i)*B(i, j)
+   end do
+   return
+   end procedure diag_multi_solve_ip
+
    module procedure diag_det
    ! Utility function to compute the determinant of a `Diagonal` matrix \( A \).
    determinant = product(A%dv)

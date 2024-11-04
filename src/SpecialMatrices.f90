@@ -21,7 +21,7 @@ module SpecialMatrices
    public :: trace
    public :: inv
    public :: matmul, spmv_ip
-   public :: solve
+   public :: solve, solve_ip
 
    !-------------------------------------
    !-----     Utility functions     -----

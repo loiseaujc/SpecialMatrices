@@ -10,7 +10,7 @@ module SpecialMatrices_Tridiagonal
    public :: trace
    public :: inv
    public :: matmul, spmv_ip
-   public :: solve
+   public :: solve, solve_ip
 
    ! --> Utility functions.
    public :: dense
@@ -529,26 +529,54 @@ module SpecialMatrices_Tridiagonal
    end interface
 
    interface spmv_ip
+      !! This interface provides methods for in-place matrix-vector products for the following
+      !! types:
+      !!
+      !! - `Diagonal`
+      !! - `Bidiagonal`
+      !! - `Tridiagonal`
+      !! - `SymTridiagonal`
+      !!
+      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \) has to be of the ones
+      !! of the types defined by `SpecialMatrices`. Both \( B \) and \( C \) need to be standard
+      !! Fortran rank-2 arrays. All the underlying functions perform the computations in-place,
+      !! the array `y`/`C` will be overwritten with the result.
+      !!
+      !! #### Syntax
+      !!
+      !! - For matrix-vector product with `A` being of a type defined by `SpecialMatrices` and
+      !! `x` a standard rank-1 array:
+      !! ```fortran
+      !!    call spmv_ip(y, A, x)
+      !! ```
+      !!
+      !! - For matrix-matrix product with `A` being of a type defined by `SpecialMatrices` and
+      !! `B` a rank-2 array:
+      !! ```fortran
+      !!    call spmv_ip(C, A, B)
+      !! ```
       module subroutine diag_spmv_ip(y, A, x)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
          !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays. Note that this
          !! function performs this product in-place, i.e. `y` needs to be pre-allocated and
          !! will be modified by the call.
+         real(dp), intent(out) :: y(:)
+         !! Output vector.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
-         real(dp), intent(out) :: y(:)
-         !! Output vector.
       end subroutine diag_spmv_ip
 
       module subroutine diag_multi_spmv_ip(Y, A, X)
+         !! Utility function to compute the matrix-matrix product \( Y = AX \) where \( A \)
+         !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
+         real(dp), intent(out) :: Y(:, :)
+         !! Output vectors.
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input vectors.
-         real(dp), intent(out) :: Y(:, :)
-         !! Output vectors.
       end subroutine diag_multi_spmv_ip
    end interface
 
@@ -566,7 +594,7 @@ module SpecialMatrices_Tridiagonal
       !! To solve a system with \( A \) being of one of the types defined by `SpecialMatrices`:
       !!
       !! ```fortran
-      !!    y = solve(A, x)
+      !!    x = solve(A, b)
       !! ```
       !!
       !! #### Arguments
@@ -574,10 +602,10 @@ module SpecialMatrices_Tridiagonal
       !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `x`   :  Rank-1 or rank-2 array defining the right-hand side(s). It is an `intent(in)`
+      !! `b`   :  Rank-1 or rank-2 array defining the right-hand side(s). It is an `intent(in)`
       !!          argument.
       !!
-      !! `y`   :  Solution of the linear system. It has the same type and shape as `x`.
+      !! `x`   :  Solution of the linear system. It has the same type and shape as `b`.
       pure module function diag_solve(A, b) result(x)
          !! Utility function to solve the linear system \( A x = b \) where \( A \) is of
          !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
@@ -676,6 +704,55 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function symtridiag_multi_solve
+   end interface
+
+   interface solve_ip
+      !! This interface provides methods for solving *in-place* a linear
+      !! system \( Ax = b \) where \( A \) is of one of the types provided by `SpecialMatrices`.
+      !! It also enables to solve a linear system with multiple right-hand sides.
+      !!
+      !! #### Syntax
+      !!
+      !! To solve a system with \( A \) being of one of the types defined by `SpecialMatrices`:
+      !!
+      !! ```fortran
+      !!    call solve_ip(x, A, b)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! `b`   :  Rank-1 or rank-2 array defining the right-hand side(s). It is an `intent(in)`
+      !!          argument.
+      !!
+      !! `x`   :  Solution of the linear system. It has the same type and shape as `b`.
+      module subroutine diag_solve_ip(x, A, b)
+         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
+         !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1
+         !! array with the same type and dimension as `b`. Computation is done in-place, i.e.
+         !! the array `x` will be overwritten with the solution.
+         real(dp), intent(out) :: x(:)
+         !! Solution vector.
+         type(Diagonal), intent(in) :: A
+         !! Coefficient matrix.
+         real(dp), intent(in) :: b(:)
+         !! Right-hand side vector.
+      end subroutine diag_solve_ip
+
+      module subroutine diag_multi_solve_ip(x, A, b)
+         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
+         !! `Diagonal` type and `B` a rank-2 array. The solution `x` is also a rank-2
+         !! array with the same type and dimension as `B`. Computation is done in-place, i.e.
+         !! the array `x` will be overwritten with the solution.
+         real(dp), intent(out) :: x(:, :)
+         !! Solution vector.
+         type(Diagonal), intent(in) :: A
+         !! Coefficient matrix.
+         real(dp), intent(in) :: b(:, :)
+         !! Right-hand side vector.
+      end subroutine diag_multi_solve_ip
    end interface
 
    interface det

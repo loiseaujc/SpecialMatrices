@@ -32,7 +32,8 @@ contains
                   new_unittest("Diagonal inverse", test_diagonal_inv), &
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
                   new_unittest("Diagonal in-place matmul", test_diagonal_spmv_ip), &
-                  new_unittest("Diagonal linear solver", test_diagonal_solve) &
+                  new_unittest("Diagonal linear solver", test_diagonal_solve), &
+                  new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip) &
                   ]
       return
    end subroutine collect_diagonal_testsuite
@@ -180,6 +181,48 @@ contains
 
       return
    end subroutine test_diagonal_solve
+
+   subroutine test_diagonal_solve_ip(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Diagonal) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
+
+      ! Solve with a single right-hand side vector.
+      block
+         real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+         allocate (b(n), x(n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         call solve_ip(x, A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "in-place Diagonal solve with a single rhs failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Solve with multiple right-hand side vectors.
+      block
+         real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+         allocate (b(n, n), x(n, n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         call solve_ip(x, A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "in-place Diagonal solve with multiple rhs failed.")
+      end block
+
+      return
+   end subroutine test_diagonal_solve_ip
 
    !---------------------------------------
    !-----     BIDIAGONAL MATRICES     -----
