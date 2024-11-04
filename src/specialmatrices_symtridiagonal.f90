@@ -27,6 +27,25 @@ contains
    !-----     Matrix-vector and Matrix-matrix products     -----
    !------------------------------------------------------------
 
+   module procedure symtridiag_trace
+   tr = sum(A%dv)
+   end procedure symtridiag_trace
+
+   module procedure symtridiag_det
+   real(dp) :: f_0, f_1
+   integer(ilp) :: i
+   f_0 = 1.0_dp; f_1 = 0.0_dp
+   ! First iteration.
+   determinant = A%dv(1)*f_0; f_1 = f_0; f_0 = determinant
+   ! Continuants
+   do i=2, A%n
+      ! Recurrence relation.
+      determinant = A%dv(i)*f_0 - A%ev(i-1)**2 * f_1
+      ! Store previous values.
+      f_1 = f_0; f_0 = determinant
+   enddo
+   end procedure symtridiag_det
+
    module procedure symtridiag_spmv
    integer(ilp) :: i, n
    n = size(x); allocate (y, mold=x)
@@ -38,11 +57,13 @@ contains
    end procedure symtridiag_spmv
 
    module procedure symtridiag_multi_spmv
-   integer(ilp) :: i
-   allocate (Y, mold=X)
-   do concurrent(i=1:size(X, 2))
-      Y(:, i) = symtridiag_spmv(A, X(:, i))
+   integer(ilp) :: i, j, n
+   n = size(x, 1); allocate (y, mold=x)
+   y(1, :) = A%dv(1)*x(1, :) + A%ev(1)*x(2, :)
+   do concurrent(i=2:n - 1, j=1:size(x, 2))
+      y(i, j) = A%ev(i - 1)*x(i - 1, j) + A%dv(i)*x(i, j) + A%ev(i)*x(i + 1, j)
    end do
+   y(n, :) = A%dv(n)*x(n, :) + A%ev(n - 1)*x(n - 1, :)
    end procedure symtridiag_multi_spmv
 
    module procedure symtridiag_spmv_ip
@@ -57,10 +78,14 @@ contains
    end procedure symtridiag_spmv_ip
 
    module procedure symtridiag_multi_spmv_ip
-   integer(ilp) :: i
-   do concurrent(i=1:size(X, 2))
-      call symtridiag_spmv_ip(Y(:, i), A, X(:, i))
+   integer(ilp) :: i, j, n
+   n = size(x, 1)
+   y(1, :) = A%dv(1)*x(1, :) + A%ev(1)*x(2, :)
+   do concurrent(i=2:n - 1, j=1:size(x, 2))
+      y(i, j) = A%ev(i - 1)*x(i - 1, j) + A%dv(i)*x(i, j) + A%ev(i)*x(i + 1, j)
    end do
+   y(n, :) = A%dv(n)*x(n, :) + A%ev(n - 1)*x(n - 1, :)
+   return
    end procedure symtridiag_multi_spmv_ip
 
    !----------------------------------

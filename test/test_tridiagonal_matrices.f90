@@ -541,6 +541,8 @@ contains
 
       testsuite = [ &
                   new_unittest("SymTridiagonal scalar multiplication", test_symtridiagonal_scalar_multiplication), &
+                  new_unittest("SymTridiagonal trace", test_symtridiagonal_trace), &
+                  new_unittest("SymTridiagonal determinant", test_symtridiagonal_det), &
                   new_unittest("SymTridiagonal matmul", test_symtridiagonal_matmul), &
                   new_unittest("SymTridiagonal in-place matmul", test_symtridiagonal_matmul_ip), &
                   new_unittest("SymTridiagonal linear solver", test_symtridiagonal_solve), &
@@ -722,4 +724,33 @@ contains
       return
    end subroutine test_symtridiagonal_scalar_multiplication
 
+   subroutine test_symtridiagonal_trace(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      A = SymTridiagonal(dv, ev)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(trace(A), trace(dense(A))), &
+                 "SymTridiagonal trace failed.")
+      return
+   end subroutine test_symtridiagonal_trace
+
+   subroutine test_symtridiagonal_det(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      A = SymTridiagonal(dv, ev)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(det(A), det(dense(A))), &
+                 "SymTridiagonal det failed.")
+      return
+   end subroutine test_symtridiagonal_det
 end module

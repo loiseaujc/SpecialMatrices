@@ -765,7 +765,7 @@ module SpecialMatrices_Tridiagonal
       !!          argument.
       !!
       !! `x`   :  Solution of the linear system. It has the same type and shape as `b`.
-      module subroutine diag_solve_ip(x, A, b)
+      pure module subroutine diag_solve_ip(x, A, b)
          !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
          !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1
          !! array with the same type and dimension as `b`. Computation is done in-place, i.e.
@@ -778,7 +778,7 @@ module SpecialMatrices_Tridiagonal
          !! Right-hand side vector.
       end subroutine diag_solve_ip
 
-      module subroutine diag_multi_solve_ip(x, A, b)
+      pure module subroutine diag_multi_solve_ip(x, A, b)
          !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
          !! `Diagonal` type and `B` a rank-2 array. The solution `x` is also a rank-2
          !! array with the same type and dimension as `B`. Computation is done in-place, i.e.
@@ -815,6 +815,14 @@ module SpecialMatrices_Tridiagonal
          real(dp) :: determinant
          !! Determinant of the matrix.
       end function diag_det
+
+      pure module function symtridiag_det(A) result(determinant)
+         !! Utility function to compute the determinant of a `SymTridiagonal` matrix.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp) :: determinant
+         !! Determinant of the matrix.
+      end function symtridiag_det
    end interface
 
    interface trace
@@ -840,6 +848,14 @@ module SpecialMatrices_Tridiagonal
          real(dp) :: tr
          !! Trace of the matrix.
       end function diag_trace
+
+      pure module function symtridiag_trace(A) result(tr)
+         !! Utility function to compute the trace of a `SymTridiagonal` matrix.
+         type(SymTridiagonal), intent(in) :: A
+         !! Input matrix.
+         real(dp) :: tr
+         !! Trace of the matrix.
+      end function symtridiag_trace
    end interface
 
    interface inv
