@@ -32,9 +32,7 @@ contains
                   new_unittest("Diagonal determinant", test_diagonal_det), &
                   new_unittest("Diagonal inverse", test_diagonal_inv), &
                   new_unittest("Diagonal matmul", test_diagonal_matmul), &
-                  new_unittest("Diagonal in-place matmul", test_diagonal_spmv_ip), &
                   new_unittest("Diagonal linear solver", test_diagonal_solve), &
-                  new_unittest("Diagonal in-place linear solver", test_diagonal_solve_ip), &
                   new_unittest("Diagonal svdvals", test_diagonal_svdvals), &
                   new_unittest("Diagonal svd", test_diagonal_svd), &
                   new_unittest("Diagonal eigvalsh", test_diagonal_eigvalsh), &
@@ -105,7 +103,7 @@ contains
       allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
 
       ! Compare against stdlib_linalg implementation.
-      call check(error, all_close(inv(dense(A)), inv(A)), &
+      call check(error, all_close(inv(dense(A)), dense(inv(A))), &
                  "Diagonal inv failed.")
       return
    end subroutine test_diagonal_inv
@@ -139,36 +137,6 @@ contains
       end block
       return
    end subroutine test_diagonal_matmul
-
-   subroutine test_diagonal_spmv_ip(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(Diagonal) :: A
-      real(dp), allocatable :: dv(:)
-
-      ! Initialize matrix.
-      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
-
-      ! Matrix-vector product.
-      block
-         real(dp), allocatable :: x(:), y(:), y_dense(:)
-         allocate (x(n), y(n)); call random_number(x)
-         call spmv_ip(y, A, x); y_dense = matmul(dense(A), x)
-         call check(error, all_close(y, y_dense), &
-                    "in-place Diagonal matrix-vector product failed.")
-         if (allocated(error)) return
-      end block
-
-      ! Matrix-matrix product.
-      block
-         real(dp), allocatable :: x(:, :), y(:, :), y_dense(:, :)
-         allocate (x(n, n), y(n, n))
-         call random_number(x)
-         call spmv_ip(y, A, x); y_dense = matmul(dense(A), x)
-         call check(error, all_close(y, y_dense), &
-                    "in-place Diagonal matrix-matrix product failed.")
-      end block
-      return
-   end subroutine test_diagonal_spmv_ip
 
    subroutine test_diagonal_solve(error)
       type(error_type), allocatable, intent(out) :: error
@@ -212,49 +180,7 @@ contains
       return
    end subroutine test_diagonal_solve
 
-   subroutine test_diagonal_solve_ip(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(Diagonal) :: A
-      real(dp), allocatable :: dv(:)
-
-      ! Initialize matrix.
-      allocate (dv(n)); call random_number(dv); A = Diagonal(dv)
-
-      ! Solve with a single right-hand side vector.
-      block
-         real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-         allocate (b(n), x(n))
-         ! Random rhs.
-         call random_number(b)
-         ! Solve with SpecialMatrices.
-         call solve_ip(x, A, b)
-         ! Solve with stdlib (dense).
-         x_stdlib = solve(dense(A), b)
-         ! Check error.
-         call check(error, all_close(x, x_stdlib), &
-                    "in-place Diagonal solve with a single rhs failed.")
-         if (allocated(error)) return
-      end block
-
-      ! Solve with multiple right-hand side vectors.
-      block
-         real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-         allocate (b(n, n), x(n, n))
-         ! Random rhs.
-         call random_number(b)
-         ! Solve with SpecialMatrices.
-         call solve_ip(x, A, b)
-         ! Solve with stdlib (dense).
-         x_stdlib = solve(dense(A), b)
-         ! Check error.
-         call check(error, all_close(x, x_stdlib), &
-                    "in-place Diagonal solve with multiple rhs failed.")
-      end block
-
-      return
-   end subroutine test_diagonal_solve_ip
-
-   subroutine test_diagonal_svdvals(error)
+  subroutine test_diagonal_svdvals(error)
       type(error_type), allocatable, intent(out) :: error
       type(Diagonal) :: A
       real(dp), allocatable :: dv(:)

@@ -8,11 +8,8 @@ module SpecialMatrices_Tridiagonal
    public :: transpose
    public :: det
    public :: trace
-   public :: inv
    public :: matmul, spmv_ip
-   public :: solve, solve_ip
-   public :: svd, svdvals
-   public :: eigh, eigvalsh
+   public :: solve
 
    ! --> Utility functions.
    public :: dense
@@ -23,16 +20,6 @@ module SpecialMatrices_Tridiagonal
    !-----------------------------------------------------------
    !-----     Base types for bi/tri-diagonal matrices     -----
    !-----------------------------------------------------------
-
-   type, public :: Diagonal
-      !! Base type used to define a `Diagonal` matrix of size [n x n] with diagonal given by the
-      !! rank-1 array `dv`.
-      private
-      integer(ilp) :: n
-      !! Dimension of the matrix.
-      real(dp), allocatable :: dv(:)
-      !! Diagonal elements of the matrix.
-   end type
 
    type, public :: Bidiagonal
       !! Base type used to define a `Bidiagonal` matrix of size [n x n] with diagonals given by
@@ -72,98 +59,6 @@ module SpecialMatrices_Tridiagonal
    !--------------------------------
    !-----     Constructors     -----
    !--------------------------------
-
-   interface Diagonal
-      !! This interface provides different methods to construct a `Diagonal` matrix.
-      !! Only `double precision` is supported currently. Only the diagonal elements
-      !! of \( A \) are being stored, i.e.
-      !!
-      !! \[
-      !!    A
-      !!    =
-      !!    \begin{bmatrix}
-      !!       d_1 \\
-      !!          &  d_2 \\
-      !!          &     &  \ddots   \\
-      !!          &     &        &  d_n
-      !!    \end{bmatrix}.
-      !! \]
-      !!
-      !! ### Syntax
-      !!
-      !! - Construct a `Diagonal` matrix filled with zeros:
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n = 100
-      !!    type(Diagonal) :: A
-      !!
-      !!    A = Diagonal(n)
-      !! ```
-      !!
-      !! - Construct a `Diagonal` matrix from a vector.
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n = 100
-      !!    real(dp), allocatable :: dv(:)
-      !!    type(Diagonal) :: A
-      !!    integer :: i
-      !!
-      !!    dv = [(i, i=1, n)]; A = Diagonal(dv)
-      !! ```
-      !!
-      !! - Construct a `Diagonal` matrix with constant diagonal element.
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n = 100
-      !!    real(dp), parameter :: d = 2.0_dp
-      !!    type(Diagonal) :: A
-      !!
-      !!    A = Diagonal(d, n)
-      !! ```
-      !!
-      !! - Construct a `Diagonal` matrix from a standard Fortran rank-2 array.
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n = 100
-      !!    real(dp) :: B(n, n)
-      !!    type(Diagonal) :: A
-      !!
-      !!    call random_number(B); A = Diagonal(B)
-      !! ```
-      pure module function initialize_diag(n) result(A)
-         !! Utility function to construct a `Diagonal` matrix filled with zeros.
-         integer(ilp), intent(in) :: n
-         !! Dimension of the matrix.
-         type(Diagonal) :: A
-         !! Corresponding diagonal matrix.
-      end function initialize_diag
-
-      pure module function construct_diag(dv) result(A)
-         !! Utility function to construct a `Diagonal` matrix from a rank-1 array.
-         real(dp), intent(in) :: dv(:)
-         !! Diagonal elements of the matrix.
-         type(Diagonal) :: A
-         !! Corresponding diagonal matrix.
-      end function construct_diag
-
-      pure module function construct_constant_diag(d, n) result(A)
-         !! Utility function to construct a `Diagonal` matrix with constant diagonal element.
-         real(dp), intent(in) :: d
-         !! Constant diagonal element of the matrix.
-         integer(ilp), intent(in) :: n
-         !! Dimension of the matrix.
-         type(Diagonal) :: A
-         !! Corresponding diagonal matrix.
-      end function construct_constant_diag
-
-      module function construct_dense_to_diag(A) result(B)
-         !! Utility function to construct a `Diagonal` matrix from a rank-2 array.
-         real(dp), intent(in) :: A(:, :)
-         !! Dense [n x n] matrix from which to construct the `Diagonal` one.
-         type(Diagonal) :: B
-         !! Corresponding diagonal matrix.
-      end function construct_dense_to_diag
-   end interface
 
    interface Bidiagonal
       !! This interface provides different methods to construct a `Bidiagonal` matrix.
@@ -457,28 +352,6 @@ module SpecialMatrices_Tridiagonal
       !! ```fortran
       !!    matmul(A, B)
       !! ```
-      pure module function diag_spmv(A, x) result(y)
-         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: x(:)
-         !! Input vector.
-         real(dp), allocatable :: y(:)
-         !! Output vector.
-      end function diag_spmv
-
-      pure module function diag_multi_spmv(A, X) result(Y)
-         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: X(:, :)
-         !! Input matrix (rank-2 array).
-         real(dp), allocatable :: Y(:, :)
-         !! Output matrix (rank-2 array).
-      end function diag_multi_spmv
-
       pure module function bidiag_spmv(A, x) result(y)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
          !! is of `Bidiagonal` type and `x` and `y` are both rank-1 arrays.
@@ -570,30 +443,6 @@ module SpecialMatrices_Tridiagonal
       !! ```fortran
       !!    call spmv_ip(C, A, B)
       !! ```
-      pure module subroutine diag_spmv_ip(y, A, x)
-         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! is of `Diagonal` type and `x` and `y` are both rank-1 arrays. Note that this
-         !! function performs this product in-place, i.e. `y` needs to be pre-allocated and
-         !! will be modified by the call.
-         real(dp), intent(out) :: y(:)
-         !! Output vector.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: x(:)
-         !! Input vector.
-      end subroutine diag_spmv_ip
-
-      pure module subroutine diag_multi_spmv_ip(Y, A, X)
-         !! Utility function to compute the matrix-matrix product \( Y = AX \) where \( A \)
-         !! is of `Diagonal` type and `X` and `Y` are both rank-2 arrays.
-         real(dp), intent(out) :: Y(:, :)
-         !! Output vectors.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: X(:, :)
-         !! Input vectors.
-      end subroutine diag_multi_spmv_ip
-
       pure module subroutine symtridiag_spmv_ip(y, A, x)
          !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
          !! is of `SymTridiagonal` type and `x` and `y` are both rank-1 arrays.
@@ -643,30 +492,6 @@ module SpecialMatrices_Tridiagonal
       !!          argument.
       !!
       !! `x`   :  Solution of the linear system. It has the same type and shape as `b`.
-      pure module function diag_solve(A, b) result(x)
-         !! Utility function to solve the linear system \( A x = b \) where \( A \) is of
-         !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1 array
-         !! with the same type and dimension as `b`.
-         type(Diagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: b(:)
-         !! Right-hande side vector.
-         real(dp), allocatable :: x(:)
-         !! Solution vector.
-      end function diag_solve
-
-      pure module function diag_multi_solve(A, B) result(X)
-         !! Utility function to solve a linear system with multiple right-hand sides where
-         !! \( A \) is of `Diagonal` type and `B` a rank-2 array. The solution `X` is also a
-         !! rank-2 array with the same type and dimensions as `B`.
-         type(Diagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: B(:, :)
-         !! Right-hande side vectors.
-         real(dp), allocatable :: X(:, :)
-         !! Solution vectors.
-      end function diag_multi_solve
-
       ! Bidiagonal matrix solve.
       pure module function bidiag_solve(A, b) result(x)
          !! Utility function to solve a linear system \( Ax = b \) where \( A \) is of
@@ -743,55 +568,6 @@ module SpecialMatrices_Tridiagonal
       end function symtridiag_multi_solve
    end interface
 
-   interface solve_ip
-      !! This interface provides methods for solving *in-place* a linear
-      !! system \( Ax = b \) where \( A \) is of one of the types provided by `SpecialMatrices`.
-      !! It also enables to solve a linear system with multiple right-hand sides.
-      !!
-      !! #### Syntax
-      !!
-      !! To solve a system with \( A \) being of one of the types defined by `SpecialMatrices`:
-      !!
-      !! ```fortran
-      !!    call solve_ip(x, A, b)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `b`   :  Rank-1 or rank-2 array defining the right-hand side(s). It is an `intent(in)`
-      !!          argument.
-      !!
-      !! `x`   :  Solution of the linear system. It has the same type and shape as `b`.
-      pure module subroutine diag_solve_ip(x, A, b)
-         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
-         !! `Diagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1
-         !! array with the same type and dimension as `b`. Computation is done in-place, i.e.
-         !! the array `x` will be overwritten with the solution.
-         real(dp), intent(out) :: x(:)
-         !! Solution vector.
-         type(Diagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: b(:)
-         !! Right-hand side vector.
-      end subroutine diag_solve_ip
-
-      pure module subroutine diag_multi_solve_ip(x, A, b)
-         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
-         !! `Diagonal` type and `B` a rank-2 array. The solution `x` is also a rank-2
-         !! array with the same type and dimension as `B`. Computation is done in-place, i.e.
-         !! the array `x` will be overwritten with the solution.
-         real(dp), intent(out) :: x(:, :)
-         !! Solution vector.
-         type(Diagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: b(:, :)
-         !! Right-hand side vector.
-      end subroutine diag_multi_solve_ip
-   end interface
-
    interface det
       !! This interface overloads the `det` interface from `stdlib_linag` to compute the
       !! determinant \(\det(A)\) where \(A\) is of one of the types provided by `SpecialMatrices`.
@@ -808,14 +584,6 @@ module SpecialMatrices_Tridiagonal
       !!          It is in an `intent(in)` argument.
       !!
       !! `determinant`  :  Determinant of the matrix.
-      pure module function diag_det(A) result(determinant)
-         !! Utility function to compute the determinant of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: determinant
-         !! Determinant of the matrix.
-      end function diag_det
-
       pure module function symtridiag_det(A) result(determinant)
          !! Utility function to compute the determinant of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
@@ -841,14 +609,6 @@ module SpecialMatrices_Tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `tr`  :  Trace of the matrix.
-      pure module function diag_trace(A) result(tr)
-         !! Utility function to compute the trace of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: tr
-         !! Trace of the matrix.
-      end function diag_trace
-
       pure module function symtridiag_trace(A) result(tr)
          !! Utility function to compute the trace of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
@@ -856,97 +616,6 @@ module SpecialMatrices_Tridiagonal
          real(dp) :: tr
          !! Trace of the matrix.
       end function symtridiag_trace
-   end interface
-
-   interface inv
-      !! This interface overloads the `inv` interface from `stdlib_linalg` to compute the inverse
-      !! of a matrix \( A \) whose type is one of the types provided by `SpecialMatrices`. Note
-      !! that the inverse is returned as a standard Fortran rank-2 array.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    B = inv(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `B`   :  Inverse of the matrix \(A\). It is a standard Fortran rank-2 array.
-      pure module function diag_inv(A) result(B)
-         !! Utility function to compute the inverse of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable :: B(:, :)
-         !! Inverse of the matrix.
-      end function diag_inv
-   end interface
-
-   interface svdvals
-      !! This interface overloads the `svdvals` interface from `stdlib_linalg` to compute the
-      !! singular values of a matrix \( A \) whose type is one of the types provided by
-      !! `SpecialMatrices`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    s = svdvals(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `s`   :  Vector of singular values sorted in decreasing order.
-      pure module function diag_svdvals(A) result(s)
-         !! Utility function to compute the singular values of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable :: s(:)
-         !! Singular values.
-      end function diag_svdvals
-   end interface
-
-   interface svd
-      !! This interface overloads the `svd` interface from `stdlib_linalg` to compute the
-      !! the singular value decomposition of a matrix \( A \) whose type is provided by
-      !! `SpecialMatrices`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    call svd(A, s, u, vt)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `s`   :  Rank-1 array `real` array returning the singular values of `A`.
-      !!          It is an `intent(out)` argument.
-      !!
-      !! `u` (optional) :  Rank-2 array of the same kind as `A` returning the left singular
-      !!                   vectors of `A` as columns. Its size should be `[n, n]`.
-      !!                   It is an `intent(out)` argument.
-      !!
-      !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
-      !!                   vectors of `A` as rows. Its size should be `[n, n]`.
-      !!                   It is an `intent(out)` argument.
-      module subroutine diag_svd(A, u, s, vt)
-         !! Utility function to compute the singular value decomposition of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable, intent(out) :: s(:)
-         !! Singular values.
-         real(dp), allocatable, optional, intent(out) :: u(:, :)
-         !! Left singular vectors as columns.
-         real(dp), allocatable, optional, intent(out) :: vt(:, :)
-         !! Right singular vectors as rows.
-      end subroutine diag_svd
    end interface
 
    interface eigvalsh
@@ -965,14 +634,6 @@ module SpecialMatrices_Tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `lambda` :  Vector of eigenvalues in increasing order.
-      module function diag_eigvalsh(A) result(lambda)
-         !! Utility function to compute the eigenvalues of a real `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable :: lambda(:)
-         !! Eigenvalues.
-      end function diag_eigvalsh
-
       module function symtridiag_eigvalsh(A) result(lambda)
          !! Utility function to compute the eigenvalues of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
@@ -1003,16 +664,6 @@ module SpecialMatrices_Tridiagonal
       !!
       !! `vectors` (optional) :  Rank-2 array of the same kind as `A` returning the eigenvectors
       !!                         of `A`. It is an `intent(out)` argument.
-      module subroutine diag_eigh(A, lambda, vectors)
-         !! Utility function to compute the eigenvalues and eigenvectors of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable, intent(out) :: lambda(:)
-         !! Eigenvalues.
-         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
-         !! Eigenvectors.
-      end subroutine diag_eigh
-
       module subroutine symtridiag_eigh(A, lambda, vectors)
          !! Utility function to compute the eigenvalues and eigenvectors of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
@@ -1044,14 +695,6 @@ module SpecialMatrices_Tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `B`   :  Rank-2 array representation of the matrix \( A \).
-      pure module function diag_to_dense(A) result(B)
-         !! Utility function to convert a `Diagonal` matrix to a regular rank-2 array.
-         type(Diagonal), intent(in) :: A
-         !! Input diagonal matrix.
-         real(dp), allocatable :: B(:, :)
-         !! Output dense rank-2 array.
-      end function diag_to_dense
-
       pure module function bidiag_to_dense(A) result(B)
          !! Utility function to convert a `Bidiagonal` matrix to a regular rank-2 array.
          type(Bidiagonal), intent(in) :: A
@@ -1093,15 +736,6 @@ module SpecialMatrices_Tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `B`   :  Resulting transposed matrix. It is of the same type as `A`.
-      pure module function diag_transpose(A) result(B)
-         !! Utility function to compute the transpose of a `Diagonal` matrix.
-         !! The output matrix is also of `Diagonal` type.
-         type(Diagonal), intent(in) :: A
-         !! Input Diagonal matrix.
-         type(Diagonal) :: B
-         !! Tranpose of the original diagonal matrix.
-      end function diag_transpose
-
       pure module function bidiag_transpose(A) result(B)
          !! Utility function to compute the transpose of a `Bidiagonal` matrix.
          !! The output matrix is also of `Bidiagonal` type.
@@ -1131,15 +765,6 @@ module SpecialMatrices_Tridiagonal
    end interface
 
    interface size
-      pure module function diag_size(A, dim) result(arr_size)
-         !! Utility function to return the size of a `Diagonal` matrix along a given dimension.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         integer(ilp), intent(in) :: dim
-         !! Dimension whose size needs to be known.
-         integer(ilp) :: arr_size
-      end function diag_size
-
       pure module function symtridiag_size(A, dim) result(arr_size)
          !! Utility function to return the size of a `Diagonal` matrix along a given dimension.
          type(SymTridiagonal), intent(in) :: A
@@ -1159,14 +784,6 @@ module SpecialMatrices_Tridiagonal
       !! ```fortran
       !!    shape(A)
       !! ```
-      pure module function diag_shape(A) result(shape)
-         !! Utility function to get the shape of a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         !! Input matrix.
-         integer(ilp) :: shape(2)
-         !! Shape of the matrix.
-      end function diag_shape
-
       pure module function bidiag_shape(A) result(shape)
          !! Utility function to get the shape of a `Bidiagonal` matrix.
          type(Bidiagonal), intent(in) :: A
@@ -1193,20 +810,6 @@ module SpecialMatrices_Tridiagonal
    end interface
 
    interface operator(*)
-      pure module function diag_scalar_multiplication(alpha, A) result(B)
-         !! Utility function to perform a scalar multiplication with a `Diagonal` matrix.
-         real(dp), intent(in) :: alpha
-         type(Diagonal), intent(in) :: A
-         type(Diagonal) :: B
-      end function diag_scalar_multiplication
-
-      pure module function diag_scalar_multiplication_bis(A, alpha) result(B)
-         !! Utility function to perform a scalar multiplication with a `Diagonal` matrix.
-         type(Diagonal), intent(in) :: A
-         real(dp), intent(in) :: alpha
-         type(Diagonal) :: B
-      end function diag_scalar_multiplication_bis
-
       pure module function symtridiag_scalar_multiplication(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a `SymTridiagonal` matrix.
          real(dp), intent(in) :: alpha
