@@ -29,7 +29,8 @@ contains
                   new_unittest("Tridiagonal determinant", test_det), &
                   new_unittest("Tridiagonal matmul", test_matmul), &
                   new_unittest("Tridiagonal linear solver", test_solve), &
-                  new_unittest("Tridiagonal eigenvalue decomposition", test_eig) &
+                  new_unittest("Tridiagonal eigenvalue decomposition", test_eig), &
+                  new_unittest("Tridiagonal singular value decomposition", test_svd) &
                   ]
       return
    end subroutine collect_tridiagonal_testsuite
@@ -198,4 +199,28 @@ contains
 
       return
    end subroutine test_eig
+
+   subroutine test_svd(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Tridiagonal) :: A
+      real(dp), allocatable :: dl(:), dv(:), du(:)
+      real(dp), allocatable :: s(:), u(:, :), vt(:, :)
+      real(dp), allocatable :: Amat(:, :)
+
+      ! Initialize matrix.
+      allocate (dl(n - 1), dv(n), du(n - 1))
+      call random_number(dl); call random_number(dv); call random_number(du)
+      A = Tridiagonal(dl, dv, du)
+
+      ! Compute eigendecomposition.
+      allocate (s(n), u(n, n), vt(n, n))
+      call svd(A, s, u, vt)
+
+     ! Check error.
+      Amat = matmul(u, matmul(diag(s), vt))
+      call check(error, maxval(abs(dense(A) - Amat)) < 10*n**2*epsilon(1.0_dp), &
+                 "Tridiagonal svd failed.")
+
+      return
+   end subroutine test_svd
 end module
