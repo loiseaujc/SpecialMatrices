@@ -1,5 +1,6 @@
 module SpecialMatrices
    use specialmatrices_diagonal
+   use specialmatrices_bidiagonal
    use specialmatrices_symtridiagonal
    use SpecialMatrices_Tridiagonal
    implicit none
