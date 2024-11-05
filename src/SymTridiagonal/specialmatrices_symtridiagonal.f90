@@ -408,7 +408,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp), allocatable, intent(out) :: lambda(:)
          !! Eigenvalues.
-         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+         real(dp), allocatable, optional, target, intent(out) :: vectors(:, :)
          !! Eigenvectors.
       end subroutine
    end interface

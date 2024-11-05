@@ -28,7 +28,8 @@ contains
                   new_unittest("SymTridiagonal determinant", test_det), &
                   new_unittest("SymTridiagonal matmul", test_matmul), &
                   new_unittest("SymTridiagonal linear solver", test_solve), &
-                  new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_solve) &
+                  new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_solve), &
+                  new_unittest("SymTridiagonal eigenvalue decomposition", test_eigh) &
                   ]
       return
    end subroutine collect_symtridiagonal_testsuite
@@ -202,4 +203,34 @@ contains
                  "SymTridiagonal det failed.")
       return
    end subroutine test_det
+
+   subroutine test_eigh(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+      real(dp), allocatable :: lambda(:), vectors(:, :), Amat(:, :)
+      real(dp), allocatable :: lambda_stdlib(:)
+      integer :: i, j
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
+      A = SymTridiagonal(dv, ev)
+
+      ! Compute eigenvalues.
+      lambda = eigvalsh(A); lambda_stdlib = eigvalsh(dense(A))
+
+      ! Check error.
+      call check(error, all_close(lambda, lambda_stdlib), &
+                 "SymTridiagonal eigvalsh failed.")
+      if (allocated(error)) return
+
+      ! Compute eigenvalues and eigenvectors.
+      call eigh(A, lambda, vectors)
+
+      ! Check error.
+      Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
+      call check(error, maxval(abs(dense(A) - Amat)) < n**2 * epsilon(1.0_dp), &
+                 "SymTridiagonal eigh failed.")
+      return
+   end subroutine test_eigh
 end module
