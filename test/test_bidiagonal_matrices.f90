@@ -22,6 +22,8 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
+                  new_unittest("Bidiagonal trace", test_trace), &
+                  new_unittest("Bidiagonal determinant", test_det), &
                   new_unittest("Bidiagonal matmul", test_matmul), &
                   new_unittest("Bidiagonal linear solver", test_solve) &
                   ]
@@ -135,5 +137,35 @@ contains
 
       return
    end subroutine test_solve
+
+   subroutine test_trace(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Bidiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      A = Bidiagonal(dv, ev)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(trace(A), trace(dense(A))), &
+      "Bidiagonal trace failed.")
+      
+   end subroutine test_trace
+
+   subroutine test_det(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Bidiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      A = Bidiagonal(dv, ev)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(det(A), det(dense(A))), &
+      "Bidiagonal det failed.")
+      
+   end subroutine test_det
 
 end module
