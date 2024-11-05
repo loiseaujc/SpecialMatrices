@@ -29,7 +29,8 @@ contains
                   new_unittest("SymTridiagonal matmul", test_matmul), &
                   new_unittest("SymTridiagonal linear solver", test_solve), &
                   new_unittest("Pos. def. SymTridiagonal linear solver", test_posdef_solve), &
-                  new_unittest("SymTridiagonal eigenvalue decomposition", test_eigh) &
+                  new_unittest("SymTridiagonal eigenvalue decomposition", test_eigh), &
+                  new_unittest("SymTridiagonal singular value decomposition", test_svd) &
                   ]
       return
    end subroutine collect_symtridiagonal_testsuite
@@ -229,8 +230,39 @@ contains
 
       ! Check error.
       Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
-      call check(error, maxval(abs(dense(A) - Amat)) < n**2 * epsilon(1.0_dp), &
+      call check(error, maxval(abs(dense(A) - Amat)) < n**2*epsilon(1.0_dp), &
                  "SymTridiagonal eigh failed.")
       return
    end subroutine test_eigh
+
+   subroutine test_svd(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(SymTridiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+      real(dp), allocatable :: lambda(:), u(:, :), vt(:, :), Amat(:, :)
+      real(dp), allocatable :: lambda_stdlib(:)
+      integer :: i, j
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
+      A = SymTridiagonal(dv, ev)
+
+      ! ! Compute singular values.
+      ! lambda = svdvals(A); lambda_stdlib = svdvals(dense(A))
+      ! write(*, *) lambda
+      ! write(*, *) lambda_stdlib
+      ! ! Check error.
+      ! call check(error, all_close(lambda, lambda_stdlib), &
+      !            "SymTridiagonal svdvals failed.")
+      ! if (allocated(error)) return
+
+      ! Compute eigenvalues and eigenvectors.
+      call svd(A, lambda, u, vt)
+
+      ! Check error.
+      Amat = matmul(u, matmul(diag(lambda), vt))
+      call check(error, maxval(abs(dense(A) - Amat)) < n**2*epsilon(1.0_dp), &
+                 "SymTridiagonal svd failed.")
+      return
+   end subroutine test_svd
 end module

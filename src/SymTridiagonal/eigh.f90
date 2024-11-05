@@ -33,39 +33,39 @@ contains
    end subroutine handle_steqr_info
 
    module procedure eigh_rdp
-      ! Local variables.
-      type(linalg_state_type) :: err0
-      integer(ilp) :: n, ldz, info
-      real(dp), allocatable :: work(:), dv(:), ev(:)
-      real(dp), target :: vectors_dummy(1, 1)
-      real(dp), pointer :: zmat(:, :)
-      character :: task_vectors
+   ! Local variables.
+   type(linalg_state_type) :: err0
+   integer(ilp) :: n, ldz, info
+   real(dp), allocatable :: work(:), dv(:), ev(:)
+   real(dp), target :: vectors_dummy(1, 1)
+   real(dp), pointer :: zmat(:, :)
+   character :: task_vectors
 
-      ! Matrix size.
-      n = A%n
+   ! Matrix size.
+   n = A%n
 
-      ! Allocate arrays.
-      dv = A%dv; ev = A%ev
+   ! Allocate arrays.
+   dv = A%dv; ev = A%ev
 
-      ! Should eigenvectors be computed?
-      task_vectors = eigenvectors_task(present(vectors))
-      if (present(vectors)) then
-         vectors = eye(n); zmat => vectors
-         allocate (work(2*n-2)); ldz = n
-      else
-         zmat => vectors_dummy; allocate (work(1)); ldz = 1
-      endif
+   ! Should eigenvectors be computed?
+   task_vectors = eigenvectors_task(present(vectors))
+   if (present(vectors)) then
+      vectors = eye(n); zmat => vectors
+      allocate (work(2*n - 2)); ldz = n
+   else
+      zmat => vectors_dummy; allocate (work(1)); ldz = 1
+   end if
 
-      ! Compute eigenvalues and eigenvectors.
-      call steqr(task_vectors, n, dv, ev, zmat, ldz, work, info)
-      call handle_steqr_info(err0, info, n, n)
+   ! Compute eigenvalues and eigenvectors.
+   call steqr(task_vectors, n, dv, ev, zmat, ldz, work, info)
+   call handle_steqr_info(err0, info, n, n)
 
-      ! Return results.
-      lambda = dv
+   ! Return results.
+   lambda = dv
    end procedure
 
    module procedure eigvalsh_rdp
-      call eigh(A, lambda)
+   call eigh(A, lambda)
    end procedure
 
 end submodule symtridiagonal_eigenvalue_decomposition

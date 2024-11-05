@@ -306,7 +306,7 @@ module specialmatrices_symtridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `s`   :  Vector of singular values sorted in decreasing order.
-      pure module function svdvals_rdp(A) result(s)
+      module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
@@ -340,7 +340,7 @@ module specialmatrices_symtridiagonal
       !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
       !!                   vectors of `A` as rows. Its size should be `[n, n]`.
       !!                   It is an `intent(out)` argument.
-      module subroutine svd_rdp(A, u, s, vt)
+      module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `SymTridiagonal` matrix.
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
