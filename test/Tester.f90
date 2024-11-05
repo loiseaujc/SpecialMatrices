@@ -4,7 +4,10 @@ program Tester
    ! Unit-test utility.
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type
    ! List of tests.
-   use TestTridiag
+   use test_diagonal
+   use test_bidiagonal
+   use test_tridiagonal
+   use test_symtridiagonal
 
    implicit none
 
