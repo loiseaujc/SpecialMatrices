@@ -2,7 +2,7 @@ module test_bidiagonal
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvalsh
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals, eig
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -26,8 +26,10 @@ contains
                   new_unittest("Bidiagonal trace", test_trace), &
                   new_unittest("Bidiagonal determinant", test_det), &
                   new_unittest("Bidiagonal matmul", test_matmul), &
-                  new_unittest("Bidiagonal linear solver", test_solve) &
-                  ]
+                  new_unittest("Bidiagonal linear solver", test_solve), &
+                  ! new_unittest("Bidiagonal eigenvalue decomposition", test_eig), &
+                  new_unittest("Bidiagonal singular value decomposition", test_svd) &
+]
       return
    end subroutine collect_bidiagonal_testsuite
 
@@ -194,4 +196,56 @@ contains
                  "Bidiagonal*alpha failed.")
       return
    end subroutine test_scalar_multiplication
+
+   subroutine test_eig(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Bidiagonal) :: A
+      real(dp), allocatable :: ev(:), dv(:)
+      complex(dp), allocatable :: lambda(:), right(:, :), left(:, :)
+      complex(dp), allocatable :: Amat(:, :), diag_a(:)
+      integer :: i
+
+      ! Initialize matrix.
+      allocate (ev(n - 1), dv(n))
+      call random_number(dv); call random_number(ev)
+      A = Bidiagonal(dv, ev, which="U")
+
+      ! Compute eigendecomposition.
+      allocate (lambda(n), left(n, n), right(n, n))
+      call eig(A, lambda, left=left, right=right)
+      ! Normalize eigenvectors.
+      do i = 1, n
+         right(:, i) = right(:, i)/dot_product(right(:, i), left(:, i))
+      end do
+
+      ! Check error.
+      Amat = matmul(right, matmul(diag(lambda), conjg(transpose(left))))
+      call check(error, maxval(abs(dense(A) - Amat%re)) < 10*n**2*epsilon(1.0_dp), &
+                 "Bidiagonal eig failed.")
+      return
+   end subroutine test_eig
+
+   subroutine test_svd(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Bidiagonal) :: A
+      real(dp), allocatable :: dv(:), ev(:)
+      real(dp), allocatable :: s(:), u(:, :), vt(:, :)
+      real(dp), allocatable :: Amat(:, :)
+
+      ! Initialize matrix.
+      allocate (dv(n), ev(n - 1))
+      call random_number(dv); call random_number(ev)
+      A = Bidiagonal(dv, ev)
+
+      ! Compute eigendecomposition.
+      allocate (s(n), u(n, n), vt(n, n))
+      call svd(A, s, u, vt)
+
+     ! Check error.
+      Amat = matmul(u, matmul(diag(s), vt))
+      call check(error, maxval(abs(dense(A) - Amat)) < 10*n**2*epsilon(1.0_dp), &
+                 "Bidiagonal svd failed.")
+
+      return
+   end subroutine test_svd
 end module
