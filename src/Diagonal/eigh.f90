@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) hermitian_eigenvalue_decomposition
+submodule(specialmatrices_diagonal) diagonal_hermitian_eigenvalue_decomposition
    use stdlib_sorting, only: sort, sort_index
    use stdlib_linalg, only: eye
    implicit none(type, external)

@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) inverse
+submodule(specialmatrices_diagonal) diagonal_inverse
    implicit none(type, external)
 contains
    module procedure inv_rdp

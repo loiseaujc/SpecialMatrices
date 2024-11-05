@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) singular_value_decomposition
+submodule(specialmatrices_diagonal) diagonal_singular_value_decomposition
    use stdlib_sorting, only: sort, sort_index
    use stdlib_linalg, only: eye
    implicit none(type, external)

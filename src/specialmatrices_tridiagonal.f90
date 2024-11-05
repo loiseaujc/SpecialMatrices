@@ -6,16 +6,11 @@ module SpecialMatrices_Tridiagonal
 
    ! --> Linear Algebra.
    public :: transpose
-   public :: det
-   public :: trace
-   public :: matmul, spmv_ip
+   public :: matmul
    public :: solve
 
    ! --> Utility functions.
    public :: dense
-   public :: shape
-   public :: size
-   public :: operator(*)
 
    !-----------------------------------------------------------
    !-----     Base types for bi/tri-diagonal matrices     -----
@@ -42,18 +37,6 @@ module SpecialMatrices_Tridiagonal
       !! Dimension of the matrix.
       real(dp), allocatable :: d(:), du(:), dl(:)
       !! Tridiagonal elements.
-   end type
-
-   type, public :: SymTridiagonal
-      !! Base type used to define a `SymTridiagonal` matrix of size [n x n] with diagonal elements
-      !! given by the rank-1 arrays `dv` (diagonal) and `ev` (sub- and super-diagonal).
-      private
-      integer(ilp) :: n
-      !! Dimension of the matrix.
-      real(dp), allocatable :: dv(:), ev(:)
-      !! Tridiagonal elements.
-      logical :: isposdef
-      !! Whether `A` is symmetric positive definite or not.
    end type
 
    !--------------------------------
@@ -236,91 +219,6 @@ module SpecialMatrices_Tridiagonal
       end function construct_dense_to_tridiag
    end interface
 
-   interface SymTridiagonal
-      !! This interface provides different methods to construct a `SymTridiagonal` matrix.
-      !! Only `double precision` is supported currently. Only the non-zero elements of
-      !! \( A \) are stored, i.e.
-      !!
-      !! \[
-      !!    A
-      !!    =
-      !!    \begin{bmatrix}
-      !!       d_1   &  e_1  \\
-      !!       e_1  &  d_2      &  e_2  \\
-      !!             &  \ddots   &  \ddots   &  \ddots   \\
-      !!             &           &  e_{n-2} &  d_{n-1}  &  e_{n-1} \\
-      !!             &           &           &  e_{n-1} &  d_n
-      !!    \end{bmatrix}.
-      !! \]
-      !!
-      !! #### Syntax
-      !!
-      !! - Construct a `SymTridiagonal` matrix filled with zeros:
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n = 100
-      !!    type(SymTridiagonal) :: A
-      !!
-      !!    A = SymTridiagonal(n)
-      !! ```
-      !!
-      !! - Construct a `SymTridiagonal` matrix from rank-1 arrays:
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n
-      !!    real(dp), allocatable :: ev(:), dv(:)
-      !!    type(SymTridiagonal) :: A
-      !!    integer :: i
-      !!
-      !!    dv = [(i, i=1, n)]; ev = [(2*i, i=1, n)]
-      !!    A = Tridiagonal(dv, ev)
-      !! ```
-      !!
-      !! - Construct a `SymTridiagonal` matrix with constant diagonals:
-      !!
-      !! ```fortran
-      !!    integer, parameter :: n
-      !!    real(dp), parameter :: d = 1.0_dp, e = 2.0_dp
-      !!    type(SymTridiagonal) :: A
-      !!
-      !!    A = SymTridiagonal(d, e, n)
-      !! ```
-      !!
-      !! - If \( A \) is known to be symmetric positive definite, it can be constructed as
-      !!
-      !! ```fortran
-      !!    A = SymTridiagonal(dv, ev, ifposdef=.true.)
-      !! ```
-      pure module function initialize_symtridiag(n) result(A)
-         !! Utility function to create a `SymTridiagonal` matrix filled with zeros.
-         integer(ilp), intent(in) :: n
-         !! Dimension of the matrix.
-         type(SymTridiagonal) :: A
-         !! Corresponding symmetric tridiagonal matrix.
-      end function initialize_symtridiag
-
-      pure module function construct_symtridiag(dv, ev, isposdef) result(A)
-         !! Utility function to create a `SymTridiagonal` matrix from rank-1 arrays.
-         real(dp), intent(in) :: dv(:), ev(:)
-         !! Diagonal elements of the matrix.
-         logical, optional, intent(in) :: isposdef
-         !! Whether `A` is symmetric positive definite or not.
-         type(SymTridiagonal) :: A
-         !! Corresponding symmetric tridiagonal matrix.
-      end function construct_symtridiag
-
-      pure module function construct_constant_symtridiag(d, e, n, isposdef) result(A)
-         !! Utility function to create a `SymTridiagonal` matrix with constant diagonal elements.
-         real(dp), intent(in) :: d, e
-         !! Constant diagonal elements of the matrix.
-         integer(ilp), intent(in) :: n
-         !! Dimension of the matrix.
-         logical, optional, intent(in) :: isposdef
-         !! Whether `A` is symmetric positive definite or not.
-         type(SymTridiagonal) :: A
-         !! Corresponding symmetric tridiagonal matrix.
-      end function construct_constant_symtridiag
-   end interface
 
    !------------------------------------------------------------
    !-----     Matrix-vector and Matrix-matrix products     -----
@@ -395,75 +293,6 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable :: Y(:, :)
          !! Output matrix (rank-2 array).
       end function tridiag_multi_spmv
-
-      pure module function symtridiag_spmv(A, x) result(y)
-         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! is of `SymTridiagonal` type and `x` and `y` are both rank-1 arrays.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: x(:)
-         !! Input vector.
-         real(dp), allocatable :: y(:)
-         !! Output vector.
-      end function symtridiag_spmv
-
-      pure module function symtridiag_multi_spmv(A, X) result(Y)
-         !! Utility function to compute the matrix-matrix product \( Y = AX \) where \( A \)
-         !! is of `SymTridiagonal` type and `X` and `Y` are both rank-2 arrays.
-         type(SymTridiagonal), intent(in) :: A
-         real(dp), intent(in) :: X(:, :)
-         real(dp), allocatable :: Y(:, :)
-      end function symtridiag_multi_spmv
-   end interface
-
-   interface spmv_ip
-      !! This interface provides methods for in-place matrix-vector products for the following
-      !! types:
-      !!
-      !! - `Diagonal`
-      !! - `Bidiagonal`
-      !! - `Tridiagonal`
-      !! - `SymTridiagonal`
-      !!
-      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \) has to be of the ones
-      !! of the types defined by `SpecialMatrices`. Both \( B \) and \( C \) need to be standard
-      !! Fortran rank-2 arrays. All the underlying functions perform the computations in-place,
-      !! the array `y`/`C` will be overwritten with the result.
-      !!
-      !! #### Syntax
-      !!
-      !! - For matrix-vector product with `A` being of a type defined by `SpecialMatrices` and
-      !! `x` a standard rank-1 array:
-      !! ```fortran
-      !!    call spmv_ip(y, A, x)
-      !! ```
-      !!
-      !! - For matrix-matrix product with `A` being of a type defined by `SpecialMatrices` and
-      !! `B` a rank-2 array:
-      !! ```fortran
-      !!    call spmv_ip(C, A, B)
-      !! ```
-      pure module subroutine symtridiag_spmv_ip(y, A, x)
-         !! Utility function to compute the matrix-vector product \( y = Ax \) where \( A \)
-         !! is of `SymTridiagonal` type and `x` and `y` are both rank-1 arrays.
-         real(dp), intent(out) :: y(:)
-         !! Output vector.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: x(:)
-         !! Input vector.
-      end subroutine symtridiag_spmv_ip
-
-      pure module subroutine symtridiag_multi_spmv_ip(Y, A, X)
-         !! Utility function to compute the matrix-vector product \( Y = AX \) where \( A \)
-         !! is of `SymTridiagonal` type and `x` and `y` are both rank-2 arrays.
-         real(dp), intent(out) :: Y(:, :)
-         !! Output vector.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(in) :: X(:, :)
-         !! Input vector.
-      end subroutine symtridiag_multi_spmv_ip
    end interface
 
    !----------------------------------
@@ -541,138 +370,6 @@ module SpecialMatrices_Tridiagonal
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function tridiag_multi_solve
-
-      ! Symmetric Tridiagonal matrix solve.
-      pure module function symtridiag_solve(A, b) result(x)
-         !! Utility function to solve the linear system \( Ax = b \) where \( A \) is of
-         !! `SymTridiagonal` type and `b` a rank-1 array. The solution `x` is also a rank-1
-         !! array with the same type and dimension as `b`.
-         type(SymTridiagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: b(:)
-         !! Right-hande side vector.
-         real(dp), allocatable :: x(:)
-         !! Solution vector.
-      end function symtridiag_solve
-
-      pure module function symtridiag_multi_solve(A, B) result(X)
-         !! Utility function to solve a linear system with multiple right-hand side vectors
-         !! where \( A \) is of `SymTridiagonal` type and `B` a rank-2 array. The solution `X`
-         !! is also a rank-2 array with the same type and dimensions as `B`.
-         type(SymTridiagonal), intent(in) :: A
-         !! Coefficient matrix.
-         real(dp), intent(in) :: B(:, :)
-         !! Right-hand side vectors.
-         real(dp), allocatable :: X(:, :)
-         !! Solution vectors.
-      end function symtridiag_multi_solve
-   end interface
-
-   interface det
-      !! This interface overloads the `det` interface from `stdlib_linag` to compute the
-      !! determinant \(\det(A)\) where \(A\) is of one of the types provided by `SpecialMatrices`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    d = det(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is in an `intent(in)` argument.
-      !!
-      !! `determinant`  :  Determinant of the matrix.
-      pure module function symtridiag_det(A) result(determinant)
-         !! Utility function to compute the determinant of a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: determinant
-         !! Determinant of the matrix.
-      end function symtridiag_det
-   end interface
-
-   interface trace
-      !! This interface overloads the `trace` interface from `stdlib_linalg` to compute the trace
-      !! of a matrix \( A \) whose type is one of the types provided by `SpecialMatrices`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    tr = trace(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Diagonal`, `Bidiagonal`, `Tridiagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `tr`  :  Trace of the matrix.
-      pure module function symtridiag_trace(A) result(tr)
-         !! Utility function to compute the trace of a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: tr
-         !! Trace of the matrix.
-      end function symtridiag_trace
-   end interface
-
-   interface eigvalsh
-      !! This interface overloads the `eigvalsh` interface from `stdlib_linalg` to compute the
-      !! eigenvalues of a real-valued matrix \( A \) whose type is `Diagonal` or `SymTridiagonal`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    lambda = eigvalsh(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  `real`-valued matrix of `Diagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `lambda` :  Vector of eigenvalues in increasing order.
-      module function symtridiag_eigvalsh(A) result(lambda)
-         !! Utility function to compute the eigenvalues of a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable :: lambda(:)
-         !! Eigenvalues.
-      end function symtridiag_eigvalsh
-   end interface
-
-   interface eigh
-      !! This interface overloads the `eigh` interface from `stdlib_linalg` to compute the
-      !! eigenvalues and eigenvectors of a real-valued matrix \(A\) whose type is `Diagonal`
-      !! or `SymTridiagonal`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    call eigh(A, lambda [, vectors])
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   : `real`-valued matrix of `Diagonal` or `SymTridiagonal` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
-      !!             It is an `intent(out)` argument.
-      !!
-      !! `vectors` (optional) :  Rank-2 array of the same kind as `A` returning the eigenvectors
-      !!                         of `A`. It is an `intent(out)` argument.
-      module subroutine symtridiag_eigh(A, lambda, vectors)
-         !! Utility function to compute the eigenvalues and eigenvectors of a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable, intent(out) :: lambda(:)
-         !! Eigenvalues.
-         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
-         !! Eigenvectors.
-      end subroutine symtridiag_eigh
    end interface
 
    !-------------------------------------
@@ -710,14 +407,6 @@ module SpecialMatrices_Tridiagonal
          real(dp) :: B(A%n, A%n)
          !! Output dense rank-2 array.
       end function tridiag_to_dense
-
-      pure module function symtridiag_to_dense(A) result(B)
-         !! Utility function to convert a `SymTridiagonal` matrix to a regular rank-2 array.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input symmetric tridiagonal matrix.
-         real(dp) :: B(A%n, A%n)
-         !! Output dense rank-2 array.
-      end function symtridiag_to_dense
    end interface
 
    interface transpose
@@ -753,26 +442,6 @@ module SpecialMatrices_Tridiagonal
          type(Tridiagonal) :: B
          !! Transpose of the original tridiagonal matrix.
       end function tridiag_transpose
-
-      pure module function symtridiag_transpose(A) result(B)
-         !! Utility function to compute the transpose of a `SymTridiagonal` matrix.
-         !! The output matrix is also of `SymTridiagonal` type.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input symmetric tridiagonal matrix.
-         type(SymTridiagonal) :: B
-         !! Transpose of the original matrix.
-      end function symtridiag_transpose
-   end interface
-
-   interface size
-      pure module function symtridiag_size(A, dim) result(arr_size)
-         !! Utility function to return the size of a `Diagonal` matrix along a given dimension.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         integer(ilp), intent(in) :: dim
-         !! Dimension whose size needs to be known.
-         integer(ilp) :: arr_size
-      end function symtridiag_size
    end interface
 
    interface shape
@@ -799,30 +468,6 @@ module SpecialMatrices_Tridiagonal
          integer(ilp) :: shape(2)
          !! Shape of the matrix.
       end function tridiag_shape
-
-      pure module function symtridiag_shape(A) result(shape)
-         !! Utility function to get the shape of a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         !! Input matrix.
-         integer(ilp) :: shape(2)
-         !! Shape of the matrix.
-      end function symtridiag_shape
-   end interface
-
-   interface operator(*)
-      pure module function symtridiag_scalar_multiplication(alpha, A) result(B)
-         !! Utility function to perform a scalar multiplication with a `SymTridiagonal` matrix.
-         real(dp), intent(in) :: alpha
-         type(SymTridiagonal), intent(in) :: A
-         type(SymTridiagonal) :: B
-      end function symtridiag_scalar_multiplication
-
-      pure module function symtridiag_scalar_multiplication_bis(A, alpha) result(B)
-         !! Utility function to perform a scalar multiplication with a `SymTridiagonal` matrix.
-         type(SymTridiagonal), intent(in) :: A
-         real(dp), intent(in) :: alpha
-         type(SymTridiagonal) :: B
-      end function symtridiag_scalar_multiplication_bis
    end interface
 
 contains

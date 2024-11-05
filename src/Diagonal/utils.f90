@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) utilities
+submodule(specialmatrices_diagonal) diagonal_utilities
    use stdlib_linalg, only: diag
    implicit none(type, external)
 contains

@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) linear_solver
+submodule(specialmatrices_diagonal) diagonal_linear_solver
    implicit none(type, external)
 contains
    module procedure solve_single_rhs

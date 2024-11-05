@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) constructors
+submodule(specialmatrices_diagonal) diagonal_constructors
    use stdlib_linalg, only: diag
    implicit none(type, external)
 contains

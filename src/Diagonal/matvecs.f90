@@ -1,4 +1,4 @@
-submodule(specialmatrices_diagonal) matvecs
+submodule(specialmatrices_diagonal) diagonal_matvecs
    implicit none(type, external)
 contains
    module procedure spmv
