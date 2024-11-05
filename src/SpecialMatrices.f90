@@ -1,5 +1,8 @@
 module SpecialMatrices
-   use SpecialMatrices_Tridiagonal
+   use specialmatrices_diagonal
+   use specialmatrices_bidiagonal
+   use specialmatrices_tridiagonal
+   use specialmatrices_symtridiagonal
    implicit none
    private
 
@@ -20,8 +23,8 @@ module SpecialMatrices
    public :: det
    public :: trace
    public :: inv
-   public :: matmul, spmv_ip
-   public :: solve, solve_ip
+   public :: matmul
+   public :: solve
    public :: svd, svdvals
    public :: eigh, eigvalsh
 

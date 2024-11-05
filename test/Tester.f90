@@ -4,7 +4,10 @@ program Tester
    ! Unit-test utility.
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type
    ! List of tests.
-   use TestTridiag
+   use test_diagonal
+   use test_bidiagonal
+   use test_tridiagonal
+   use test_symtridiagonal
 
    implicit none
 
@@ -19,7 +22,7 @@ program Tester
                 new_testsuite("Diagonal Matrices", collect_diagonal_testsuite), &
                 new_testsuite("Bidiagonal Matrices", collect_bidiagonal_testsuite), &
                 new_testsuite("Tridiagonal Matrices", collect_tridiagonal_testsuite), &
-                new_testsuite("SymTriDiagonal Matrices", collect_symtridiagonal_testsuite) &
+                new_testsuite("SymTridiagonal Matrices", collect_symtridiagonal_testsuite) &
                 ]
 
    do is = 1, size(testsuites)
