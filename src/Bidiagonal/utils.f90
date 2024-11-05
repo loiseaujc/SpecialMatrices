@@ -4,18 +4,18 @@ contains
    module procedure dense_rdp
    integer(ilp) :: i, n
    n = A%n; allocate (B(n, n)); B = 0.0_dp
-   select case(A%which)
-      case("L")
-         B(1, 1) = A%dv(1)
-         do concurrent(i=2:n)
-            B(i, i) = A%dv(i)
-            B(i, i - 1) = A%ev(i - 1)
-         enddo
-      case("U")
+   select case (A%which)
+   case ("L")
+      B(1, 1) = A%dv(1)
+      do concurrent(i=2:n)
+         B(i, i) = A%dv(i)
+         B(i, i - 1) = A%ev(i - 1)
+      end do
+   case ("U")
       do concurrent(i=1:n - 1)
          B(i, i) = A%dv(i)
          B(i, i + 1) = A%ev(i)
-      enddo
+      end do
       B(n, n) = A%dv(n)
    end select
    end procedure
@@ -26,7 +26,7 @@ contains
       B%which = "U"
    else
       B%which = "L"
-   endif
+   end if
    end procedure
 
    module procedure shape_rdp

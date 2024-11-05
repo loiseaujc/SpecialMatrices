@@ -8,11 +8,11 @@ contains
    ! First iteration.
    d = A%dv(1)*f_0; f_1 = f_0; f_0 = d
    ! Continuants
-   do i=2, A%n
+   do i = 2, A%n
       ! Reccurence relation.
-      d = A%dv(i)*f_0 - A%ev(i - 1)**2 * f_1
+      d = A%dv(i)*f_0 - A%ev(i - 1)**2*f_1
       ! Store previous values.
       f_1 = f_0; f_0 = d
-   enddo
+   end do
    end procedure
 end submodule

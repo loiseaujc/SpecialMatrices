@@ -13,7 +13,7 @@ contains
       call ptsv(n, nrhs, d, du, xmat, n, info)
    else
       call gtsv(n, nrhs, dl, d, du, xmat, n, info)
-   endif
+   end if
    end procedure
 
    module procedure solve_multi_rhs
@@ -27,6 +27,6 @@ contains
       call ptsv(n, nrhs, d, du, xmat, n, info)
    else
       call gtsv(n, nrhs, dl, d, du, xmat, n, info)
-   endif
+   end if
    end procedure
 end submodule

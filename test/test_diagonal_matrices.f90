@@ -176,7 +176,7 @@ contains
       return
    end subroutine test_solve
 
-  subroutine test_svdvals(error)
+   subroutine test_svdvals(error)
       type(error_type), allocatable, intent(out) :: error
       type(Diagonal) :: A
       real(dp), allocatable :: dv(:)

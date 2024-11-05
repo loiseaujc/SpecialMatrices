@@ -14,6 +14,6 @@ contains
    ! Eigenvectors.
    if (present(vectors)) then
       vectors = eye(A%n); vectors = vectors(:, index)
-   endif
+   end if
    end procedure
 end submodule

@@ -142,7 +142,7 @@ contains
       real(dp), allocatable :: dl(:), dv(:), du(:)
 
       ! Initialize matrix.
-      allocate (dl(n-1), dv(n), du(n-1))
+      allocate (dl(n - 1), dv(n), du(n - 1))
       call random_number(dl); call random_number(dv); call random_number(du)
       A = Tridiagonal(dl, dv, du)
 
@@ -158,7 +158,7 @@ contains
       real(dp), allocatable :: dl(:), dv(:), du(:)
 
       ! Initialize matrix.
-      allocate (dl(n-1), dv(n), du(n-1))
+      allocate (dl(n - 1), dv(n), du(n - 1))
       call random_number(dl); call random_number(dv); call random_number(du)
       A = Tridiagonal(dl, dv, du)
 

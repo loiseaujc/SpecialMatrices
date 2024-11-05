@@ -10,10 +10,10 @@ contains
    n = A%n; nrhs = 1
    x = b; xmat(1:n, 1:nrhs) => x
    ! Dispatch to solver.
-   select case(A%which)
-      case("L")
+   select case (A%which)
+   case ("L")
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
-      case("U")
+   case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
    end select
    ! Solve.
@@ -28,10 +28,10 @@ contains
    n = A%n; nrhs = size(b, 2)
    x = b; xmat(1:n, 1:nrhs) => x
    ! Dispatch to solver.
-   select case(A%which)
-      case("L")
+   select case (A%which)
+   case ("L")
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
-      case("U")
+   case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
    end select
    ! Solve.

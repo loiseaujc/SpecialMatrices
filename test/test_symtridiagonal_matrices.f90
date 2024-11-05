@@ -179,7 +179,7 @@ contains
       real(dp), allocatable :: dv(:), ev(:)
 
       ! Initialize matrix.
-      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
       A = SymTridiagonal(dv, ev)
 
       ! Compare against stdlib_linalg implementation.
@@ -194,7 +194,7 @@ contains
       real(dp), allocatable :: dv(:), ev(:)
 
       ! Initialize matrix.
-      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
       A = SymTridiagonal(dv, ev)
 
       ! Compare against stdlib_linalg implementation.

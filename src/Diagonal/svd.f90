@@ -17,7 +17,7 @@ contains
    vt = eye(A%n)
    do concurrent(i=1:A%n, A%dv(i) < 0.0_dp)
       vt(i, i) = -1.0_dp
-   enddo
+   end do
    vt = vt(index, :)
    end procedure
 end submodule

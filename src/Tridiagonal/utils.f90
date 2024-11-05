@@ -9,7 +9,7 @@ contains
       B(i, i - 1) = A%dl(i - 1)
       B(i, i) = A%dv(i)
       B(i, i + 1) = A%du(i)
-   enddo
+   end do
    B(n, n - 1) = A%dl(n - 1); B(n, n) = A%dv(n)
    end procedure
 
