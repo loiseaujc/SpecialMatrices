@@ -27,6 +27,7 @@ module SpecialMatrices
    public :: solve
    public :: svd, svdvals
    public :: eigh, eigvalsh
+   public :: eig, eigvals
 
    !-------------------------------------
    !-----     Utility functions     -----

@@ -295,7 +295,7 @@ module specialmatrices_tridiagonal
       !!          It is an `intent(in)` argument.
       !!
       !! `s`   :  Vector of singular values sorted in decreasing order.
-      pure module function svdvals_rdp(A) result(s)
+      module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
@@ -329,15 +329,15 @@ module specialmatrices_tridiagonal
       !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
       !!                   vectors of `A` as rows. Its size should be `[n, n]`.
       !!                   It is an `intent(out)` argument.
-      module subroutine svd_rdp(A, u, s, vt)
+      module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable, intent(out) :: s(:)
+         real(dp), intent(out) :: s(:)
          !! Singular values in descending order.
-         real(dp), allocatable, optional, intent(out) :: u(:, :)
+         real(dp), optional, intent(out) :: u(:, :)
          !! Left singular vectors as columns.
-         real(dp), allocatable, optional, intent(out) :: vt(:, :)
+         real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
       end subroutine
    end interface
@@ -366,7 +366,7 @@ module specialmatrices_tridiagonal
          !! Utility function to compute the eigenvalues of a real `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable :: lambda(:)
+         complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
       end function
    end interface
@@ -378,7 +378,7 @@ module specialmatrices_tridiagonal
       !! #### Syntax
       !!
       !! ```fortran
-      !!    call eig(A, lambda [, vectors])
+      !!    call eig(A, lambda [, left] [, right])
       !! ```
       !!
       !! #### Arguments
@@ -389,15 +389,26 @@ module specialmatrices_tridiagonal
       !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
       !!             It is an `intent(out)` argument.
       !!
-      !! `vectors` (optional) :  Rank-2 array of the same kind as `A` returning the eigenvectors
-      !!                         of `A`. It is an `intent(out)` argument.
-      module subroutine eig_rdp(A, lambda, vectors)
+      !! `left` (optional) :  `complex` rank-2 array of the same kind as `A` returning the left
+      !!                      eigenvectors of `A`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! `right` (optional) : `complex` rank-2 array of the same kind as `A` returning the right
+      !!                      eigenvectors of `A`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! No specialized eigensolvers for generic `Tridiagonal` matrices exist in LAPACK.
+      !! This routine thus falls back to wrapping the `eig` procedure from `stdlib_linalg`
+      !! which uses `*geev` under the hood.
+      !! @endnote
+      module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable, intent(out) :: lambda(:)
+         complex(dp), intent(out) :: lambda(:)
          !! Eigenvalues.
-         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+         complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
       end subroutine
    end interface
