@@ -366,7 +366,7 @@ module specialmatrices_tridiagonal
          !! Utility function to compute the eigenvalues of a real `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable :: lambda(:)
+         complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
       end function
    end interface
@@ -378,7 +378,7 @@ module specialmatrices_tridiagonal
       !! #### Syntax
       !!
       !! ```fortran
-      !!    call eig(A, lambda [, vectors])
+      !!    call eig(A, lambda [, left] [, right])
       !! ```
       !!
       !! #### Arguments
@@ -389,15 +389,26 @@ module specialmatrices_tridiagonal
       !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
       !!             It is an `intent(out)` argument.
       !!
-      !! `vectors` (optional) :  Rank-2 array of the same kind as `A` returning the eigenvectors
-      !!                         of `A`. It is an `intent(out)` argument.
-      module subroutine eig_rdp(A, lambda, vectors)
+      !! `left` (optional) :  `complex` rank-2 array of the same kind as `A` returning the left
+      !!                      eigenvectors of `A`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! `right` (optional) : `complex` rank-2 array of the same kind as `A` returning the right
+      !!                      eigenvectors of `A`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! No specialized eigensolvers for generic `Tridiagonal` matrices exist in LAPACK.
+      !! This routine thus falls back to wrapping the `eig` procedure from `stdlib_linalg`
+      !! which uses `*geev` under the hood.
+      !! @endnote
+      module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a `Tridiagonal` matrix.
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable, intent(out) :: lambda(:)
+         complex(dp), intent(out) :: lambda(:)
          !! Eigenvalues.
-         real(dp), allocatable, optional, intent(out) :: vectors(:, :)
+         complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
       end subroutine
    end interface

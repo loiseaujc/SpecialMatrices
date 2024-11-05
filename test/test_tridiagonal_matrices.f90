@@ -28,7 +28,8 @@ contains
                   new_unittest("Tridiagonal trace", test_trace), &
                   new_unittest("Tridiagonal determinant", test_det), &
                   new_unittest("Tridiagonal matmul", test_matmul), &
-                  new_unittest("Tridiagonal linear solver", test_solve) &
+                  new_unittest("Tridiagonal linear solver", test_solve), &
+                  new_unittest("Tridiagonal eigenvalue decomposition", test_eig) &
                   ]
       return
    end subroutine collect_tridiagonal_testsuite
@@ -168,4 +169,33 @@ contains
       return
    end subroutine test_det
 
+   subroutine test_eig(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Tridiagonal) :: A
+      real(dp), allocatable :: dl(:), dv(:), du(:)
+      complex(dp), allocatable :: lambda(:), right(:, :), left(:, :)
+      complex(dp), allocatable :: Amat(:, :), diag_a(:)
+      integer :: i
+
+      ! Initialize matrix.
+      allocate (dl(n - 1), dv(n), du(n - 1))
+      call random_number(dl); call random_number(dv); call random_number(du)
+      A = Tridiagonal(dl, dv, du)
+
+      ! Compute eigendecomposition.
+      allocate (lambda(n), left(n, n), right(n, n))
+      call eig(A, lambda, left=left, right=right)
+
+      ! Normalize eigenvectors.
+      do i = 1, n
+         right(:, i) = right(:, i)/dot_product(right(:, i), left(:, i))
+      end do
+
+      ! Check error.
+      Amat = matmul(right, matmul(diag(lambda), conjg(transpose(left))))
+      call check(error, maxval(abs(dense(A) - Amat%re)) < 10*n**2*epsilon(1.0_dp), &
+                 "Tridiagonal eig failed.")
+
+      return
+   end subroutine test_eig
 end module
