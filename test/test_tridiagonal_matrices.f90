@@ -85,7 +85,7 @@ contains
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
-         x = solve(A, b)
+         x = solve(A, b, refine=.true.)
          ! Solve with stdlib (dense).
          x_stdlib = solve(dense(A), b)
          ! Check error.
@@ -100,7 +100,7 @@ contains
          ! Random rhs.
          call random_number(b)
          ! Solve with SpecialMatrices.
-         x = solve(A, b)
+         x = solve(A, b, refine=.true.)
          ! Solve with stdlib (dense).
          x_stdlib = solve(dense(A), b)
          ! Check error.

@@ -186,19 +186,21 @@ module specialmatrices_tridiagonal
       !!
       !! `x`   :  Solution of the linear system.
       !!          It has the same type and shape as `b`.
-      pure module function solve_single_rhs(A, b) result(x)
+      module function solve_single_rhs(A, b, refine) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is of type `Tridiagonal` and `b` a
          !! standard rank-1 array. The solution vector `x` has the same dimension and kind
          !! as the right-hand side vector `b`.
          type(Tridiagonal), intent(in) :: A
          !! Coefficient matrix.
-         real(dp), intent(in) :: b(:)
+         real(dp), intent(in), target :: b(:)
          !! Right-hand side vector.
+         logical(lk), optional, intent(in) :: refine
+         !! Whether iterative refinement is used or not.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
       end function
 
-      pure module function solve_multi_rhs(A, b) result(x)
+      module function solve_multi_rhs(A, b, refine) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type `Tridiagonal` and `B` a
          !! standard rank-2 array. The solution matrix `X` has the same dimensions and kind
          !! as the right-hand side matrix `B`.
@@ -206,6 +208,8 @@ module specialmatrices_tridiagonal
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
          !! Right-hand side vectors.
+         logical(lk), optional, intent(in) :: refine
+         !! Whether iterative refined is used or not.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
       end function
