@@ -19,14 +19,12 @@ contains
    module procedure solve_multi_rhs
    integer(ilp) :: i, n, nrhs, info
    real(dp), allocatable :: dl(:), d(:), du(:)
-   real(dp), pointer :: xmat(:, :)
    ! Initialize arrays.
-   n = A%n; nrhs = size(b, 2); dl = A%ev; d = A%dv; du = A%ev
-   x = b; xmat(1:n, 1:nrhs) => x
+   n = A%n; nrhs = size(b, 2); dl = A%ev; d = A%dv; du = A%ev; x = b
    if (A%isposdef) then
-      call ptsv(n, nrhs, d, du, xmat, n, info)
+      call ptsv(n, nrhs, d, du, x, n, info)
    else
-      call gtsv(n, nrhs, dl, d, du, xmat, n, info)
+      call gtsv(n, nrhs, dl, d, du, x, n, info)
    end if
    end procedure
 end submodule

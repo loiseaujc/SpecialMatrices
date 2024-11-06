@@ -9,16 +9,16 @@ contains
    ! Initialize arrays.
    n = A%n; nrhs = 1; dl = A%dl; d = A%dv; du = A%du
    x = b; xmat(1:n, 1:nrhs) => x
+   ! Solve system.
    call gtsv(n, nrhs, dl, d, du, xmat, n, info)
    end procedure
 
    module procedure solve_multi_rhs
    integer(ilp) :: i, n, nrhs, info
    real(dp), allocatable :: dl(:), d(:), du(:)
-   real(dp), pointer :: xmat(:, :)
    ! Initialize arrays.
-   n = A%n; nrhs = size(b, 2); dl = A%dl; d = A%dv; du = A%du
-   x = b; xmat(1:n, 1:nrhs) => x
-   call gtsv(n, nrhs, dl, d, du, xmat, n, info)
+   n = A%n; nrhs = size(b, 2); dl = A%dl; d = A%dv; du = A%du; x = b
+   ! Solve system.
+   call gtsv(n, nrhs, dl, d, du, x, n, info)
    end procedure
 end submodule

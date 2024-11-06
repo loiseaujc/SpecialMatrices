@@ -23,10 +23,8 @@ contains
    module procedure solve_multi_rhs
    integer(ilp) :: i, n, nrhs, info
    real(dp), allocatable :: dl(:), dv(:), du(:)
-   real(dp), pointer :: xmat(:, :)
    ! Initialize arrays.
-   n = A%n; nrhs = size(b, 2)
-   x = b; xmat(1:n, 1:nrhs) => x
+   n = A%n; nrhs = size(b, 2); x = b
    ! Dispatch to solver.
    select case (A%which)
    case ("L")
@@ -35,6 +33,6 @@ contains
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
    end select
    ! Solve.
-   call gtsv(n, nrhs, dl, dv, du, xmat, n, info)
+   call gtsv(n, nrhs, dl, dv, du, x, n, info)
    end procedure
 end submodule
