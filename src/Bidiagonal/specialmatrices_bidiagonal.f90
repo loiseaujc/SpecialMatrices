@@ -140,22 +140,22 @@ module specialmatrices_bidiagonal
       !! ```fortran
       !!    C = matmul(A, B)
       !! ```
-      pure module function spmv(A, x) result(y)
+      module function spmv(A, x) result(y)
          !! Compute the matrix-vector product \(y = Ax\) for a `Bidiagonal` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
-         type(Bidiagonal), intent(in) :: A
+         type(Bidiagonal), target, intent(in) :: A
          !! Input matrix.
-         real(dp), intent(in) :: x(:)
+         real(dp), target, intent(in) :: x(:)
          !! Input vector.
-         real(dp), allocatable :: y(:)
+         real(dp), target, allocatable :: y(:)
          !! Output vector.
       end function
 
-      pure module function spmvs(A, x) result(y)
+      module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Bidiagonal` matrix \(A\) and a
          !! dense matrix \(X\) (rank-2 array). \(Y\) is also a rank-2 array with the same
          !! dimensions as \(X\).
-         type(Bidiagonal), intent(in) :: A
+         type(Bidiagonal), target, intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input vectors.
