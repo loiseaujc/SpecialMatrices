@@ -1,23 +1,32 @@
 submodule(specialmatrices_symtridiagonal) symtridiagonal_matvecs
+   use stdlib_linalg_lapack, only: lagtm
    implicit none(type, external)
 contains
    module procedure spmv
-   integer(ilp) :: i, n
-   n = A%n; allocate (y, mold=x)
-   y(1) = A%dv(1)*x(1) + A%ev(1)*x(2)
-   do concurrent(i=2:n - 1)
-      y(i) = A%ev(i - 1)*x(i - 1) + A%dv(i)*x(i) + A%ev(i)*x(i + 1)
-   end do
-   y(n) = A%dv(n)*x(n) + A%ev(n - 1)*x(n - 1)
+   ! Local variables.
+   character :: trans
+   integer(ilp) :: n, nrhs, ldx, ldy
+   real(dp), parameter :: alpha = 1.0_dp, beta = 0.0_dp
+   real(dp), pointer :: xmat(:, :), ymat(:, :)
+
+   ! Setup variables.
+   n = A%n; nrhs = 1; ldx = n; ldy = n; trans = "N"
+   y = x; xmat(1:n, 1:nrhs) => x; ymat(1:n, 1:nrhs) => y
+   ! Matrix-vector product.
+   call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, A%ev, xmat, ldx, beta, ymat, ldy)
+
    end procedure
 
    module procedure spmvs
-   integer(ilp) :: i, j, n, nvecs
-   n = A%n; nvecs = size(x, 2); allocate (y, mold=x)
-   y(1, :) = A%dv(1)*x(1, :) + A%ev(1)*x(2, :)
-   do concurrent(i=2:n - 1, j=1:nvecs)
-      y(i, j) = A%ev(i - 1)*x(i - 1, j) + A%dv(i)*x(i, j) + A%ev(i)*x(i + 1, j)
-   end do
-   y(n, :) = A%dv(n)*x(n, :) + A%ev(n - 1)*x(n - 1, :)
+   ! Local variables.
+   character :: trans
+   integer(ilp) :: n, nrhs, ldx, ldy
+   real(dp), parameter :: alpha = 1.0_dp, beta = 0.0_dp
+
+   ! Setup variables.
+   n = A%n; nrhs = size(x, 2); ldx = n; ldy = n; trans = "N"; y = x
+   ! Matrix-vector product.
+   call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, A%ev, x, ldx, beta, y, ldy)
+
    end procedure
 end submodule
