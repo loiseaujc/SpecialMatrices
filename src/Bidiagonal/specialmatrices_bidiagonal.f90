@@ -151,11 +151,11 @@ module specialmatrices_bidiagonal
          !! Output vector.
       end function
 
-      module function spmvs(A, x) result(y)
+      pure module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Bidiagonal` matrix \(A\) and a
          !! dense matrix \(X\) (rank-2 array). \(Y\) is also a rank-2 array with the same
          !! dimensions as \(X\).
-         type(Bidiagonal), target, intent(in) :: A
+         type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input vectors.
