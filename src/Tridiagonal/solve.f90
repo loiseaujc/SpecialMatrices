@@ -1,6 +1,6 @@
 submodule(specialmatrices_tridiagonal) tridiagonal_linear_solver
    use stdlib_optval, only: optval
-   use stdlib_linalg_lapack, only: gtsv, gttrf, gttrs, gtrfs
+   use stdlib_linalg_lapack, only: gttrf, gttrs, gtrfs
    use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling, LINALG_ERROR, &
                                   LINALG_INTERNAL_ERROR, LINALG_VALUE_ERROR, LINALG_SUCCESS
    implicit none(type, external)
