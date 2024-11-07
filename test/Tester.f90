@@ -8,6 +8,7 @@ program Tester
    use test_bidiagonal
    use test_tridiagonal
    use test_symtridiagonal
+   use test_strang
 
    implicit none
 
@@ -22,7 +23,8 @@ program Tester
                 new_testsuite("Diagonal Matrices", collect_diagonal_testsuite), &
                 new_testsuite("Bidiagonal Matrices", collect_bidiagonal_testsuite), &
                 new_testsuite("Tridiagonal Matrices", collect_tridiagonal_testsuite), &
-                new_testsuite("SymTridiagonal Matrices", collect_symtridiagonal_testsuite) &
+                new_testsuite("SymTridiagonal Matrices", collect_symtridiagonal_testsuite), &
+                new_testsuite("Strang Matrices", collect_strang_testsuite) &
                 ]
 
    do is = 1, size(testsuites)

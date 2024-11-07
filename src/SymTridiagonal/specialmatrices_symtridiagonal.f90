@@ -221,7 +221,7 @@ module specialmatrices_symtridiagonal
          !! Right-hand side vectors.
          logical(lk), optional, intent(in) :: refine
          !! Whether iterative refinement of the solution is used or not.
-         real(dp), allocatable, target :: x(:, :)
+         real(dp), allocatable :: x(:, :)
          !! Solution vectors.
       end function
    end interface
