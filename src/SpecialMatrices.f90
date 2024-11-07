@@ -3,6 +3,7 @@ module SpecialMatrices
    use specialmatrices_bidiagonal
    use specialmatrices_tridiagonal
    use specialmatrices_symtridiagonal
+   use specialmatrices_strang
    implicit none
    private
 
@@ -14,6 +15,7 @@ module SpecialMatrices
    public :: Bidiagonal
    public :: Tridiagonal
    public :: SymTridiagonal
+   public :: Strang
 
    !----------------------------------
    !-----     Linear Algebra     -----
