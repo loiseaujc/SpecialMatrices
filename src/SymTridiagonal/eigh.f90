@@ -15,18 +15,31 @@ contains
    end function eigenvectors_task
 
    ! Process STEQR output flags.
-   elemental subroutine handle_steqr_info(err, info, m, n)
-      !> Error handler.
+   elemental subroutine handle_steqr_info(compz, n, ldz, info, err)
+      character, intent(in) :: compz
+      integer(ilp), intent(in) :: n, ldz, info
       type(linalg_state_type), intent(inout) :: err
-      ! SETQR return flag.
-      integer(ilp), intent(in) :: info
-      ! Input matrix size.
-      integer(ilp), intent(in) :: m, n
 
       select case (info)
       case (0)
          ! Success.
          err%state = LINALG_SUCCESS
+      case (-1)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for compz=", compz)
+      case (-2)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for n=", n)
+      case (-3)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for D.")
+      case (-4)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for E.")
+      case (-5)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for Z.")
+      case (-6)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for ldz=", ldz)
+      case (-7)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for work.")
+      case (1:)
+         err = linalg_state_type(this, LINALG_ERROR, "steqr failed to converge.")
       case default
          err = linalg_state_type(this, LINALG_INTERNAL_ERROR, "Unknown error returned by setqr.")
       end select
@@ -58,7 +71,7 @@ contains
 
    ! Compute eigenvalues and eigenvectors.
    call steqr(task_vectors, n, dv, ev, zmat, ldz, work, info)
-   call handle_steqr_info(err0, info, n, n)
+   call handle_steqr_info(task_vectors, n, n, info, err0)
 
    ! Return results.
    lambda = dv
