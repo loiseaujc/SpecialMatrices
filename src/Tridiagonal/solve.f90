@@ -20,15 +20,15 @@ contains
       case (-1)
          err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid problem size n=", n)
       case (-2)
-         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for dl.")
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid size for dl.")
       case (-3)
-         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for d.")
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid size for d.")
       case (-4)
-         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for du.")
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid size for du.")
       case (-5)
-         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for du2.")
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid size for du2.")
       case (-6)
-         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for ipiv.")
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid size for ipiv.")
       case (1:)
          err = linalg_state_type(this, LINALG_ERROR, "Singular matrix.")
       case default
@@ -37,16 +37,33 @@ contains
    end subroutine handle_gttrf_info
 
    ! Process GTTRS
-   elemental subroutine handle_gttrs_info(err, info)
-      !> Error handler.
+   elemental subroutine handle_gttrs_info(trans, n, nrhs, ldb, info, err)
+      character, intent(in) :: trans
+      integer(ilp), intent(in) :: n, nrhs, ldb, info
       type(linalg_state_type), intent(inout) :: err
-      ! GTTRS return flag.
-      integer(ilp), intent(in) :: info
 
       select case (info)
       case (0)
          ! Success.
          err%state = LINALG_SUCCESS
+      case (-1)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for trans", trans)
+      case (-2)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid problem size n=", n)
+      case (-3)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid number of rhs nrhs=", nrhs)
+      case (-4)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid dimensions for dl.")
+      case (-5)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid dimensions for d.")
+      case (-6)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid dimensions for du2.")
+      case (-7)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid dimensions for ipiv.")
+      case (-8)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid dimensions for b.")
+      case (-9)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid value for ldb=", ldb)
       case default
          err = linalg_state_type(this, LINALG_INTERNAL_ERROR, "Unknown error returned by gttrs")
       end select
@@ -110,7 +127,7 @@ contains
 
       ! ----- Solve the system -----
       call gttrs("N", n, nrhs, dl, d, du, du2, ipiv, x, n, info)
-      call handle_gttrs_info(err, info)
+      call handle_gttrs_info("N", n, nrhs, n, info, err)
 
       !----------------------------------------
       !-----     Iterative refinement     -----
