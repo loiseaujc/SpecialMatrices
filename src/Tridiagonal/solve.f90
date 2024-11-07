@@ -9,16 +9,28 @@ submodule(specialmatrices_tridiagonal) tridiagonal_linear_solver
 contains
 
    ! Process GTTRF
-   elemental subroutine handle_gttrf_info(err, info)
-      !> Error handler.
+   elemental subroutine handle_gttrf_info(n, info, err)
+      integer(ilp), intent(in) :: n, info
       type(linalg_state_type), intent(inout) :: err
-      ! GTTRF return flag.
-      integer(ilp), intent(in) :: info
 
       select case (info)
       case (0)
          ! Success.
          err%state = LINALG_SUCCESS
+      case (-1)
+         err = linalg_state_type(this, LINALG_VALUE_ERROR, "Invalid problem size n=", n)
+      case (-2)
+         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for dl.")
+      case (-3)
+         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for d.")
+      case (-4)
+         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for du.")
+      case (-5)
+         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for du2.")
+      case (-6)
+         err = linalg_state_type(this, LINALG_ERROR, "Invalid size for ipiv.")
+      case (1:)
+         err = linalg_state_type(this, LINALG_ERROR, "Singular matrix.")
       case default
          err = linalg_state_type(this, LINALG_INTERNAL_ERROR, "Unknown error returned by gttrf")
       end select
@@ -90,7 +102,7 @@ contains
       dl = A%dl; d = A%dv; du = A%du; 
       ! ----- LU factorization -----
       call gttrf(n, dl, d, du, du2, ipiv, info)
-      call handle_gttrf_info(err, info)
+      call handle_gttrf_info(n, info, err)
 
       !-------------------------------------
       !-----     Tridiagonal solve     -----
