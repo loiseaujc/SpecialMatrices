@@ -4,6 +4,7 @@ module SpecialMatrices
    use specialmatrices_tridiagonal
    use specialmatrices_symtridiagonal
    use specialmatrices_strang
+   use specialmatrices_poisson2D
    implicit none
    private
 
