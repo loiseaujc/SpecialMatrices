@@ -1,6 +1,5 @@
 module test_poisson2D
    ! Fortran standard library.
-   use stdlib_io_npy, only: save_npy
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
    use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvalsh
@@ -34,13 +33,11 @@ contains
    end subroutine collect_poisson2D_testsuite
 
    subroutine test_matmul(error)
-      use stdlib_io_npy, only: save_npy
       type(error_type), allocatable, intent(out) :: error
       type(Poisson2D) :: A
 
       ! Initialize matrix.
       A = Poisson2D(nx, ny)
-      call save_npy("poisson2D.npy", dense(A))
       ! Matrix-vector product.
       block
          real(dp), allocatable :: x(:), y(:), y_dense(:)
