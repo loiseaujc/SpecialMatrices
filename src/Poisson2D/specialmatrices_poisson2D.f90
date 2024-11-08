@@ -48,21 +48,21 @@ module specialmatrices_poisson2D
    !-------------------------------------------------------------------
 
    interface matmul
-      pure module function spmv(A, x) result(y)
+      module function spmv(A, x) result(y)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
-         real(dp), intent(in) :: x(:)
+         real(dp), target, intent(in) :: x(:)
          !! Input vector.
-         real(dp), allocatable :: y(:)
+         real(dp), allocatable, target :: y(:)
          !! Output vector.
       end function
 
-      pure module function spmvs(A, x) result(y)
+      module function spmvs(A, x) result(y)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
-         real(dp), intent(in) :: x(:, :)
+         real(dp), target, contiguous, intent(in) :: x(:, :)
          !! Input vectors.
-         real(dp), allocatable :: y(:, :)
+         real(dp), allocatable, target :: y(:, :)
          !! Output vectors.
       end function
    end interface
@@ -86,7 +86,7 @@ module specialmatrices_poisson2D
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
          !! Right-hand side vector.
-         real(dp), allocatable :: x(:)
+         real(dp), allocatable :: x(:, :)
          !! Solution vector.
       end function
    end interface
@@ -118,16 +118,16 @@ module specialmatrices_poisson2D
    !--------------------------------------------
 
    interface eigvalsh
-      pure module function eigvalsh_rdp(A) result(lambda)
+      module function eigvalsh_rdp(A) result(lambda)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable :: lambda(:)
+         real(dp), allocatable, target :: lambda(:)
          !! Eigenvalues.
       end function
    end interface
 
    interface eigh
-      pure module subroutine eigh_rdp(A, lambda, vectors)
+      module subroutine eigh_rdp(A, lambda, vectors)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: lambda(:)
@@ -159,7 +159,7 @@ module specialmatrices_poisson2D
    end interface
 
    interface size
-      pure module function size(A, dim) result(arr_size)
+      pure module function size_rdp(A, dim) result(arr_size)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim

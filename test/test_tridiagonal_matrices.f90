@@ -175,7 +175,7 @@ contains
       type(Tridiagonal) :: A
       real(dp), allocatable :: dl(:), dv(:), du(:)
       complex(dp), allocatable :: lambda(:), right(:, :), left(:, :)
-      complex(dp), allocatable :: Amat(:, :), diag_a(:)
+      complex(dp), allocatable :: diag_a(:)
       integer :: i
 
       ! Initialize matrix.
@@ -193,8 +193,8 @@ contains
       end do
 
       ! Check error.
-      Amat = matmul(right, matmul(diag(lambda), conjg(transpose(left))))
-      call check(error, maxval(abs(dense(A) - Amat%re)) < 10*n**2*epsilon(1.0_dp), &
+      diag_a = diag(matmul(transpose(conjg(left)), matmul(dense(A), right)))
+      call check(error, all_close(lambda, diag_a), &
                  "Tridiagonal eig failed.")
 
       return

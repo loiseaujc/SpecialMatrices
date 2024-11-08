@@ -17,6 +17,7 @@ module SpecialMatrices
    public :: Tridiagonal
    public :: SymTridiagonal
    public :: Strang
+   public :: Poisson2D
 
    !----------------------------------
    !-----     Linear Algebra     -----
