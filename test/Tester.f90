@@ -9,6 +9,7 @@ program Tester
    use test_tridiagonal
    use test_symtridiagonal
    use test_strang
+   use test_poisson2D
 
    implicit none
 
@@ -24,7 +25,8 @@ program Tester
                 new_testsuite("Bidiagonal Matrices", collect_bidiagonal_testsuite), &
                 new_testsuite("Tridiagonal Matrices", collect_tridiagonal_testsuite), &
                 new_testsuite("SymTridiagonal Matrices", collect_symtridiagonal_testsuite), &
-                new_testsuite("Strang Matrices", collect_strang_testsuite) &
+                new_testsuite("Strang Matrices", collect_strang_testsuite), &
+                new_testsuite("Poisson2D Matrices", collect_poisson2D_testsuite) &
                 ]
 
    do is = 1, size(testsuites)
