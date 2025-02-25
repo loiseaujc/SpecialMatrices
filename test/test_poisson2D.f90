@@ -26,7 +26,7 @@ contains
                   new_unittest("Poisson2D trace", test_trace), &
                   ! new_unittest("Poisson2D determinant", test_det), &
                   new_unittest("Poisson2D matmul", test_matmul), &
-                  ! new_unittest("Poisson2D linear solver", test_solve), &
+                  new_unittest("Poisson2D linear solver", test_solve), &
                   new_unittest("Poisson2D eigenvalue decomposition", test_eigh) &
                   ]
       return
