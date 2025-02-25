@@ -73,19 +73,19 @@ module specialmatrices_poisson2D
    !-----------------------------------------------
 
    interface solve
-      module function solve_single_rhs(A, b) result(x)
+      pure module function solve_single_rhs(A, b) result(x)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
-         real(dp), intent(in), target :: b(:)
+         real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
       end function
 
-      module function solve_multi_rhs(A, b) result(x)
+      pure module function solve_multi_rhs(A, b) result(x)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
-         real(dp), intent(in), target :: b(:, :)
+         real(dp), intent(in) :: b(:, :)
          !! Right-hand side vector.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vector.

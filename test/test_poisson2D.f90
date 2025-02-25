@@ -10,7 +10,7 @@ module test_poisson2D
    implicit none
    private
 
-   integer, parameter :: nx = 16, ny = 16, n = nx*ny
+   integer, parameter :: nx = 16, ny = 8, n = nx*ny
 
    public :: collect_poisson2D_testsuite
 

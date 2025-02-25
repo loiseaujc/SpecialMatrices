@@ -3,34 +3,61 @@ submodule(specialmatrices_poisson2D) poisson2D_solve
    use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling, LINALG_ERROR, &
                                   LINALG_INTERNAL_ERROR, LINALG_VALUE_ERROR, LINALG_SUCCESS
    use stdlib_io_npy, only: save_npy
+   use fftpack, only: dst => dsint, init_dst => dsinti
    implicit none(type, external)
 
    character(len=*), parameter :: this = "poisson2D_linear_solver"
 contains
    module procedure solve_single_rhs
       ! Local variables.
-      real(dp), allocatable :: D(:), V(:, :)
+      integer(ilp) :: nx, ny, i, j, nx_wrk, ny_wrk
+      real(dp), allocatable :: lambda_x(:), lambda_y(:)
+      real(dp), pointer :: xmat(:, :)
+      real(dp), allocatable :: wsave_x(:), wsave_y(:)
 
-      ! Compute eigendecomposition of the Poisson 2D.
-      call eigh(A, D, V)
+      ! Initializes pointer and allocatable arrays.
+      nx = A%nx ; ny = A%ny
+      x = b ; xmat(1:nx, 1:ny) => x
+      nx_wrk = int(2.5*nx + 15, kind=ilp) ; ny_wrk = int(2.5*ny + 15, kind=ilp)
+      allocate(wsave_x(nx_wrk)) ; allocate(wsave_y(ny_wrk))
 
-      ! Solution.
-      x = matmul(transpose(V), b)
-      x = matmul(diag(1.0_dp/D), x)
-      x = matmul(V, x)
+      ! Initializes Discrete Sine Transforms (Type-I).
+      call init_dst(nx, wsave_x) ; call init_dst(ny, wsave_y)
+
+      ! Compute the DST-I of the right-hand side.
+      do concurrent(i=1:ny)
+         call dst(nx, xmat(:, i), wsave_x)
+      enddo
+      do concurrent(i=1:nx)
+         call dst(ny, xmat(i, :), wsave_y)
+      enddo
+
+      ! Compute the eigenvalues of the 1D Laplacian operators.
+      lambda_x = -eigvalsh(Strang(nx)) / A%dx**2
+      lambda_y = -eigvalsh(Strang(ny)) / A%dy**2
+
+      ! Compute the solution in spectral space.
+      do concurrent(i=1:nx, j=1:ny)
+         xmat(i, j) = xmat(i, j) / (lambda_x(i) + lambda_y(j))
+      enddo
+
+      ! Inverse DST-I of the solution.
+      do concurrent(i=1:ny)
+         call dst(nx, xmat(:, i), wsave_x)
+      enddo
+      xmat = 1.0_dp / (2*(nx+1)) * xmat
+      do concurrent(i=1:nx)
+         call dst(ny, xmat(i, :), wsave_y)
+      enddo
+      xmat = 1.0_dp / (2*(ny+1)) * xmat
   end procedure
 
    module procedure solve_multi_rhs
-      ! Local variables.
-      real(dp), allocatable :: D(:), V(:, :)
-
-      ! Compute eigendecomposition of the Poisson 2D.
-      call eigh(A, D, V)
-
-      ! Solution.
-      x = matmul(transpose(V), b)
-      x = matmul(diag(1.0_dp/D), x)
-      x = matmul(V, x)
+      integer(ilp) :: i
+      allocate(x, mold=b)
+      do concurrent(i=1:size(b, 2))
+         x(:, i) = solve(A, b(:, i))
+      enddo
    end procedure
 
 end submodule
