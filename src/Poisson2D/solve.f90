@@ -1,8 +1,4 @@
 submodule(specialmatrices_poisson2D) poisson2D_solve
-   use stdlib_linalg, only: eye, diag
-   use stdlib_linalg_state, only: linalg_state_type, linalg_error_handling, LINALG_ERROR, &
-                                  LINALG_INTERNAL_ERROR, LINALG_VALUE_ERROR, LINALG_SUCCESS
-   use stdlib_io_npy, only: save_npy
    use fftpack, only: dst => dsint, init_dst => dsinti
    implicit none(type, external)
 
@@ -12,8 +8,9 @@ contains
       ! Local variables.
       integer(ilp) :: nx, ny, i, j, nx_wrk, ny_wrk
       real(dp), allocatable :: lambda_x(:), lambda_y(:)
-      real(dp), pointer :: xmat(:, :)
       real(dp), allocatable :: wsave_x(:), wsave_y(:)
+      real(dp), pointer     :: xmat(:, :)
+      real(dp) :: scale
 
       ! Initializes pointer and allocatable arrays.
       nx = A%nx ; ny = A%ny
@@ -25,8 +22,8 @@ contains
       call init_dst(nx, wsave_x) ; call init_dst(ny, wsave_y)
 
       ! Compute the DST-I of the right-hand side.
-      do concurrent(i=1:ny)
-         call dst(nx, xmat(:, i), wsave_x)
+      do concurrent(j=1:ny)
+         call dst(nx, xmat(:, j), wsave_x)
       enddo
       do concurrent(i=1:nx)
          call dst(ny, xmat(i, :), wsave_y)
@@ -42,14 +39,14 @@ contains
       enddo
 
       ! Inverse DST-I of the solution.
-      do concurrent(i=1:ny)
-         call dst(nx, xmat(:, i), wsave_x)
+      scale = 1.0_dp / (2*(nx+1) * 2*(ny+1))
+      do concurrent(j=1:ny)
+         call dst(nx, xmat(:, j), wsave_x)
       enddo
-      xmat = 1.0_dp / (2*(nx+1)) * xmat
       do concurrent(i=1:nx)
          call dst(ny, xmat(i, :), wsave_y)
       enddo
-      xmat = 1.0_dp / (2*(ny+1)) * xmat
+      xmat = scale * xmat
   end procedure
 
    module procedure solve_multi_rhs
