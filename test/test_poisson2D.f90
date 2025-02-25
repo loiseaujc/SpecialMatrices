@@ -10,7 +10,7 @@ module test_poisson2D
    implicit none
    private
 
-   integer, parameter :: nx = 16, ny = 16, n = nx*ny
+   integer, parameter :: nx = 16, ny = 8, n = nx*ny
 
    public :: collect_poisson2D_testsuite
 
@@ -25,9 +25,9 @@ contains
       testsuite = [ &
                   new_unittest("Poisson2D trace", test_trace), &
                   ! new_unittest("Poisson2D determinant", test_det), &
-                  new_unittest("Poisson2D matmul", test_matmul) &
-                  ! new_unittest("Poisson2D linear solver", test_solve), &
-                  ! new_unittest("Poisson2D eigenvalue decomposition", test_eigh) &
+                  new_unittest("Poisson2D matmul", test_matmul), &
+                  new_unittest("Poisson2D linear solver", test_solve), &
+                  new_unittest("Poisson2D eigenvalue decomposition", test_eigh) &
                   ]
       return
    end subroutine collect_poisson2D_testsuite
@@ -139,7 +139,6 @@ contains
 
       ! Compute eigenvalues.
       lambda = eigvalsh(A); lambda_stdlib = eigvalsh(dense(A))
-      write(*, *) lambda - lambda_stdlib
       ! Check error.
       call check(error, all_close(lambda, lambda_stdlib), &
                  "Poisson2D eigvalsh failed.")

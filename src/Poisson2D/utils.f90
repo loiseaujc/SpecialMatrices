@@ -16,9 +16,8 @@ contains
    D2x = -dense(Strang(nx))/dx**2; D2y = -dense(Strang(ny))/dy**2
 
    ! Corresponding 2D Laplace operator.
-   Idx = eye(nx); Idy = eye(ny)
-   !B = kron(Idy, D2x) + kron(D2y, Idx)
-   B = kron(D2x, Idy) + kron(Idx, D2y)
+   Idx = eye(nx, mold=1.0_dp); Idy = eye(ny, mold=1.0_dp)
+   B = kron(Idy, D2x) + kron(D2y, Idx)
    end procedure
 
    module procedure shape_rdp

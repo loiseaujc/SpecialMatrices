@@ -1,5 +1,6 @@
 module specialmatrices_poisson2D
    use stdlib_linalg_constants, only: dp, ilp, lk
+   use specialmatrices_strang, only: Strang, dense, eigvalsh, eigh
    implicit none(type, external)
    private
 
@@ -72,21 +73,21 @@ module specialmatrices_poisson2D
    !-----------------------------------------------
 
    interface solve
-      module function solve_single_rhs(A, b) result(x)
+      pure module function solve_single_rhs(A, b) result(x)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
-         real(dp), allocatable :: x(:)
+         real(dp), allocatable, target :: x(:)
          !! Solution vector.
       end function
 
-      module function solve_multi_rhs(A, b) result(x)
+      pure module function solve_multi_rhs(A, b) result(x)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
          !! Right-hand side vector.
-         real(dp), allocatable :: x(:, :)
+         real(dp), allocatable, target :: x(:, :)
          !! Solution vector.
       end function
    end interface
@@ -130,7 +131,7 @@ module specialmatrices_poisson2D
       module subroutine eigh_rdp(A, lambda, vectors)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
-         real(dp), allocatable, intent(out) :: lambda(:)
+         real(dp), allocatable, intent(out), target :: lambda(:)
          !! Eigenvalues.
          real(dp), allocatable, intent(out) :: vectors(:, :)
       end subroutine
