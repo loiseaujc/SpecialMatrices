@@ -183,7 +183,7 @@ module specialmatrices_strang
    interface dense
       !! This interface provides a method to convert a matrix of type `Strang`
       !! to its dense representation as a standard rank-2 array
-   .  pure module function dense_rdp(A) result(B)
+      pure module function dense_rdp(A) result(B)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
