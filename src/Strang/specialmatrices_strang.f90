@@ -19,6 +19,7 @@ module specialmatrices_strang
    !---------------------------------------------------
 
    type, public :: Strang
+      !! Base type used to define a `Strang` matrix.
       private
       integer(ilp) :: n
       !! Dimension of the matrix.
@@ -29,6 +30,11 @@ module specialmatrices_strang
    !--------------------------------
 
    interface Strang
+      !! Constructor for generating the `Strang` matrix of size `n`. Only
+      !! `double precision` is currently supported. The matrix corresponds
+      !! to the standard 3-point finite-difference approximation of the
+      !! 1D Laplace operator with unit grid-spacing (\(\Delta x = 1\)) and
+      !! homogeneous Dirichlet boundary conditions.
       pure module function initialize(n) result(A)
          integer(ilp), intent(in) :: n
          type(Strang) :: A
@@ -40,7 +46,18 @@ module specialmatrices_strang
    !-------------------------------------------------------------------
 
    interface matmul
+      !! This interface overloads the Fortran intrinsic `matmul` for the `Strang`
+      !! matrix. It is overloaded both for matrix-vector and matrix-matrix products.!! For matrix-matrix product \( C = A B \), only \(A\) can be a `Strang`
+      !! matrix. Both \( B \) and \( C \) are standard rank-2 arrays.
+      !!
+      !! ### Syntax
+      !!
+      !! ```fortran
+      !!    y = matmul(A, x)
+      !!    C = matmul(A, B)
+      !! ```
       pure module function spmv(A, x) result(y)
+         !! Driver for the matrix-vector product.
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
@@ -49,12 +66,13 @@ module specialmatrices_strang
          !! Output vector.
       end function
 
-      pure module function spmvs(A, x) result(y)
+      pure module function spmvs(A, X) result(Y)
+         !! Driver for the matrix-matrix product.
          type(Strang), intent(in) :: A
          !! Input matrix.
-         real(dp), intent(in) :: x(:, :)
+         real(dp), intent(in) :: X(:, :)
          !! Input vector.
-         real(dp), allocatable :: y(:, :)
+         real(dp), allocatable :: Y(:, :)
          !! Output vector.
       end function
    end interface
@@ -64,6 +82,15 @@ module specialmatrices_strang
    !-----------------------------------------------
 
    interface solve
+      !! This interface overloads the `solve` interface from `stdlib_linalg` for solving
+      !! a system \(Ax = b\) where \(A\) is a `Strang` matrix. It also enables to
+      !! solve a linear system with multiple right-hand sides.
+      !!
+      !! ### Syntax
+      !!
+      !! ```fortran
+      !!    x = solve(A, b)
+      !! ```
       module function solve_single_rhs(A, b, refine) result(x)
          type(Strang), intent(in) :: A
          !! Coefficient matrix.
@@ -114,6 +141,15 @@ module specialmatrices_strang
    !--------------------------------------------
 
    interface eigvalsh
+      !! This interface overloads the `eigvalsh` interface from `stdlib_linalg`
+      !! to compute the eigenvalues of a `Strang` matrix. Note that these
+      !! eigenvalues are known analytically.
+      !!
+      !! ### Syntax
+      !!
+      !! ```fortran
+      !!    lambda = eigvalsh(A)
+      !! ```
       pure module function eigvalsh_rdp(A) result(lambda)
          type(Strang), intent(in) :: A
          !! Input matrix.
@@ -123,6 +159,13 @@ module specialmatrices_strang
    end interface
 
    interface eigh
+      !! This interface overloads the `eigh` interface from `stdlib_linalg`
+      !! to compute the eigenvalues and eigenvectors of a `Strang` matrix.
+      !! Note that both quantities are known analytically.
+      !!
+      !! ```fortran
+      !!    call eigh(A, lambda, vectors)
+      !! ```
       pure module subroutine eigh_rdp(A, lambda, vectors)
          type(Strang), intent(in) :: A
          !! Input matrix.
@@ -138,6 +181,8 @@ module specialmatrices_strang
    !-------------------------------------
 
    interface dense
+      !! This interface provides a method to convert a matrix of type `Strang`
+      !! to its dense representation as a standard rank-2 array
       pure module function dense_rdp(A) result(B)
          type(Strang), intent(in) :: A
          !! Input matrix.
