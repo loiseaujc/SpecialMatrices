@@ -10,7 +10,7 @@ module specialmatrices_circulant
    public :: matmul
    public :: inv
    public :: solve
-   public :: svd, svdvals
+   ! public :: svd, svdvals
    public :: eig, eigvals
 
    ! --> Utility functions.
@@ -250,69 +250,68 @@ module specialmatrices_circulant
    !-----     Singular Value Decomposition     -----
    !------------------------------------------------
 
-   interface svdvals
-      !! This interface overloads the `svdvals` interface from `stdlib_linalg` to compute the
-      !! singular values of a `Circulant` matrix \(A\).
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    s = svdvals(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Circulant` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `s`   :  Vector of singular values sorted in decreasing order.
-      module function svdvals_rdp(A) result(s)
-         !! Compute the singular values of a `Circulant` matrix.
-         type(Circulant), intent(in) :: A
-         !! Input matrix.
-         real(dp), allocatable :: s(:)
-         !! Singular values in descending order.
-      end function
-   end interface
-
-   interface svd
-      !! This interface overloads the `svd` interface from `stdlib_linalg` to compute the
-      !! the singular value decomposition of a `Circulant` matrix \(A\).
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    call svd(A, s, u, vt)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! `A`   :  Matrix of `Circulant` type.
-      !!          It is an `intent(in)` argument.
-      !!
-      !! `s`   :  Rank-1 array `real` array returning the singular values of `A`.
-      !!          It is an `intent(out)` argument.
-      !!
-      !! `u` (optional) :  Rank-2 array of the same kind as `A` returning the left singular
-      !!                   vectors of `A` as columns. Its size should be `[n, n]`.
-      !!                   It is an `intent(out)` argument.
-      !!
-      !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
-      !!                   vectors of `A` as rows. Its size should be `[n, n]`.
-      !!                   It is an `intent(out)` argument.
-      module subroutine svd_rdp(A, s, u, vt)
-         !! Compute the singular value decomposition of a `Circulant` matrix.
-         type(Circulant), intent(in) :: A
-         !! Input matrix.
-         real(dp), intent(out) :: s(:)
-         !! Singular values in descending order.
-         real(dp), optional, intent(out) :: u(:, :)
-         !! Left singular vectors as columns.
-         real(dp), optional, intent(out) :: vt(:, :)
-         !! Right singular vectors as rows.
-      end subroutine
-   end interface
-
+   ! interface svdvals
+   !    !! This interface overloads the `svdvals` interface from `stdlib_linalg` to compute the
+   !    !! singular values of a `Circulant` matrix \(A\).
+   !    !!
+   !    !! #### Syntax
+   !    !!
+   !    !! ```fortran
+   !    !!    s = svdvals(A)
+   !    !! ```
+   !    !!
+   !    !! #### Arguments
+   !    !!
+   !    !! `A`   :  Matrix of `Circulant` type.
+   !    !!          It is an `intent(in)` argument.
+   !    !!
+   !    !! `s`   :  Vector of singular values sorted in decreasing order.
+   !    module function svdvals_rdp(A) result(s)
+   !       !! Compute the singular values of a `Circulant` matrix.
+   !       type(Circulant), intent(in) :: A
+   !       !! Input matrix.
+   !       real(dp), allocatable :: s(:)
+   !       !! Singular values in descending order.
+   !    end function
+   ! end interface
+   !
+   ! interface svd
+   !    !! This interface overloads the `svd` interface from `stdlib_linalg` to compute the
+   !    !! the singular value decomposition of a `Circulant` matrix \(A\).
+   !    !!
+   !    !! #### Syntax
+   !    !!
+   !    !! ```fortran
+   !    !!    call svd(A, s, u, vt)
+   !    !! ```
+   !    !!
+   !    !! #### Arguments
+   !    !!
+   !    !! `A`   :  Matrix of `Circulant` type.
+   !    !!          It is an `intent(in)` argument.
+   !    !!
+   !    !! `s`   :  Rank-1 array `real` array returning the singular values of `A`.
+   !    !!          It is an `intent(out)` argument.
+   !    !!
+   !    !! `u` (optional) :  Rank-2 array of the same kind as `A` returning the left singular
+   !    !!                   vectors of `A` as columns. Its size should be `[n, n]`.
+   !    !!                   It is an `intent(out)` argument.
+   !    !!
+   !    !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
+   !    !!                   vectors of `A` as rows. Its size should be `[n, n]`.
+   !    !!                   It is an `intent(out)` argument.
+   !    module subroutine svd_rdp(A, s, u, vt)
+   !       !! Compute the singular value decomposition of a `Circulant` matrix.
+   !       type(Circulant), intent(in) :: A
+   !       !! Input matrix.
+   !       real(dp), intent(out) :: s(:)
+   !       !! Singular values in descending order.
+   !       real(dp), optional, intent(out) :: u(:, :)
+   !       !! Left singular vectors as columns.
+   !       real(dp), optional, intent(out) :: vt(:, :)
+   !       !! Right singular vectors as rows.
+   !    end subroutine
+   ! end interface
 
    !--------------------------------------------
    !-----     Eigenvalue Decomposition     -----

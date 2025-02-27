@@ -24,7 +24,7 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
-                  ! new_unittest("Circulant scalar multiplication", test_scalar_multiplication), &
+                  new_unittest("Circulant scalar multiplication", test_scalar_multiplication), &
                   new_unittest("Circulant trace", test_trace), &
                   ! new_unittest("Circulant determinant", test_det), &
                   new_unittest("Circulant inverse", test_inv), &
@@ -38,30 +38,30 @@ contains
       return
    end subroutine collect_circulant_testsuite
 
-   ! subroutine test_scalar_multiplication(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A, B
-   !    real(dp), allocatable :: dv(:)
-   !    real(dp) :: alpha
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !    call random_number(alpha)
-   !
-   !    ! Scalar-matrix multiplication.
-   !    B = alpha*A
-   !    ! Check error.
-   !    call check(error, all_close(alpha*dense(A), dense(B)), &
-   !               "alpha*circulant failed.")
-   !    if (allocated(error)) return
-   !
-   !    ! Matrix-scalar multipliation.
-   !    B = A*alpha
-   !    ! Check error.
-   !    call check(error, all_close(alpha*dense(A), dense(B)), &
-   !               "circulant*alpha failed.")
-   !    return
-   ! end subroutine test_scalar_multiplication
+   subroutine test_scalar_multiplication(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A, B
+      real(dp), allocatable :: dv(:)
+      real(dp) :: alpha
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+      call random_number(alpha)
+
+      ! Scalar-matrix multiplication.
+      B = alpha*A
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "alpha*circulant failed.")
+      if (allocated(error)) return
+
+      ! Matrix-scalar multipliation.
+      B = A*alpha
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "circulant*alpha failed.")
+      return
+   end subroutine test_scalar_multiplication
 
    subroutine test_trace(error)
       type(error_type), allocatable, intent(out) :: error

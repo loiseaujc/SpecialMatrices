@@ -13,15 +13,19 @@ contains
    end procedure
 
    module procedure size_rdp
+   arr_size = A%n
    end procedure
 
    module procedure shape_rdp
+   arr_shape = A%n
    end procedure
 
    module procedure scalar_multiplication_rdp
+   B = Circulant(alpha*A%c)
    end procedure
 
    module procedure scalar_multiplication_bis_rdp
+   B = Circulant(alpha*A%c)
    end procedure
 
 end submodule
