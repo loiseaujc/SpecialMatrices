@@ -3,6 +3,8 @@ submodule(specialmatrices_circulant) circulant_constructors
 contains
    module procedure initialize
    A%n = n; allocate(A%c(n)) ; A%c = 0.0_dp
+   !> Initialize the workspace for the FFT and its inverse.
+   allocate(A%wsave(2*n+15)) ; call init_fft(n, A%wsave)
    end procedure
 
    module procedure construct
