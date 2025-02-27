@@ -1,6 +1,6 @@
 module specialmatrices_circulant
    use stdlib_linalg_constants, only: dp, ilp, lk
-   use fftpack, only: init_fft => dffti, fft => dfftf, ifft => dfftb
+   use fftpack, only: fft, ifft
    implicit none(type, external)
    private
 
@@ -31,8 +31,8 @@ module specialmatrices_circulant
       !! Dimension of the matrix.
       real(dp), allocatable :: c(:)
       !! Generating vector.
-      real(dp), allocatable :: wsave(:)
-      !! Workspace for the FFT.
+      complex(dp), allocatable :: c_hat(:)
+      !! Fourier Transform of the generating vector.
    end type
 
    !--------------------------------
@@ -106,7 +106,7 @@ module specialmatrices_circulant
       !! ```fortran
       !!    C = matmul(A, B)
       !! ```
-      module function spmv(A, x) result(y)
+      pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Circulant` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
          type(Circulant), intent(in) :: A
@@ -117,7 +117,7 @@ module specialmatrices_circulant
          !! Output vector.
       end function
 
-      module function spmvs(A, X) result(Y)
+      pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Circulant` matrix `A`.
          !! Both `X` and `Y` are rank-2 arrays with the same kind as `A`.
          type(Circulant), intent(in) :: A
@@ -470,5 +470,4 @@ module specialmatrices_circulant
          type(Circulant) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-
 end module
