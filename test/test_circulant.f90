@@ -1,8 +1,9 @@
 module test_circulant
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
+   use stdlib_sorting, only: sort_index
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals, hermitian
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -15,9 +16,9 @@ module test_circulant
    public :: collect_circulant_testsuite
 contains
 
-   !-------------------------------------
-   !-----     circulant MATRICES     -----
-   !-------------------------------------
+   !--------------------------------------
+   !-----     CIRCULANT MATRICES     -----
+   !--------------------------------------
 
    subroutine collect_circulant_testsuite(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
@@ -28,11 +29,11 @@ contains
                   ! new_unittest("Circulant determinant", test_det), &
                   new_unittest("Circulant inverse", test_inv), &
                   new_unittest("Circulant matmul", test_matmul), &
-                  new_unittest("Circulant linear solver", test_solve) &
+                  new_unittest("Circulant linear solver", test_solve), &
                   ! new_unittest("Circulant svdvals", test_svdvals), &
                   ! new_unittest("Circulant svd", test_svd), &
-                  ! new_unittest("Circulant eigvals", test_eigvals), &
-                  ! new_unittest("Circulant eig", test_eig) &
+                  new_unittest("Circulant eigvals", test_eigvals), &
+                  new_unittest("Circulant eig", test_eig) &
                   ]
       return
    end subroutine collect_circulant_testsuite
@@ -210,38 +211,51 @@ contains
    !    return
    ! end subroutine test_svd
    !
-   ! subroutine test_eigvals(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !    real(dp), allocatable :: lambda(:), lambda_stdlib(:)
-   !
-   !    ! Initialize array.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !    ! Compute singular values.
-   !    lambda = eigvals(A); lambda_stdlib = eigvals(dense(A))
-   !    ! Check error.
-   !    call check(error, all_close(lambda, lambda_stdlib), &
-   !               "circulant eigvals failed.")
-   !    return
-   ! end subroutine test_eigvals
-   !
-   ! subroutine test_eig(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:), Amat(:, :)
-   !    real(dp), allocatable :: lambda(:), vectors(:, :)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !    ! Compute singular value decomposition.
-   !    call eig(A, lambda, vectors)
-   !    ! Check error.
-   !    allocate (Amat(n, n)); Amat = 0.0_dp
-   !    Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
-   !    call check(error, all_close(dense(A), Amat), &
-   !               "circulant eig failed.")
-   !    return
-   ! end subroutine test_eig
+   subroutine test_eigvals(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:), abs_lambda(:)
+      complex(dp), allocatable :: lambda(:), lambda_stdlib(:)
+      complex(dp), allocatable :: lambda_check(:)
+      integer(ilp) :: i, j
+
+      ! Initialize array.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+      ! Compute singular values.
+      lambda = eigvals(A); lambda_stdlib = eigvals(dense(A))
+      ! Re-order eigenvalues for comparison.
+      allocate(lambda_check(n)) ; lambda_check = 0.0_dp
+      do i = 1, n
+         do j = 1, n
+            if (is_close(lambda(i), lambda_stdlib(j))) then
+               lambda_check(j) = lambda_stdlib(j)
+               exit
+            endif
+         enddo
+      enddo
+      ! Check error.
+      call check(error, all_close(lambda_check, lambda_stdlib), &
+                 "circulant eigvals failed.")
+      return
+   end subroutine test_eigvals
+
+   subroutine test_eig(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:), Amat(:, :)
+      complex(dp), allocatable :: lambda(:), left(:, :), right(:, :)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+      ! Compute singular value decomposition.
+      allocate (lambda(n), left(n, n), right(n, n))
+      call eig(A, lambda, left=left, right=right)
+      ! Check error.
+      allocate (Amat(n, n)); Amat = 0.0_dp
+      Amat = real(matmul(right, matmul(diag(lambda), hermitian(left))))
+      call check(error, all_close(dense(A), Amat), &
+                 "circulant eig failed.")
+      return
+   end subroutine test_eig
 
 end module
