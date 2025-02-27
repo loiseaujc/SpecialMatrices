@@ -76,20 +76,20 @@ contains
       return
    end subroutine test_trace
 
-   ! subroutine test_det(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !
-   !    ! Compare against stdlib_linalg implementation.
-   !    call check(error, is_close(det(A), det(dense(A))), &
-   !               "circulant det failed.")
-   !    return
-   ! end subroutine test_det
-   !
+   subroutine test_det(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(det(A), det(dense(A))), &
+                 "circulant det failed.")
+      return
+   end subroutine test_det
+
    ! subroutine test_inv(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(circulant) :: A
