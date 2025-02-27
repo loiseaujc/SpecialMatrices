@@ -156,7 +156,7 @@ module specialmatrices_circulant
       !!
       !! `x`   :  Solution of the linear system.
       !!          It has the same type and shape as `b`.
-      module function solve_single_rhs(A, b) result(x)
+      pure module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is `Circulant` and `b` a
          !! standard rank-1 array. The solution vector `x` has the same dimension
          !! and kind as the right-hand side vector `b`.
@@ -168,7 +168,7 @@ module specialmatrices_circulant
          !! Solution vector.
       end function
 
-      module function solve_multi_rhs(A, B) result(X)
+      pure module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Circulant` and `B` is
          !! a rank-2 array. The solution matrix `X` has the same dimension and kind
          !! as the right-hand side matrix `B`.

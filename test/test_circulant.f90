@@ -27,8 +27,8 @@ contains
                   ! new_unittest("Circulant trace", test_trace), &
                   ! new_unittest("Circulant determinant", test_det), &
                   ! new_unittest("Circulant inverse", test_inv), &
-                  new_unittest("Circulant matmul", test_matmul) &
-                  ! new_unittest("Circulant linear solver", test_solve), &
+                  new_unittest("Circulant matmul", test_matmul), &
+                  new_unittest("Circulant linear solver", test_solve) &
                   ! new_unittest("Circulant svdvals", test_svdvals), &
                   ! new_unittest("Circulant svd", test_svd), &
                   ! new_unittest("Circulant eigvalsh", test_eigvalsh), &
@@ -134,48 +134,48 @@ contains
       return
    end subroutine test_matmul
 
-   ! subroutine test_solve(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !
-   !    ! Solve with a single right-hand side vector.
-   !    block
-   !       real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-   !       allocate (b(n))
-   !       ! Random rhs.
-   !       call random_number(b)
-   !       ! Solve with SpecialMatrices.
-   !       x = solve(A, b)
-   !       ! Solve with stdlib (dense).
-   !       x_stdlib = solve(dense(A), b)
-   !       ! Check error.
-   !       call check(error, all_close(x, x_stdlib), &
-   !                  "circulant solve with a single rhs failed.")
-   !       if (allocated(error)) return
-   !    end block
-   !
-   !    ! Solve with multiple right-hand side vectors.
-   !    block
-   !       real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-   !       allocate (b(n, n))
-   !       ! Random rhs.
-   !       call random_number(b)
-   !       ! Solve with SpecialMatrices.
-   !       x = solve(A, b)
-   !       ! Solve with stdlib (dense).
-   !       x_stdlib = solve(dense(A), b)
-   !       ! Check error.
-   !       call check(error, all_close(x, x_stdlib), &
-   !                  "circulant solve with multiple rhs failed.")
-   !    end block
-   !
-   !    return
-   ! end subroutine test_solve
-   !
+   subroutine test_solve(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+
+      ! Solve with a single right-hand side vector.
+      block
+         real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+         allocate (b(n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "circulant solve with a single rhs failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Solve with multiple right-hand side vectors.
+      block
+         real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+         allocate (b(n, n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "circulant solve with multiple rhs failed.")
+      end block
+
+      return
+   end subroutine test_solve
+
    ! subroutine test_svdvals(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(circulant) :: A
