@@ -6,6 +6,7 @@ module SpecialMatrices
    use specialmatrices_strang
    use specialmatrices_poisson2D
    use specialmatrices_circulant
+   use specialmatrices_toeplitz
    implicit none
    private
 
