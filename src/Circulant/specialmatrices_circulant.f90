@@ -1,5 +1,6 @@
 module specialmatrices_circulant
    use stdlib_linalg_constants, only: dp, ilp, lk
+   use fftpack, only: init_fft => dffti, fft => dfftf, ifft => dfftb
    implicit none(type, external)
    private
 
@@ -29,6 +30,9 @@ module specialmatrices_circulant
       integer(ilp) :: n
       !! Dimension of the matrix.
       real(dp), allocatable :: c(:)
+      !! Generating vector.
+      real(dp), allocatable :: wsave(:)
+      !! Workspace for the FFT.
    end type
 
    !--------------------------------
