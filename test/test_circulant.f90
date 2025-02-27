@@ -2,7 +2,7 @@ module test_circulant
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvalsh
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -26,13 +26,13 @@ contains
                   ! new_unittest("Circulant scalar multiplication", test_scalar_multiplication), &
                   new_unittest("Circulant trace", test_trace), &
                   ! new_unittest("Circulant determinant", test_det), &
-                  ! new_unittest("Circulant inverse", test_inv), &
+                  new_unittest("Circulant inverse", test_inv), &
                   new_unittest("Circulant matmul", test_matmul), &
                   new_unittest("Circulant linear solver", test_solve) &
                   ! new_unittest("Circulant svdvals", test_svdvals), &
                   ! new_unittest("Circulant svd", test_svd), &
-                  ! new_unittest("Circulant eigvalsh", test_eigvalsh), &
-                  ! new_unittest("Circulant eigh", test_eigh) &
+                  ! new_unittest("Circulant eigvals", test_eigvals), &
+                  ! new_unittest("Circulant eig", test_eig) &
                   ]
       return
    end subroutine collect_circulant_testsuite
@@ -90,19 +90,19 @@ contains
       return
    end subroutine test_det
 
-   ! subroutine test_inv(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Intialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !
-   !    ! Compare against stdlib_linalg implementation.
-   !    call check(error, all_close(inv(dense(A)), dense(inv(A))), &
-   !               "circulant inv failed.")
-   !    return
-   ! end subroutine test_inv
+   subroutine test_inv(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Intialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, all_close(inv(dense(A)), dense(inv(A))), &
+                 "circulant inv failed.")
+      return
+   end subroutine test_inv
 
    subroutine test_matmul(error)
       type(error_type), allocatable, intent(out) :: error
@@ -210,7 +210,7 @@ contains
    !    return
    ! end subroutine test_svd
    !
-   ! subroutine test_eigvalsh(error)
+   ! subroutine test_eigvals(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(circulant) :: A
    !    real(dp), allocatable :: dv(:)
@@ -219,14 +219,14 @@ contains
    !    ! Initialize array.
    !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
    !    ! Compute singular values.
-   !    lambda = eigvalsh(A); lambda_stdlib = eigvalsh(dense(A))
+   !    lambda = eigvals(A); lambda_stdlib = eigvals(dense(A))
    !    ! Check error.
    !    call check(error, all_close(lambda, lambda_stdlib), &
-   !               "circulant eigvalsh failed.")
+   !               "circulant eigvals failed.")
    !    return
-   ! end subroutine test_eigvalsh
+   ! end subroutine test_eigvals
    !
-   ! subroutine test_eigh(error)
+   ! subroutine test_eig(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(circulant) :: A
    !    real(dp), allocatable :: dv(:), Amat(:, :)
@@ -235,13 +235,13 @@ contains
    !    ! Initialize matrix.
    !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
    !    ! Compute singular value decomposition.
-   !    call eigh(A, lambda, vectors)
+   !    call eig(A, lambda, vectors)
    !    ! Check error.
    !    allocate (Amat(n, n)); Amat = 0.0_dp
    !    Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
    !    call check(error, all_close(dense(A), Amat), &
-   !               "circulant eigh failed.")
+   !               "circulant eig failed.")
    !    return
-   ! end subroutine test_eigh
+   ! end subroutine test_eig
 
 end module
