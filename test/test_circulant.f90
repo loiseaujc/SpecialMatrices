@@ -24,7 +24,7 @@ contains
 
       testsuite = [ &
                   ! new_unittest("Circulant scalar multiplication", test_scalar_multiplication), &
-                  ! new_unittest("Circulant trace", test_trace), &
+                  new_unittest("Circulant trace", test_trace), &
                   ! new_unittest("Circulant determinant", test_det), &
                   ! new_unittest("Circulant inverse", test_inv), &
                   new_unittest("Circulant matmul", test_matmul), &
@@ -61,21 +61,21 @@ contains
    !               "circulant*alpha failed.")
    !    return
    ! end subroutine test_scalar_multiplication
-   !
-   ! subroutine test_trace(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !
-   !    ! Compare against stdlib_linalg implementation.
-   !    call check(error, is_close(trace(A), trace(dense(A))), &
-   !               "circulant trace failed.")
-   !    return
-   ! end subroutine test_trace
-   !
+
+   subroutine test_trace(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(trace(A), trace(dense(A))), &
+                 "circulant trace failed.")
+      return
+   end subroutine test_trace
+
    ! subroutine test_det(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(circulant) :: A
