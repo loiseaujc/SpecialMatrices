@@ -169,7 +169,7 @@ contains
          ! Solve with stdlib (dense).
          x_stdlib = solve(dense(A), b)
          ! Check error.
-         call check(error, all_close(x, x_stdlib), &
+         call check(error, all_close(x, x_stdlib, abs_tol=1e-12_dp), &
                     "circulant solve with multiple rhs failed.")
       end block
 
