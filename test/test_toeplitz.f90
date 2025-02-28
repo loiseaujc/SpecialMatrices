@@ -11,7 +11,7 @@ module test_toeplitz
    implicit none
    private
 
-   integer, parameter :: m = 128, n = 64
+   integer, parameter :: m = 128, n = 128
 
    public :: collect_toeplitz_testsuite
 contains
@@ -24,12 +24,12 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
-                  ! new_unittest("toeplitz scalar multiplication", test_scalar_multiplication), &
-                  ! new_unittest("toeplitz trace", test_trace), &
+                  new_unittest("toeplitz scalar multiplication", test_scalar_multiplication), &
+                  new_unittest("toeplitz trace", test_trace), &
                   ! new_unittest("toeplitz determinant", test_det), &
                   ! new_unittest("toeplitz inverse", test_inv), &
                   new_unittest("toeplitz matmul", test_matmul) &
-                  ! new_unittest("toeplitz linear solver", test_solve), &
+                  ! new_unittest("toeplitz linear solver", test_solve) &
                   ! new_unittest("toeplitz svdvals", test_svdvals), &
                   ! new_unittest("toeplitz svd", test_svd), &
                   ! new_unittest("toeplitz eigvals", test_eigvals), &
@@ -38,59 +38,64 @@ contains
       return
    end subroutine collect_toeplitz_testsuite
 
-   ! subroutine test_scalar_multiplication(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(toeplitz) :: A, B
-   !    real(dp), allocatable :: dv(:)
-   !    real(dp) :: alpha
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = toeplitz(dv)
-   !    call random_number(alpha)
-   !
-   !    ! Scalar-matrix multiplication.
-   !    B = alpha*A
-   !    ! Check error.
-   !    call check(error, all_close(alpha*dense(A), dense(B)), &
-   !               "alpha*toeplitz failed.")
-   !    if (allocated(error)) return
-   !
-   !    ! Matrix-scalar multipliation.
-   !    B = A*alpha
-   !    ! Check error.
-   !    call check(error, all_close(alpha*dense(A), dense(B)), &
-   !               "toeplitz*alpha failed.")
-   !    return
-   ! end subroutine test_scalar_multiplication
-   !
-   ! subroutine test_trace(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(toeplitz) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = toeplitz(dv)
-   !
-   !    ! Compare against stdlib_linalg implementation.
-   !    call check(error, is_close(trace(A), trace(dense(A))), &
-   !               "toeplitz trace failed.")
-   !    return
-   ! end subroutine test_trace
-   !
-   ! subroutine test_det(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(toeplitz) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = toeplitz(dv)
-   !
-   !    ! Compare against stdlib_linalg implementation.
-   !    call check(error, is_close(det(A), det(dense(A))), &
-   !               "toeplitz det failed.")
-   !    return
-   ! end subroutine test_det
-   !
+   subroutine test_scalar_multiplication(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(toeplitz) :: A, B
+      real(dp), allocatable :: vc(:), vr(:)
+      real(dp) :: alpha
+
+      ! Initialize matrix.
+      allocate(vc(m)) ; call random_number(vc)
+      allocate(vr(n)) ; call random_number(vr)
+      A = Toeplitz(vc, vr) ; call random_number(alpha)
+
+      ! Scalar-matrix multiplication.
+      B = alpha*A
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "alpha*toeplitz failed.")
+      if (allocated(error)) return
+
+      ! Matrix-scalar multipliation.
+      B = A*alpha
+      ! Check error.
+      call check(error, all_close(alpha*dense(A), dense(B)), &
+                 "toeplitz*alpha failed.")
+      return
+   end subroutine test_scalar_multiplication
+
+   subroutine test_trace(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(toeplitz) :: A
+      real(dp), allocatable :: vc(:), vr(:)
+
+      ! Initialize matrix.
+      allocate(vc(n)) ; call random_number(vc)
+      allocate(vr(n)) ; call random_number(vr)
+      A = Toeplitz(vc, vr)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(trace(A), trace(dense(A))), &
+                 "toeplitz trace failed.")
+      return
+   end subroutine test_trace
+
+   subroutine test_det(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(toeplitz) :: A
+      real(dp), allocatable :: vc(:), vr(:)
+
+      ! Initialize matrix.
+      allocate(vc(n)) ; call random_number(vc)
+      allocate(vr(n)) ; call random_number(vr)
+      A = Toeplitz(vc, vr)
+
+      ! Compare against stdlib_linalg implementation.
+      call check(error, is_close(det(A), det(dense(A))), &
+                 "toeplitz det failed.")
+      return
+   end subroutine test_det
+
    ! subroutine test_inv(error)
    !    type(error_type), allocatable, intent(out) :: error
    !    type(toeplitz) :: A
@@ -137,47 +142,51 @@ contains
       return
    end subroutine test_matmul
 
-   ! subroutine test_solve(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(toeplitz) :: A
-   !    real(dp), allocatable :: dv(:)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = toeplitz(dv)
-   !
-   !    ! Solve with a single right-hand side vector.
-   !    block
-   !       real(dp), allocatable :: x(:), x_stdlib(:), b(:)
-   !       allocate (b(n))
-   !       ! Random rhs.
-   !       call random_number(b)
-   !       ! Solve with SpecialMatrices.
-   !       x = solve(A, b)
-   !       ! Solve with stdlib (dense).
-   !       x_stdlib = solve(dense(A), b)
-   !       ! Check error.
-   !       call check(error, all_close(x, x_stdlib), &
-   !                  "toeplitz solve with a single rhs failed.")
-   !       if (allocated(error)) return
-   !    end block
-   !
-   !    ! Solve with multiple right-hand side vectors.
-   !    block
-   !       real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
-   !       allocate (b(n, n))
-   !       ! Random rhs.
-   !       call random_number(b)
-   !       ! Solve with SpecialMatrices.
-   !       x = solve(A, b)
-   !       ! Solve with stdlib (dense).
-   !       x_stdlib = solve(dense(A), b)
-   !       ! Check error.
-   !       call check(error, all_close(x, x_stdlib, abs_tol=1e-12_dp), &
-   !                  "toeplitz solve with multiple rhs failed.")
-   !    end block
-   !
-   !    return
-   ! end subroutine test_solve
+   subroutine test_solve(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(toeplitz) :: A
+      real(dp), allocatable :: vr(:), vc(:)
+
+      ! Initialize matrix.
+      allocate(vc(n)) ; call random_number(vc)
+      allocate(vr(n)) ; call random_number(vr)
+      A = Toeplitz(vc, vr)
+
+      ! Solve with a single right-hand side vector.
+      block
+         real(dp), allocatable :: x(:), x_stdlib(:), b(:)
+         allocate (b(n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         write(*, *) norm2(x - x_stdlib)
+         write(*, *) norm2(matmul(A, x) - b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib), &
+                    "toeplitz solve with a single rhs failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Solve with multiple right-hand side vectors.
+      block
+         real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+         allocate (b(n, n))
+         ! Random rhs.
+         call random_number(b)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Solve with stdlib (dense).
+         x_stdlib = solve(dense(A), b)
+         ! Check error.
+         call check(error, all_close(x, x_stdlib, abs_tol=1e-12_dp), &
+                    "toeplitz solve with multiple rhs failed.")
+      end block
+
+      return
+   end subroutine test_solve
 
    ! subroutine test_svdvals(error)
    !    type(error_type), allocatable, intent(out) :: error

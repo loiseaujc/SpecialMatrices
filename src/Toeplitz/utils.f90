@@ -1,6 +1,13 @@
 submodule(specialmatrices_toeplitz) toeplitz_utilities
    implicit none(type, external)
 contains
+   module procedure det_rdp
+   end procedure
+
+   module procedure trace_rdp
+   tr = A%vc(1)*A%m
+   end procedure
+
    module procedure dense_rdp
    integer(ilp) :: i, j, m, n
    real(dp), allocatable :: t(:)
@@ -33,9 +40,11 @@ contains
    end procedure
 
    module procedure scalar_multiplication_rdp
+   B = Toeplitz(alpha*A%vc, alpha*A%vr)
    end procedure
 
    module procedure scalar_multiplication_bis_rdp
+   B = Toeplitz(alpha*A%vc, alpha*A%vr)
    end procedure
 
    module procedure Toeplitz2Circulant
