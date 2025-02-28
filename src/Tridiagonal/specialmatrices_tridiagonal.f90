@@ -18,9 +18,9 @@ module specialmatrices_tridiagonal
    public :: size
    public :: operator(*)
 
-   !-----------------------------------------------------------------
-   !-----     Base types for Symmetric Tridiagonal matrices     -----
-   !-----------------------------------------------------------------
+   !-------------------------------------------------------
+   !-----     Base types for Tridiagonal matrices     -----
+   !-------------------------------------------------------
 
    type, public :: Tridiagonal
       !! Base type used to define a `Tridiagonal` matrix of size `[n, n]`
