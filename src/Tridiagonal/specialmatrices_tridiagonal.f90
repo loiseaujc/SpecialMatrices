@@ -334,10 +334,10 @@ module specialmatrices_tridiagonal
       !!
       !! - `u` (optional)  :  Rank-2 array of the same kind as `A` returning
       !!                      the left singular vectors of `A` as columns.
-      !                       Its size should be `[n, n]`.
+      !!                       Its size should be `[n, n]`.
       !!                      It is an `intent(out)` argument.
       !!
-      !! - `vt (optional)  :  Rank-2 array of the same kind as `A` returning
+      !! - `vt` (optional) :  Rank-2 array of the same kind as `A` returning
       !!                      the right singular vectors of `A` as rows. Its
       !!                      size should be `[n, n]`.
       !!                      It is an `intent(out)` argument.
