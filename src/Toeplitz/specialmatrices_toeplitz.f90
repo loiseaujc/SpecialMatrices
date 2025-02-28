@@ -37,7 +37,7 @@ module specialmatrices_toeplitz
    !-----     Constructors     -----
    !--------------------------------
 
-   interface Circulant
+   interface Toeplitz
       !! This interface provides methods to construct `Toeplitz` matrices.
       !! Only `double precision` is supported currently. Given a vector `vc` specifying
       !! the first column of the matrix and a vector `vr` specifying its first row, the

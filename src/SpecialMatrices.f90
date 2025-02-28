@@ -21,6 +21,7 @@ module SpecialMatrices
    public :: Strang
    public :: Poisson2D
    public :: Circulant
+   public :: Toeplitz
 
    !----------------------------------
    !-----     Linear Algebra     -----
