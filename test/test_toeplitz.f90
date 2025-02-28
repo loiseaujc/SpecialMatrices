@@ -16,9 +16,9 @@ module test_toeplitz
    public :: collect_toeplitz_testsuite
 contains
 
-   !--------------------------------------
-   !-----     toeplitz MATRICES     -----
-   !--------------------------------------
+   !-------------------------------------
+   !-----     TOEPLITZ MATRICES     -----
+   !-------------------------------------
 
    subroutine collect_toeplitz_testsuite(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
