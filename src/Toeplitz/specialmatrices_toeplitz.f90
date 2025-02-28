@@ -78,6 +78,8 @@ module specialmatrices_toeplitz
    end interface
 
    interface Circulant
+      !! Utility function to embed an m x n `Toeplitz` matrix into an
+      !! (m+n) x (m+n) `Circulant` matrix.
       pure module function Toeplitz2Circulant(T) result(C)
          type(Toeplitz), intent(in) :: T
          type(Circulant) :: C
