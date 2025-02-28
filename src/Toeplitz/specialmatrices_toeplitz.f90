@@ -1,5 +1,6 @@
 module specialmatrices_toeplitz
    use stdlib_linalg_constants, only: dp, ilp, lk
+   use specialmatrices_circulant
    implicit none(type, external)
    private
 
@@ -12,6 +13,7 @@ module specialmatrices_toeplitz
    public :: eig, eigvals
 
    ! --> Utility functions.
+   public :: Circulant
    public :: dense
    public :: shape
    public :: size
@@ -72,6 +74,13 @@ module specialmatrices_toeplitz
          !! First row of the matrix.
          type(Toeplitz) :: A
          !! Corresponding Toeplitz matrix.
+      end function
+   end interface
+
+   interface Circulant
+      pure module function Toeplitz2Circulant(T) result(C)
+         type(Toeplitz), intent(in) :: T
+         type(Circulant) :: C
       end function
    end interface
 

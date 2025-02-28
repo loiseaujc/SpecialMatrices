@@ -38,4 +38,11 @@ contains
    module procedure scalar_multiplication_bis_rdp
    end procedure
 
+   module procedure Toeplitz2Circulant
+   real(dp), allocatable :: c_vec(:)
+   integer(ilp) :: m, n
+   m = T%m ; n = T%n ; allocate(c_vec(m+n))
+   c_vec(:m) = T%vc ; c_vec(m+1:) = cshift(T%vr(n:1:-1), -1)
+   C = Circulant(c_vec)
+   end procedure
 end submodule
