@@ -22,9 +22,9 @@ module specialmatrices_poisson2D
    !------------------------------------------------------
 
    type :: Poisson2D
-      !! Base type used to define a `Poisson2D` matrix on a rectangular domain discretized
-      !! with `nx` and `ny` points in each direction and corresponding grid spacings `dx`
-      !! and `dy`.
+      !! Base type used to define a `Poisson2D` matrix on a rectangular domain
+      !! discretized with `nx` and `ny` points in each direction and
+      !! corresponding grid spacings `dx` and `dy`.
       private
       integer(ilp) :: nx, ny
       !! Dimension of the grid in each direction.
@@ -37,16 +37,16 @@ module specialmatrices_poisson2D
    !--------------------------------
 
    interface Poisson2D
-      !! Constructor for generating a `Poisson2D` matrix. Only `double precision` is
-      !! supported currently. The matrix corresponds to the standard second-order
-      !! accurate finite-difference approximation of the Laplace operator with homogeneous
-      !! Dirichlet boundary conditions.
+      !! Constructor for generating a `Poisson2D` matrix. The matrix corresponds
+      !! to the standard second-order accurate finite-difference approximation
+      !! of the Laplace operator with homogeneous Dirichlet boundary conditions.
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! - Construct the finite-difference approximation of the Laplace operator
-      !!   on the rectangular domain \(\Omega = \left[ 0, 1 \right] \times \left[ 0, 2 \right]\)
-      !!   using 128 points in the horizontal direction and 256 in the vertical one.
+      !!    on the rectangular domain \(\Omega = \left[ 0, 1 \right] \times \left[ 0, 2 \right]\)
+      !!    using 128 points in the horizontal direction and 256 in the
+      !!    vertical one.
       !!
       !! ```fortran
       !!    type(Poisson2D)     :: A
@@ -56,7 +56,14 @@ module specialmatrices_poisson2D
       !!    A = Poisson2D(nx, ny, Lx, Ly)
       !! ```
       !!
-      !! Note that `Lx` and `Ly` are optional. If not specified, they default to `1.0_dp`.
+      !! @note
+      !! Only `doube precision` is currently supported for this matrix type.
+      !! @endnote
+      !! 
+      !! @note
+      !! Note that `Lx` and `Ly` are optional. If not specified, they default
+      !! to `1.0_dp`.
+      !! @endnote
       pure module function initialize(nx, ny, Lx, Ly) result(A)
          !! Utility function to construct a `Poisson2D` matrix.
          integer(ilp), intent(in) :: nx, ny
@@ -73,12 +80,13 @@ module specialmatrices_poisson2D
    !-------------------------------------------------------------------
 
    interface matmul
-      !! This interface overloads the Fortran intrinsic `matmul` for a `Poisson2D` matrix.
-      !! The intrinsic `matmul` is overloaded both for matrix-vector and matrix-matrix products.
-      !! For a matrix-matrix product \(C = AB\), only the matrix \( A \) has to be a `Poisson2D`
-      !! matrix. Both \( B \) and \( C \) are standard Fortran rank-2 arrays.
+      !! This interface overloads the Fortran intrinsic `matmul` for a
+      !! `Poisson2D` matrixn, both for matrix-vector and matrix-matrix
+      !! products. For a matrix-matrix product \(C = AB\), only the matrix
+      !! \( A \) has to be a `Poisson2D` matrix. Both \( B \) and \( C \) are
+      !! standard Fortran rank-2 arrays.
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! ```fortran
       !!    y = matmul(A, x)
@@ -111,19 +119,35 @@ module specialmatrices_poisson2D
    !-----------------------------------------------
 
    interface solve
-      !! This interface overloads the `solve` interface from `stdlib_linalg` for solving
-      !! a system \(Ax = b\) where \(A\) is a `Poisson2D` matrix. It also enables to
-      !! solve a linear system with multiple right-hand sides. It uses a fast Poisson solver
-      !! leveraging the discrete sine transform provided by `fftpack`. Note that only
-      !! homogeneous Dirichlet boundary conditions are handled by default. If non-homogeneous
-      !! Dirichlet boundary conditions need to be used, they can be implemented by modifiying
-      !! the right-hand side vector. Neuman-type boundary conditions are not supported at all.
+      !! This interface overloads the `solve` interface from `stdlib_linalg`
+      !! for solving a system \(Ax = b\) where \(A\) is a `Poisson2D` matrix.
+      !! It also enables to solve a linear system with multiple right-hand
+      !! sides.
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! ```fortran
       !!    x = solve(A, b)
       !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of type `Poisson2D`. It is an `intent(in)` argument.
+      !!
+      !! - `b` :  Rank-1 or rank-2 array defining the right-hand side(s).
+      !!          It is an `intent(in)` argument.
+      !!
+      !! - `x` :  Solution of the linear system. It has the same type and
+      !!          shape as `b`.
+      !!
+      !! @note
+      !! It uses a fast Poisson solver leveraging the discrete sine
+      !! transform provided by `fftpack`. Only homogeneous Dirichlet boundary
+      !! conditions are handled by default. If non-homogeneous Dirichlet
+      !! boundary conditions need to be used, they can be implemented by
+      !! modifiying the right-hand side vector. Neuman-type boundary
+      !! conditions are not supported at all.
+      !! @endnote
       pure module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax = b\) using a fast Poisson solver.
          type(Poisson2D), intent(in) :: A
@@ -150,6 +174,20 @@ module specialmatrices_poisson2D
    !-----------------------------------------
 
    interface det
+      !! This interface overloads the `det` interface from `stdlib_linalg`
+      !! to compute the determinant of a `Poisson2D` matrix \(A\).
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    d = det(A)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
+      !!
+      !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
@@ -159,6 +197,20 @@ module specialmatrices_poisson2D
    end interface
 
    interface trace
+      !! This interace overloads the `trace` interface from `stdlib_linalg`
+      !! to compute the trace of a `Poisson2D` matrix \(A\).
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    tr = trace(A)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
+      !!
+      !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
@@ -172,15 +224,26 @@ module specialmatrices_poisson2D
    !--------------------------------------------
 
    interface eigvalsh
-      !! This interface overloads the `eigvalsh` interface from `stdlib_linalg` to compute the
-      !! eigenvalues of the `Poisson2D` matrix \(A\). Note that these eigenvalues are known
-      !! analytically.
+      !! This interface overloads the `eigvalsh` interface from `stdlib_linalg`
+      !! to compute the eigenvalues of the `Poisson2D` matrix \(A\).
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! ```fortran
       !!    lambda = eigvalsh(A)
       !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
+      !!
+      !! - `lambda`  :  Rank-1 `real` array returning the eigenvalues of `A`
+      !!                in increasing order.
+      !!
+      !! @note
+      !! The eigenvalues of the `Poisson2D` matrix are known analytically
+      !! and can thus be computed efficiently.
+      !! @endnote
       module function eigvalsh_rdp(A) result(lambda)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
@@ -190,15 +253,30 @@ module specialmatrices_poisson2D
    end interface
 
    interface eigh
-      !! This interface overloads the `eigh` interface from `stdlib_linalg` to compute the
-      !! eigenvalues and eigenvectors of the `Poisson2D` matrix \(A\). Note that both eigenvalues
-      !! and eigenvectors are known analytically.
+      !! This interface overloads the `eigh` interface from `stdlib_linalg`
+      !! to compute the eigenvalues and eigenvectors of the `Poisson2D`
+      !! matrix \(A\).
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! ```fortran
       !!    call eigh(A, lambda, vectors)
       !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
+      !!
+      !! - `lambda`: Rank-1 `real` array returning the eigenvalues of `A` in
+      !!             increasing order. It is an `intent(out)` argument.
+      !!
+      !! - `vectors`:   Rank-2 `real` array returning the eigenvectors of `A`.
+      !!                It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! Both the eigenvalues and eigenvectors of the `Poisson2D` matrix are
+      !! known analytically and can thus be constructed efficiently.
+      !! @endnote
       module subroutine eigh_rdp(A, lambda, vectors)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
@@ -213,14 +291,21 @@ module specialmatrices_poisson2D
    !-------------------------------------
 
    interface dense
-      !! This interface provides a method to convert a matrix of type `Poisson2D` to its dense
-      !! representation as a standard rank-2 array.
+      !! Cnvert a matrix of type `Poisson2D` to its dense representation as a
+      !! standard rank-2 array.
       !!
-      !! ### Syntax
+      !! #### Syntax
       !!
       !! ```fortran
-      !!    Adense = dense(A)
+      !!    B = dense(A)
       !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
+      !!
+      !! - `B` :  Rank-2 `real` array corresponding to the dense representation
+      !!          of `A`.
       pure module function dense_rdp(A) result(B)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
@@ -230,6 +315,7 @@ module specialmatrices_poisson2D
    end interface
 
    interface shape
+      !! Utility function to return the shape a `Poisson2D` matrix \(A\).
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of the `Poisson2D` matrix.
          type(Poisson2D), intent(in) :: A
@@ -240,6 +326,8 @@ module specialmatrices_poisson2D
    end interface
 
    interface size
+      !! Utility function to return the size of a `Poisson2D` matrix \(A\)
+      !! along a given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
          !! Utility function to return the size of a `Poisson2D` matrix along a given dimension.
          type(Poisson2D), intent(in) :: A
