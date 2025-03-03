@@ -25,7 +25,7 @@ module specialmatrices_circulant
 
    type, public :: Circulant
       !! Base type to define a `Circulant` matrix of size [n x n] with elements
-      !! given by the vector c = (c[1], c[2], ..., c[n]).
+      !! given by the vector \(c = (c[1], c[2], ..., c[n]).\)
       private
       integer(ilp) :: n
       !! Dimension of the matrix.
@@ -41,9 +41,8 @@ module specialmatrices_circulant
 
    interface Circulant
       !! This interface provides methods to construct `Circulant` matrices.
-      !! Only `double precision` is supported currently. Given a vector
-      !! \( \mathbf{c} = (c_1, c_2, \cdots, c_n)\), the associated `Circulant`
-      !! matrix is the following \(n \times n\) matrix
+      !! Given a vector \( \mathbf{c} = (c_1, c_2, \cdots, c_n)\),
+      !! the associated `Circulant` matrix is the following `[n x n]` matrix
       !!
       !! \[
       !!    A
@@ -66,6 +65,10 @@ module specialmatrices_circulant
       !!    call random_number(c)
       !!    A = Circulant(c)
       !! ```
+      !!
+      !! @note
+      !! Only `double precision` is currently supported for this matrix type.
+      !! @endnote
       pure module function initialize(n) result(A)
          !! Construct a `Circulant` matrix filled with zeros.
          integer(ilp), intent(in) :: n
@@ -88,23 +91,17 @@ module specialmatrices_circulant
    !-------------------------------------------------------------------
 
    interface matmul
-      !! This interface overloads the Fortran intrinsic `matmul` for a `Circulant` matrix.
-      !! The intrinsic `matmul` is overloaded both for matrix-vector and matrix-matrix products.
-      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \) has to be a
-      !! `Circulant` matrix. Both \( B \) and \( C \) need to be standard Fortran rank-2
-      !! arrays. All the underlying functions are defined as `pure`.
+      !! This interface overloads the Fortran intrinsic `matmul` for a
+      !! `Circulant` matrix, both for matrix-vector and matrix-matrix products.
+      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \)
+      !! has to be a `Circulant` matrix. Both \( B \) and \( C \) need to be
+      !! standard Fortran rank-2 arrays. All the underlying functions are
+      !! defined as `pure`.
       !!
       !! #### Syntax
       !!
-      !! - For matrix-vector product with `A` being of type `Circulant` and `x` a standard
-      !! rank-1 array:
       !! ```fortran
       !!    y = matmul(A, x)
-      !! ```
-      !!
-      !! - For matrix-matrix product with `A` being of type `Circulant` and `B` rank-2 array:
-      !! ```fortran
-      !!    C = matmul(A, B)
       !! ```
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Circulant` matrix \(A\).
@@ -134,13 +131,12 @@ module specialmatrices_circulant
    !-----------------------------------------------
 
    interface solve
-      !! This interface overloads the `solve` interface from `stdlib_linalg` for
-      !! solving a linear system \( Ax = b \) where \( A \) is a `Circulant` matrix.
-      !! It also enables to solve a linear system with multiple right-hand sides.
+      !! This interface overloads the `solve` interface from `stdlib_linalg`
+      !! for solving a linear system \( Ax = b \) where \( A \) is a
+      !! `Circulant` matrix. It also enables to solve a linear system with
+      !! multiple right-hand sides.
       !!
       !! #### Syntax
-      !!
-      !! To solve a system with \( A \) being of type `Circulant`:
       !!
       !! ```fortran
       !!    x = solve(A, b)
@@ -148,18 +144,24 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Circulant` type.
+      !! - `A` :  Matrix of `Circulant` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `b`   :  Rank-1 or rank-2 array defining the right-hand side(s).
+      !! - `b` :  Rank-1 or rank-2 array defining the right-hand side(s).
       !!          It is an `intent(in)` argument.
       !!
-      !! `x`   :  Solution of the linear system.
+      !! - `x` :  Solution of the linear system.
       !!          It has the same type and shape as `b`.
+      !!
+      !! @note
+      !! Linear systems characterized by a circulant matrix can be solved
+      !! efficiently in \(\mathcal{O}(n \log\ n)\) operations using the
+      !! Fast Fourier Transform algorithm available via `fftpack`.
+      !! @endnote
       pure module function solve_single_rhs(A, b) result(x)
-         !! Solve the linear system \(Ax=b\) where \(A\) is `Circulant` and `b` a
-         !! standard rank-1 array. The solution vector `x` has the same dimension
-         !! and kind as the right-hand side vector `b`.
+         !! Solve the linear system \(Ax=b\) where \(A\) is `Circulant` and
+         !! `b` a standard rank-1 array. The solution vector `x` has the same
+         !! dimension and kind as the right-hand side vector `b`.
          type(Circulant), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -169,9 +171,9 @@ module specialmatrices_circulant
       end function
 
       pure module function solve_multi_rhs(A, B) result(X)
-         !! Solve the linear system \(AX=B\), where `A` is `Circulant` and `B` is
-         !! a rank-2 array. The solution matrix `X` has the same dimension and kind
-         !! as the right-hand side matrix `B`.
+         !! Solve the linear system \(AX=B\), where `A` is `Circulant` and
+         !! `B` is a rank-2 array. The solution matrix `X` has the same
+         !! dimension and kind as the right-hand side matrix `B`.
          type(Circulant), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
@@ -197,8 +199,8 @@ module specialmatrices_circulant
    !------------------------------------------
 
    interface det
-      !! This interface overloads the `det` interface from `stdlib_linag` to compute the
-      !! determinant \(\det(A)\) where \(A\) is of type `Circulant`.
+      !! This interface overloads the `det` interface from `stdlib_linag` to
+      !! compute the determinant \(\det(A)\) where \(A\) is of type `Circulant`.
       !!
       !! #### Syntax
       !!
@@ -208,10 +210,10 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Circulant` type.
+      !! - `A` :  Matrix of `Circulant` type.
       !!          It is in an `intent(in)` argument.
       !!
-      !! `d`   :  Determinant of the matrix.
+      !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `Circulant` matrix.
          type(Circulant), intent(in) :: A
@@ -222,8 +224,8 @@ module specialmatrices_circulant
    end interface
 
    interface trace
-      !! This interface overloads the `trace` interface from `stdlib_linalg` to compute the trace
-      !! of a matrix \( A \) of type `Circulant`.
+      !! This interface overloads the `trace` interface from `stdlib_linalg`
+      !! to compute the trace of a matrix \( A \) of type `Circulant`.
       !!
       !! #### Syntax
       !!
@@ -233,10 +235,10 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Circulant` type.
+      !! - `A` :  Matrix of `Circulant` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `tr`  :  Trace of the matrix.
+      !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `Circulant` matrix.
          type(Circulant), intent(in) :: A
@@ -318,8 +320,9 @@ module specialmatrices_circulant
    !--------------------------------------------
 
    interface eigvals
-      !! This interface overloads the `eigvals` interface from `stdlib_linalg` to compute the
-      !! eigenvalues of a real-valued matrix \( A \) whose type is `Circulant`.
+      !! This interface overloads the `eigvals` interface from `stdlib_linalg`
+      !! to compute the eigenvalues of a real-valued matrix \( A \) whose
+      !! type is `Circulant`.
       !!
       !! #### Syntax
       !!
@@ -329,12 +332,18 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  `real`-valued matrix of `Circulant` type.
+      !! - `A` :  `real`-valued matrix of `Circulant` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `lambda` :  Vector of eigenvalues in increasing order.
+      !! - `lambda`  :  Vector of eigenvalues in increasing order.
+      !!
+      !! @note
+      !! Eigenvalues of a circulant matrix can be efficiently computed using
+      !! the Fast Fourier Transform of the generating vector `c`.
+      !! @endnote
       module function eigvals_rdp(A) result(lambda)
-         !! Utility function to compute the eigenvalues of a real `Circulant` matrix.
+         !! Utility function to compute the eigenvalues of a real `Circulant`
+         !! matrix.
          type(Circulant), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
@@ -343,8 +352,9 @@ module specialmatrices_circulant
    end interface
 
    interface eig
-      !! This interface overloads the `eig` interface from `stdlib_linalg` to compute the
-      !! eigenvalues and eigenvectors of a real-valued matrix \(A\) whose type is `Circulant`.
+      !! This interface overloads the `eig` interface from `stdlib_linalg` to
+      !! compute the eigenvalues and eigenvectors of a real-valued matrix \(A\)
+      !! whose type is `Circulant`.
       !!
       !! #### Syntax
       !!
@@ -354,21 +364,28 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   : `real`-valued matrix of `Circulant`.
+      !! - `A` : `real`-valued matrix of `Circulant`.
       !!          It is an `intent(in)` argument.
       !!
-      !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
-      !!             It is an `intent(out)` argument.
+      !! - `lambda` :   Rank-1 `real` array returning the eigenvalues of `A`
+      !!                in increasing order. It is an `intent(out)` argument.
       !!
-      !! `left` (optional) :  `complex` rank-2 array of the same kind as `A` returning the left
-      !!                      eigenvectors of `A`.
-      !!                      It is an `intent(out)` argument.
+      !! - `left` (optional)  :  `complex` rank-2 array of the same kind as
+      !!                         `A` returning the left eigenvectors of `A`.
+      !!                         It is an `intent(out)` argument.
       !!
-      !! `right` (optional) : `complex` rank-2 array of the same kind as `A` returning the right
-      !!                      eigenvectors of `A`.
-      !!                      It is an `intent(out)` argument.
+      !! - `right` (optional) :  `complex` rank-2 array of the same kind as
+      !!                         `A` returning the right eigenvectors of `A`.
+      !!                         It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! Eigenvalues of a circulant matrix can be efficiently computed using
+      !! the Fast Fourier Transform of the generating vector `c`. Likewise,
+      !! its eigenvectors are simply the corresponding Fourier modes.
+      !! @endnote
       module subroutine eig_rdp(A, lambda, left, right)
-         !! Utility function to compute the eigenvalues and eigenvectors of a `Circulant` matrix.
+         !! Utility function to compute the eigenvalues and eigenvectors of a
+         !! `Circulant` matrix.
          type(Circulant), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
@@ -383,8 +400,7 @@ module specialmatrices_circulant
    !-------------------------------------
 
    interface dense
-      !! This interface provides methods to convert a matrix of one the types defined in
-      !! `SpecialMatrix` to a regular rank-2 array.
+      !! Convert a `Circulant` matrix to its dense representation.
       !!
       !! #### Syntax
       !!
@@ -394,10 +410,10 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Circulant`, `Bidiagonal`, `Circulant` or `SymCirculant` type.
+      !! - `A` :  Matrix of `Circulant` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `B`   :  Rank-2 array representation of the matrix \( A \).
+      !! - `B` :  Rank-2 array representation of the matrix \( A \).
       module function dense_rdp(A) result(B)
          !! Utility function to convert a `Circulant` matrix to a rank-2 array.
          type(Circulant), intent(in) :: A
@@ -408,8 +424,8 @@ module specialmatrices_circulant
    end interface
 
    interface transpose
-      !! This interface overloads the Fortran `intrinsic` procedure to define the transpose
-      !! operation for the various types defined in `SpecialMatrices`.
+      !! This interface overloads the Fortran `intrinsic` procedure to define
+      !! the transpose operation of a `Circulant` matrix.
       !!
       !! #### Syntax
       !!
@@ -419,10 +435,10 @@ module specialmatrices_circulant
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Circulant`, `Bidiagonal`, `Circulant` or `SymCirculant` type.
+      !! - `A` :  Matrix of `Circulant`.
       !!          It is an `intent(in)` argument.
       !!
-      !! `B`   :  Resulting transposed matrix. It is of the same type as `A`.
+      !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Circulant` matrix.
          type(Circulant), intent(in) :: A
@@ -433,8 +449,11 @@ module specialmatrices_circulant
    end interface
 
    interface size
+      !! Utility function to return the size of a `Circulant` matrix along
+      !! a given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
-         !! Utility function to return the size of `Circulant` matrix along a given dimension.
+         !! Utility function to return the size of `Circulant` matrix along a
+         !! given dimension.
          type(Circulant), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -445,6 +464,7 @@ module specialmatrices_circulant
    end interface
 
    interface shape
+      !! Utility function to return the shape of a `Circulant` matrix.
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Circulant` matrix.
          type(Circulant), intent(in) :: A
@@ -456,14 +476,16 @@ module specialmatrices_circulant
 
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
-         !! Utility function to perform a scalar multiplication with a `Circulant` matrix.
+         !! Utility function to perform a scalar multiplication with a
+         !! `Circulant` matrix.
          real(dp), intent(in) :: alpha
          type(Circulant), intent(in) :: A
          type(Circulant) :: B
       end function scalar_multiplication_rdp
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
-         !! Utility function to perform a scalar multiplication with a `Circulant` matrix.
+         !! Utility function to perform a scalar multiplication with a
+         !! `Circulant` matrix.
          type(Circulant), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Circulant) :: B
