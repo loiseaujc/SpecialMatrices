@@ -24,8 +24,9 @@ module specialmatrices_toeplitz
    !---------------------------------------------------
 
    type, public :: Toeplitz
-      !! Base type to define a `Toeplitz` matrix of size [m x n]. The first column
-      !! is given by the vector `vc` while the first row is given by `vr`.
+      !! Base type to define a `Toeplitz` matrix of size [m x n]. The first
+      !! column is given by the vector `vc` while the first row is given by
+      !! `vr`.
       private
       integer(ilp) :: m, n
       !! Dimensions of the matrix.
@@ -41,9 +42,9 @@ module specialmatrices_toeplitz
 
    interface Toeplitz
       !! This interface provides methods to construct `Toeplitz` matrices.
-      !! Only `double precision` is supported currently. Given a vector `vc` specifying
-      !! the first column of the matrix and a vector `vr` specifying its first row, the
-      !! associated `Toeplitz` matrix is the following \(m \times n\) matrix
+      !! Given a vector `vc` specifying the first column of the matrix and a
+      !! vector `vr` specifying its first row, the associated `Toeplitz`
+      !! matrix is the following \(m \times n\) matrix
       !!
       !! \[
       !!    A
@@ -66,6 +67,15 @@ module specialmatrices_toeplitz
       !!    call random_number(vc) ; call random_number(vr)
       !!    A = Toeplitz(vc, vr)
       !! ```
+      !!
+      !! @warning
+      !! The element \( A_{11} \) is read from the first entry of the vector
+      !! `vc`. The first entry of `vr` is not referenced.
+      !! @endwarning
+      !!
+      !! @note
+      !! Only `double precision` is currently supported for this matrix type.
+      !! @endnote
       pure module function construct(vc, vr) result(A)
          !! Construct a `Toeplitz` matrix from the rank-1 arrays `vc` and `vr`.
          real(dp), intent(in) :: vc(:)
@@ -91,23 +101,17 @@ module specialmatrices_toeplitz
    !-------------------------------------------------------------------
 
    interface matmul
-      !! This interface overloads the Fortran intrinsic `matmul` for a `Toeplitz` matrix.
-      !! The intrinsic `matmul` is overloaded both for matrix-vector and matrix-matrix products.
-      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \) has to be a
-      !! `Toeplitz` matrix. Both \( B \) and \( C \) need to be standard Fortran rank-2
-      !! arrays. All the underlying functions are defined as `pure`.
+      !! This interface overloads the Fortran intrinsic `matmul` for a
+      !! `Toeplitz` matrix, both for matrix-vector and matrix-matrix products.
+      !! For a matrix-matrix product \( C = AB \), only the matrix \( A \)
+      !! has to be a `Toeplitz` matrix. Both \( B \) and \( C \) need to be
+      !! standard Fortran rank-2 arrays. All the underlying functions are
+      !! defined as `pure`.
       !!
       !! #### Syntax
       !!
-      !! - For matrix-vector product with `A` being of type `Toeplitz` and `x` a standard
-      !! rank-1 array:
       !! ```fortran
       !!    y = matmul(A, x)
-      !! ```
-      !!
-      !! - For matrix-matrix product with `A` being of type `Toeplitz` and `B` rank-2 array:
-      !! ```fortran
-      !!    C = matmul(A, B)
       !! ```
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Toeplitz` matrix \(A\).
@@ -137,9 +141,10 @@ module specialmatrices_toeplitz
    !-----------------------------------------------
 
    interface solve
-      !! This interface overloads the `solve` interface from `stdlib_linalg` for
-      !! solving a linear system \( Ax = b \) where \( A \) is a `Toeplitz` matrix.
-      !! It also enables to solve a linear system with multiple right-hand sides.
+      !! This interface overloads the `solve` interface from `stdlib_linalg`
+      !! for solving a linear system \( Ax = b \) where \( A \) is a `Toeplitz`
+      !! matrix. It also enables to solve a linear system with multiple
+      !! right-hand sides.
       !!
       !! #### Syntax
       !!
@@ -151,18 +156,18 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `b`   :  Rank-1 or rank-2 array defining the right-hand side(s).
+      !! - `b` :  Rank-1 or rank-2 array defining the right-hand side(s).
       !!          It is an `intent(in)` argument.
       !!
-      !! `x`   :  Solution of the linear system.
+      !! - `x` :  Solution of the linear system.
       !!          It has the same type and shape as `b`.
       pure module function solve_single_rhs(A, b) result(x)
-         !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b` a
-         !! standard rank-1 array. The solution vector `x` has the same dimension
-         !! and kind as the right-hand side vector `b`.
+         !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b`
+         !! a standard rank-1 array. The solution vector `x` has the same
+         !! dimension and kind as the right-hand side vector `b`.
          type(Toeplitz), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -172,9 +177,9 @@ module specialmatrices_toeplitz
       end function
 
       pure module function solve_multi_rhs(A, B) result(X)
-         !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B` is
-         !! a rank-2 array. The solution matrix `X` has the same dimension and kind
-         !! as the right-hand side matrix `B`.
+         !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B`
+         !! is a rank-2 array. The solution matrix `X` has the same dimension
+         !! and kind as the right-hand side matrix `B`.
          type(Toeplitz), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
@@ -189,8 +194,8 @@ module specialmatrices_toeplitz
    !------------------------------------------
 
    interface det
-      !! This interface overloads the `det` interface from `stdlib_linag` to compute the
-      !! determinant \(\det(A)\) where \(A\) is of type `Toeplitz`.
+      !! This interface overloads the `det` interface from `stdlib_linag` to
+      !! compute the determinant \(\det(A)\) where \(A\) is of type `Toeplitz`.
       !!
       !! #### Syntax
       !!
@@ -200,10 +205,10 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is in an `intent(in)` argument.
       !!
-      !! `d`   :  Determinant of the matrix.
+      !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
@@ -214,8 +219,8 @@ module specialmatrices_toeplitz
    end interface
 
    interface trace
-      !! This interface overloads the `trace` interface from `stdlib_linalg` to compute the trace
-      !! of a matrix \( A \) of type `Toeplitz`.
+      !! This interface overloads the `trace` interface from `stdlib_linalg`
+      !! to compute the trace of a matrix \( A \) of type `Toeplitz`.
       !!
       !! #### Syntax
       !!
@@ -225,10 +230,10 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `tr`  :  Trace of the matrix.
+      !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
@@ -310,8 +315,9 @@ module specialmatrices_toeplitz
    !--------------------------------------------
 
    interface eigvals
-      !! This interface overloads the `eigvals` interface from `stdlib_linalg` to compute the
-      !! eigenvalues of a real-valued matrix \( A \) whose type is `Toeplitz`.
+      !! This interface overloads the `eigvals` interface from `stdlib_linalg`
+      !! to compute the eigenvalues of a real-valued matrix \( A \) whose
+      !! type is `Toeplitz`.
       !!
       !! #### Syntax
       !!
@@ -321,12 +327,13 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  `real`-valued matrix of `Toeplitz` type.
+      !! - `A` :  `real`-valued matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `lambda` :  Vector of eigenvalues in increasing order.
+      !! - `lambda` :  Vector of eigenvalues in increasing order.
       module function eigvals_rdp(A) result(lambda)
-         !! Utility function to compute the eigenvalues of a real `Toeplitz` matrix.
+         !! Utility function to compute the eigenvalues of a real `Toeplitz`
+         !! matrix.
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
@@ -335,8 +342,9 @@ module specialmatrices_toeplitz
    end interface
 
    interface eig
-      !! This interface overloads the `eig` interface from `stdlib_linalg` to compute the
-      !! eigenvalues and eigenvectors of a real-valued matrix \(A\) whose type is `Toeplitz`.
+      !! This interface overloads the `eig` interface from `stdlib_linalg` to
+      !! compute the eigenvalues and eigenvectors of a real-valued matrix
+      !! \(A\) whose type is `Toeplitz`.
       !!
       !! #### Syntax
       !!
@@ -346,21 +354,23 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   : `real`-valued matrix of `Toeplitz`.
+      !! - `A` : `real`-valued matrix of `Toeplitz`.
       !!          It is an `intent(in)` argument.
       !!
-      !! `lambda` :  Rank-1 `real` array returning the eigenvalues of `A` in increasing order.
-      !!             It is an `intent(out)` argument.
+      !! - `lambda`  :  Rank-1 `real` array returning the eigenvalues of `A`
+      !!                in increasing order.
+      !!                It is an `intent(out)` argument.
       !!
-      !! `left` (optional) :  `complex` rank-2 array of the same kind as `A` returning the left
-      !!                      eigenvectors of `A`.
-      !!                      It is an `intent(out)` argument.
+      !! - `left` (optional) :  `complex` rank-2 array of the same kind as `A`
+      !!                         returning the left eigenvectors of `A`.
+      !!                         It is an `intent(out)` argument.
       !!
-      !! `right` (optional) : `complex` rank-2 array of the same kind as `A` returning the right
-      !!                      eigenvectors of `A`.
-      !!                      It is an `intent(out)` argument.
+      !! - `right` (optional) : `complex` rank-2 array of the same kind as `A`
+      !!                         returning the right eigenvectors of `A`.
+      !!                         It is an `intent(out)` argument.
       module subroutine eig_rdp(A, lambda, left, right)
-         !! Utility function to compute the eigenvalues and eigenvectors of a `Toeplitz` matrix.
+         !! Utility function to compute the eigenvalues and eigenvectors of a
+         !! `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
@@ -375,8 +385,7 @@ module specialmatrices_toeplitz
    !-------------------------------------
 
    interface dense
-      !! This interface provides methods to convert a matrix of one the types defined in
-      !! `SpecialMatrix` to a regular rank-2 array.
+      !! Convert a `Toeplitz` matrix to a standard rank-2 array.
       !!
       !! #### Syntax
       !!
@@ -386,10 +395,10 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Toeplitz`, `Bidiagonal`, `Toeplitz` or `SymCirculant` type.
+      !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `B`   :  Rank-2 array representation of the matrix \( A \).
+      !! - `B` :  Rank-2 array representation of the matrix \( A \).
       module function dense_rdp(A) result(B)
          !! Utility function to convert a `Toeplitz` matrix to a rank-2 array.
          type(Toeplitz), intent(in) :: A
@@ -400,8 +409,8 @@ module specialmatrices_toeplitz
    end interface
 
    interface transpose
-      !! This interface overloads the Fortran `intrinsic` procedure to define the transpose
-      !! operation for the various types defined in `SpecialMatrices`.
+      !! This interface overloads the Fortran `intrinsic` procedure to define
+      !! the transpose operation of a `Toeplitz` matrix.
       !!
       !! #### Syntax
       !!
@@ -411,10 +420,10 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! `A`   :  Matrix of `Toeplitz`, `Bidiagonal`, `Toeplitz` or `SymCirculant` type.
+      !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! `B`   :  Resulting transposed matrix. It is of the same type as `A`.
+      !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
@@ -425,8 +434,9 @@ module specialmatrices_toeplitz
    end interface
 
    interface size
+      !! Utility function to return the size of `Toeplitz` matrix along a
+      !! given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
-         !! Utility function to return the size of `Toeplitz` matrix along a given dimension.
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -437,6 +447,7 @@ module specialmatrices_toeplitz
    end interface
 
    interface shape
+      !! Utility function to return the size of a `Toeplitz` matrix.
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
