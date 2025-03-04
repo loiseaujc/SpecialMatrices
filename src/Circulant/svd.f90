@@ -20,14 +20,14 @@ contains
       !> Allocate variables.
       allocate(lambda(n), left(n, n), right(n, n))
       !> Eigendecomposition of the Circulant matrix.
-      call eig(A, lambda, right=right, left=left) ; right = hermitian(right)
+      call eig(A, lambda, right=right, left=left)
       !> Singular values.
       s = abs(A%c_hat)
       !> Right singular vectors.
-      vt = discrete_hartley_transform(right)
+      vt = discrete_hartley_transform(left)
       !> Left singular vectors.
-      pi = matmul(transpose(right), right) ; D = diag(A%c_hat/s)
-      u = discrete_hartley_transform(right)
+      pi = matmul(transpose(left), left) ; D = diag(A%c_hat/s)
+      u = discrete_hartley_transform(left)
       u = matmul(u, real(D%re - matmul(pi, D%im)))
       !> Sort the SVD.
       allocate(indices(n)) ; call sort_index(s, indices, reverse=.true.)
