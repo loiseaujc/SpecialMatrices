@@ -6,7 +6,6 @@ module specialmatrices_poisson2D
 
    public :: Poisson2D
    ! --> Linear algebra.
-   public :: det, trace
    public :: matmul
    public :: solve
    public :: eigh, eigvalsh
@@ -166,56 +165,6 @@ module specialmatrices_poisson2D
          !! Right-hand side vectors.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
-   end interface
-
-   !-----------------------------------------
-   !-----     Determinant and Trace     -----
-   !-----------------------------------------
-
-   interface det
-      !! This interface overloads the `det` interface from `stdlib_linalg`
-      !! to compute the determinant of a `Poisson2D` matrix \(A\).
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    d = det(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
-      !!
-      !! - `d` :  Determinant of the matrix.
-      pure module function det_rdp(A) result(d)
-         type(Poisson2D), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: d
-         !! Determinant of the matrix.
-      end function
-   end interface
-
-   interface trace
-      !! This interace overloads the `trace` interface from `stdlib_linalg`
-      !! to compute the trace of a `Poisson2D` matrix \(A\).
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    tr = trace(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! - `A` :  Matrix of `Poisson2D` type. It is an `intent(in)` argument.
-      !!
-      !! - `tr`:  Trace of the matrix.
-      pure module function trace_rdp(A) result(tr)
-         type(Poisson2D), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: tr
-         !! Trace of the matrix.
       end function
    end interface
 
