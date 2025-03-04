@@ -6,11 +6,10 @@ module specialmatrices_circulant
 
    ! --> Linear algebra
    public :: transpose
-   public :: det, trace
    public :: matmul
    public :: inv
    public :: solve
-   ! public :: svd, svdvals
+   public :: svd, svdvals
    public :: eig, eigvals
 
    ! --> Utility functions.
@@ -69,14 +68,6 @@ module specialmatrices_circulant
       !! @note
       !! Only `double precision` is currently supported for this matrix type.
       !! @endnote
-      pure module function initialize(n) result(A)
-         !! Construct a `Circulant` matrix filled with zeros.
-         integer(ilp), intent(in) :: n
-         !! Dimension of the matrix.
-         type(Circulant) :: A
-         !! Circulant matrix.
-      end function
-
       pure module function construct(c) result(A)
          !! Construct a `Circulant` matrix from the rank-1 array `c`.
          real(dp), intent(in) :: c(:)
@@ -194,43 +185,18 @@ module specialmatrices_circulant
       end function
    end interface
 
-   !------------------------------------------
-   !-----     Determinant and Trace      -----
-   !------------------------------------------
+   !------------------------------------------------
+   !-----     Singular Value Decomposition     -----
+   !------------------------------------------------
 
-   interface det
-      !! This interface overloads the `det` interface from `stdlib_linag` to
-      !! compute the determinant \(\det(A)\) where \(A\) is of type `Circulant`.
+   interface svdvals
+      !! This interface overloads the `svdvals` interface from `stdlib_linalg`
+      !! to compute the singular values of a `Circulant` matrix \(A\).
       !!
       !! #### Syntax
       !!
       !! ```fortran
-      !!    d = det(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! - `A` :  Matrix of `Circulant` type.
-      !!          It is in an `intent(in)` argument.
-      !!
-      !! - `d` :  Determinant of the matrix.
-      pure module function det_rdp(A) result(d)
-         !! Compute the determinant of a `Circulant` matrix.
-         type(Circulant), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: d
-         !! Determinant of the matrix.
-      end function
-   end interface
-
-   interface trace
-      !! This interface overloads the `trace` interface from `stdlib_linalg`
-      !! to compute the trace of a matrix \( A \) of type `Circulant`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    tr = trace(A)
+      !!    s = svdvals(A)
       !! ```
       !!
       !! #### Arguments
@@ -238,82 +204,61 @@ module specialmatrices_circulant
       !! - `A` :  Matrix of `Circulant` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! - `tr`:  Trace of the matrix.
-      pure module function trace_rdp(A) result(tr)
-         !! Compute the trace of a `Circulant` matrix.
+      !! - `s` :  Vector of singular values sorted in decreasing order.
+      module function svdvals_rdp(A) result(s)
+         !! Compute the singular values of a `Circulant` matrix.
          type(Circulant), intent(in) :: A
          !! Input matrix.
-         real(dp) :: tr
-         !! Trace of the matrix.
+         real(dp), allocatable :: s(:)
+         !! Singular values in descending order.
       end function
    end interface
 
-   !------------------------------------------------
-   !-----     Singular Value Decomposition     -----
-   !------------------------------------------------
-
-   ! interface svdvals
-   !    !! This interface overloads the `svdvals` interface from `stdlib_linalg` to compute the
-   !    !! singular values of a `Circulant` matrix \(A\).
-   !    !!
-   !    !! #### Syntax
-   !    !!
-   !    !! ```fortran
-   !    !!    s = svdvals(A)
-   !    !! ```
-   !    !!
-   !    !! #### Arguments
-   !    !!
-   !    !! `A`   :  Matrix of `Circulant` type.
-   !    !!          It is an `intent(in)` argument.
-   !    !!
-   !    !! `s`   :  Vector of singular values sorted in decreasing order.
-   !    module function svdvals_rdp(A) result(s)
-   !       !! Compute the singular values of a `Circulant` matrix.
-   !       type(Circulant), intent(in) :: A
-   !       !! Input matrix.
-   !       real(dp), allocatable :: s(:)
-   !       !! Singular values in descending order.
-   !    end function
-   ! end interface
-   !
-   ! interface svd
-   !    !! This interface overloads the `svd` interface from `stdlib_linalg` to compute the
-   !    !! the singular value decomposition of a `Circulant` matrix \(A\).
-   !    !!
-   !    !! #### Syntax
-   !    !!
-   !    !! ```fortran
-   !    !!    call svd(A, s, u, vt)
-   !    !! ```
-   !    !!
-   !    !! #### Arguments
-   !    !!
-   !    !! `A`   :  Matrix of `Circulant` type.
-   !    !!          It is an `intent(in)` argument.
-   !    !!
-   !    !! `s`   :  Rank-1 array `real` array returning the singular values of `A`.
-   !    !!          It is an `intent(out)` argument.
-   !    !!
-   !    !! `u` (optional) :  Rank-2 array of the same kind as `A` returning the left singular
-   !    !!                   vectors of `A` as columns. Its size should be `[n, n]`.
-   !    !!                   It is an `intent(out)` argument.
-   !    !!
-   !    !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
-   !    !!                   vectors of `A` as rows. Its size should be `[n, n]`.
-   !    !!                   It is an `intent(out)` argument.
-   !    module subroutine svd_rdp(A, s, u, vt)
-   !       !! Compute the singular value decomposition of a `Circulant` matrix.
-   !       type(Circulant), intent(in) :: A
-   !       !! Input matrix.
-   !       real(dp), intent(out) :: s(:)
-   !       !! Singular values in descending order.
-   !       real(dp), optional, intent(out) :: u(:, :)
-   !       !! Left singular vectors as columns.
-   !       real(dp), optional, intent(out) :: vt(:, :)
-   !       !! Right singular vectors as rows.
-   !    end subroutine
-   ! end interface
+   interface svd
+      !! This interface overloads the `svd` interface from `stdlib_linalg` to
+      !! compute the the singular value decomposition of a `Circulant` matrix
+      !! \(A\).
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    call svd(A, s, u, vt)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Circulant` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! - `s` :  Rank-1 array `real` array returning the singular values of
+      !!          `A`. It is an `intent(out)` argument.
+      !!
+      !! - `u` (optional) :   Rank-2 array of the same kind as `A` returning
+      !!                      the left singular vectors of `A` as columns.
+      !!                      Its size should be `[n, n]`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! - `vt` (optional) :  Rank-2 array of the same kind as `A` returning
+      !!                      the right singular vectors of `A` as rows. Its
+      !!                      size should be `[n, n]`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! Singular values and singular vectors of a `Circulant` matrix can be
+      !! efficiently computed based on the Fast Fourier transform.
+      !! @endnote
+      module subroutine svd_rdp(A, s, u, vt)
+         !! Compute the singular value decomposition of a `Circulant` matrix.
+         type(Circulant), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(out) :: s(:)
+         !! Singular values in descending order.
+         real(dp), optional, intent(out) :: u(:, :)
+         !! Left singular vectors as columns.
+         real(dp), optional, intent(out) :: vt(:, :)
+         !! Right singular vectors as rows.
+      end subroutine
+   end interface
 
    !--------------------------------------------
    !-----     Eigenvalue Decomposition     -----

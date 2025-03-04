@@ -1,5 +1,5 @@
 submodule(specialmatrices_circulant) circulant_eigenvalue_decomposition
-   use stdlib_linalg, only: stdlib_eig => eig, stdlib_eigvals => eigvals, eye
+   use stdlib_linalg, only: hermitian, eye
    implicit none(type, external)
 contains
    module procedure eigvals_rdp
@@ -14,8 +14,9 @@ contains
    if (present(right)) then
       right = eye(n, mold=1.0_dp)
       do concurrent(i=1:n)
-         right(:, i) = ifft(right(:, i), n) / sqrt(1.0_dp*n)
+         right(:, i) = fft(right(:, i), n) / sqrt(1.0_dp*n)
       enddo
+      right = hermitian(right)
    endif
 
    if (present(left)) then

@@ -2,8 +2,9 @@ module test_circulant
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
+   use stdlib_io_npy, only: save_npy
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals, hermitian
+   use stdlib_linalg, only: diag, inv, solve, svdvals, eigvals, hermitian, eye, norm, mnorm
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -25,13 +26,11 @@ contains
 
       testsuite = [ &
                   new_unittest("Circulant scalar multiplication", test_scalar_multiplication), &
-                  new_unittest("Circulant trace", test_trace), &
-                  ! new_unittest("Circulant determinant", test_det), &
                   new_unittest("Circulant inverse", test_inv), &
                   new_unittest("Circulant matmul", test_matmul), &
                   new_unittest("Circulant linear solver", test_solve), &
-                  ! new_unittest("Circulant svdvals", test_svdvals), &
-                  ! new_unittest("Circulant svd", test_svd), &
+                  new_unittest("Circulant svdvals", test_svdvals), &
+                  new_unittest("Circulant svd", test_svd), &
                   new_unittest("Circulant eigvals", test_eigvals), &
                   new_unittest("Circulant eig", test_eig) &
                   ]
@@ -62,34 +61,6 @@ contains
                  "circulant*alpha failed.")
       return
    end subroutine test_scalar_multiplication
-
-   subroutine test_trace(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(circulant) :: A
-      real(dp), allocatable :: dv(:)
-
-      ! Initialize matrix.
-      allocate (dv(n)); call random_number(dv); A = circulant(dv)
-
-      ! Compare against stdlib_linalg implementation.
-      call check(error, is_close(trace(A), trace(dense(A))), &
-                 "circulant trace failed.")
-      return
-   end subroutine test_trace
-
-   subroutine test_det(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(circulant) :: A
-      real(dp), allocatable :: dv(:)
-
-      ! Initialize matrix.
-      allocate (dv(n)); call random_number(dv); A = circulant(dv)
-
-      ! Compare against stdlib_linalg implementation.
-      call check(error, is_close(det(A), det(dense(A))), &
-                 "circulant det failed.")
-      return
-   end subroutine test_det
 
    subroutine test_inv(error)
       type(error_type), allocatable, intent(out) :: error
@@ -177,40 +148,59 @@ contains
       return
    end subroutine test_solve
 
-   ! subroutine test_svdvals(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:)
-   !    real(dp), allocatable :: s(:), s_stdlib(:)
-   !
-   !    ! Initialize array.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !    ! Compute singular values.
-   !    s = svdvals(A); s_stdlib = svdvals(dense(A))
-   !    ! Check error.
-   !    call check(error, all_close(s, s_stdlib), &
-   !               "circulant svdvals failed.")
-   !    return
-   ! end subroutine test_svdvals
-   !
-   ! subroutine test_svd(error)
-   !    type(error_type), allocatable, intent(out) :: error
-   !    type(circulant) :: A
-   !    real(dp), allocatable :: dv(:), Amat(:, :)
-   !    real(dp), allocatable :: u(:, :), s(:), vt(:, :)
-   !
-   !    ! Initialize matrix.
-   !    allocate (dv(n)); call random_number(dv); A = circulant(dv)
-   !    ! Compute singular value decomposition.
-   !    call svd(A, u, s, vt)
-   !    ! Check error.
-   !    allocate (Amat(n, n)); Amat = 0.0_dp
-   !    Amat = matmul(u, matmul(diag(s), vt))
-   !    call check(error, all_close(dense(A), Amat), &
-   !               "circulant svd failed.")
-   !    return
-   ! end subroutine test_svd
-   !
+   subroutine test_svdvals(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:)
+      real(dp), allocatable :: s(:), s_stdlib(:)
+
+      ! Initialize array.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+      ! Compute singular values.
+      s = svdvals(A); s_stdlib = svdvals(dense(A))
+      ! Check error.
+      call check(error, all_close(s, s_stdlib), &
+                 "circulant svdvals failed.")
+      return
+   end subroutine test_svdvals
+
+   subroutine test_svd(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(circulant) :: A
+      real(dp), allocatable :: dv(:), Amat(:, :)
+      real(dp), allocatable :: u(:, :), s(:), vt(:, :)
+
+      ! Initialize matrix.
+      allocate (dv(n)); call random_number(dv); A = circulant(dv)
+
+      ! Compute singular value decomposition.
+      allocate(s(n), u(n, n), vt(n, n))
+      call svd(A, s, u, vt)
+
+      ! Check orthogonality of the left singular vectors.
+      block
+      real(dp), allocatable :: G(:, :)
+      G = matmul(transpose(u), u)
+      call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
+                "Orthogonality of the left singular vectors failed.")
+      end block
+
+      ! Check orthogonality of the right singular vectors.
+      block
+      real(dp), allocatable :: G(:, :)
+      G = matmul(vt, transpose(vt))
+      call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
+                 "Orthogonality of the right singular vectors failed.")
+      end block
+
+      ! Check error.
+      allocate (Amat(n, n)); Amat = 0.0_dp
+      Amat = matmul(u, matmul(diag(s), vt))
+      call check(error, mnorm(dense(A) - Amat, 2) < 1e-8_dp, &
+                 "circulant svd failed.")
+      return
+   end subroutine test_svd
+
    subroutine test_eigvals(error)
       type(error_type), allocatable, intent(out) :: error
       type(circulant) :: A
@@ -253,6 +243,8 @@ contains
       ! Check error.
       allocate (Amat(n, n)); Amat = 0.0_dp
       Amat = real(matmul(right, matmul(diag(lambda), hermitian(left))))
+      call save_npy("Amat.npy", Amat)
+      call save_npy("A.npy", dense(A))
       call check(error, all_close(dense(A), Amat), &
                  "circulant eig failed.")
       return
