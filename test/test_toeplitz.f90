@@ -3,7 +3,7 @@ module test_toeplitz
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals, hermitian
+   use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvals, hermitian, norm
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -28,8 +28,8 @@ contains
                   new_unittest("toeplitz trace", test_trace), &
                   ! new_unittest("toeplitz determinant", test_det), &
                   ! new_unittest("toeplitz inverse", test_inv), &
-                  new_unittest("toeplitz matmul", test_matmul) &
-                  ! new_unittest("toeplitz linear solver", test_solve) &
+                  new_unittest("toeplitz matmul", test_matmul), &
+                  new_unittest("toeplitz linear solver", test_solve) &
                   ! new_unittest("toeplitz svdvals", test_svdvals), &
                   ! new_unittest("toeplitz svd", test_svd), &
                   ! new_unittest("toeplitz eigvals", test_eigvals), &
@@ -157,15 +157,13 @@ contains
          real(dp), allocatable :: x(:), x_stdlib(:), b(:)
          allocate (b(n))
          ! Random rhs.
-         call random_number(b)
+         call random_number(b) ; b = b / norm(b, 2)
          ! Solve with SpecialMatrices.
          x = solve(A, b)
          ! Solve with stdlib (dense).
          x_stdlib = solve(dense(A), b)
-         write(*, *) norm2(x - x_stdlib)
-         write(*, *) norm2(matmul(A, x) - b)
          ! Check error.
-         call check(error, all_close(x, x_stdlib), &
+         call check(error, norm(matmul(A, x) - b, 2) <= 1e-8_dp, &
                     "toeplitz solve with a single rhs failed.")
          if (allocated(error)) return
       end block
@@ -173,16 +171,23 @@ contains
       ! Solve with multiple right-hand side vectors.
       block
          real(dp), allocatable :: x(:, :), x_stdlib(:, :), b(:, :)
+         integer(ilp) :: i
          allocate (b(n, n))
          ! Random rhs.
          call random_number(b)
+         do i = 1, n
+            b(:, i) = b(:, i) / norm(b, 2)
+         enddo
          ! Solve with SpecialMatrices.
          x = solve(A, b)
          ! Solve with stdlib (dense).
          x_stdlib = solve(dense(A), b)
          ! Check error.
-         call check(error, all_close(x, x_stdlib, abs_tol=1e-12_dp), &
-                    "toeplitz solve with multiple rhs failed.")
+         do i = 1, n
+            call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= 1e-8_dp, &
+                      "toeplitz solve with multiple rhs failed.")
+            if (allocated(error)) return
+         enddo
       end block
 
       return
