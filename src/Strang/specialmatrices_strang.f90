@@ -20,7 +20,6 @@ module specialmatrices_strang
 
    type, public :: Strang
       !! Base type used to define the `Strang` matrix.
-      private
       integer(ilp) :: n
       !! Dimension of the matrix.
    end type
