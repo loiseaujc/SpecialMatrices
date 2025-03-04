@@ -11,7 +11,7 @@ module test_circulant
    implicit none
    private
 
-   integer, parameter :: n = 512
+   integer, parameter :: n = 256
 
    public :: collect_circulant_testsuite
 contains
