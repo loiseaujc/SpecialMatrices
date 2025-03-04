@@ -1,15 +1,15 @@
 module specialmatrices_toeplitz
    use stdlib_linalg_constants, only: dp, ilp, lk
+   use stdlib_linalg, only: eig, eigvals, svd, svdvals
    use specialmatrices_circulant
    implicit none(type, external)
    private
 
    ! --> Linear algebra
    public :: transpose
-   public :: det, trace
    public :: matmul
    public :: solve
-   ! public :: svd, svdvals
+   public :: svd, svdvals
    public :: eig, eigvals
 
    ! --> Utility functions.
@@ -113,6 +113,13 @@ module specialmatrices_toeplitz
       !! ```fortran
       !!    y = matmul(A, x)
       !! ```
+      !!
+      !! @note
+      !! Matrix-vector products for `Toeplitz` matrices can be efficiently
+      !! computed by embedding the `Toeplitz` matrix into a `Circulant` matrix
+      !! of size `[m+n x m+n]` and using the Fast Fourier Transform provided
+      !! by `fftpack`.
+      !! @endnote
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Toeplitz` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
@@ -164,6 +171,12 @@ module specialmatrices_toeplitz
       !!
       !! - `x` :  Solution of the linear system.
       !!          It has the same type and shape as `b`.
+      !!
+      !! @note
+      !! Under the hood, a `gmres` solver is being used along with a
+      !! Circulant preconditioner. By design, `gmres` is run until a
+      !! relative tolerance of \(10^{-8}\) is reached.
+      !! @endnote
       pure module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
@@ -189,43 +202,18 @@ module specialmatrices_toeplitz
       end function
    end interface
 
-   !------------------------------------------
-   !-----     Determinant and Trace      -----
-   !------------------------------------------
+   !------------------------------------------------
+   !-----     Singular Value Decomposition     -----
+   !------------------------------------------------
 
-   interface det
-      !! This interface overloads the `det` interface from `stdlib_linag` to
-      !! compute the determinant \(\det(A)\) where \(A\) is of type `Toeplitz`.
+   interface svdvals
+      !! This interface overloads the `svdvals` interface from `stdlib_linalg`
+      !! to compute the singular values of a `Toeplitz` matrix \(A\).
       !!
       !! #### Syntax
       !!
       !! ```fortran
-      !!    d = det(A)
-      !! ```
-      !!
-      !! #### Arguments
-      !!
-      !! - `A` :  Matrix of `Toeplitz` type.
-      !!          It is in an `intent(in)` argument.
-      !!
-      !! - `d` :  Determinant of the matrix.
-      pure module function det_rdp(A) result(d)
-         !! Compute the determinant of a `Toeplitz` matrix.
-         type(Toeplitz), intent(in) :: A
-         !! Input matrix.
-         real(dp) :: d
-         !! Determinant of the matrix.
-      end function
-   end interface
-
-   interface trace
-      !! This interface overloads the `trace` interface from `stdlib_linalg`
-      !! to compute the trace of a matrix \( A \) of type `Toeplitz`.
-      !!
-      !! #### Syntax
-      !!
-      !! ```fortran
-      !!    tr = trace(A)
+      !!    s = svdvals(A)
       !! ```
       !!
       !! #### Arguments
@@ -233,82 +221,70 @@ module specialmatrices_toeplitz
       !! - `A` :  Matrix of `Toeplitz` type.
       !!          It is an `intent(in)` argument.
       !!
-      !! - `tr`:  Trace of the matrix.
-      pure module function trace_rdp(A) result(tr)
-         !! Compute the trace of a `Toeplitz` matrix.
+      !! - `s` :  Vector of singular values sorted in decreasing order.
+      !!
+      !! @note
+      !! No analytic expression exist for the singular values of a general
+      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! its dense representation and the function `svdvals` from
+      !! `stdlib_linalg` is used.
+      !! @endnote
+      module function svdvals_rdp(A) result(s)
+         !! Compute the singular values of a `Toeplitz` matrix.
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
-         real(dp) :: tr
-         !! Trace of the matrix.
+         real(dp), allocatable :: s(:)
+         !! Singular values in descending order.
       end function
    end interface
 
-   !------------------------------------------------
-   !-----     Singular Value Decomposition     -----
-   !------------------------------------------------
-
-   ! interface svdvals
-   !    !! This interface overloads the `svdvals` interface from `stdlib_linalg` to compute the
-   !    !! singular values of a `Toeplitz` matrix \(A\).
-   !    !!
-   !    !! #### Syntax
-   !    !!
-   !    !! ```fortran
-   !    !!    s = svdvals(A)
-   !    !! ```
-   !    !!
-   !    !! #### Arguments
-   !    !!
-   !    !! `A`   :  Matrix of `Toeplitz` type.
-   !    !!          It is an `intent(in)` argument.
-   !    !!
-   !    !! `s`   :  Vector of singular values sorted in decreasing order.
-   !    module function svdvals_rdp(A) result(s)
-   !       !! Compute the singular values of a `Toeplitz` matrix.
-   !       type(Toeplitz), intent(in) :: A
-   !       !! Input matrix.
-   !       real(dp), allocatable :: s(:)
-   !       !! Singular values in descending order.
-   !    end function
-   ! end interface
-   !
-   ! interface svd
-   !    !! This interface overloads the `svd` interface from `stdlib_linalg` to compute the
-   !    !! the singular value decomposition of a `Toeplitz` matrix \(A\).
-   !    !!
-   !    !! #### Syntax
-   !    !!
-   !    !! ```fortran
-   !    !!    call svd(A, s, u, vt)
-   !    !! ```
-   !    !!
-   !    !! #### Arguments
-   !    !!
-   !    !! `A`   :  Matrix of `Toeplitz` type.
-   !    !!          It is an `intent(in)` argument.
-   !    !!
-   !    !! `s`   :  Rank-1 array `real` array returning the singular values of `A`.
-   !    !!          It is an `intent(out)` argument.
-   !    !!
-   !    !! `u` (optional) :  Rank-2 array of the same kind as `A` returning the left singular
-   !    !!                   vectors of `A` as columns. Its size should be `[n, n]`.
-   !    !!                   It is an `intent(out)` argument.
-   !    !!
-   !    !! `vt (optional) :  Rank-2 array of the same kind as `A` returning the right singular
-   !    !!                   vectors of `A` as rows. Its size should be `[n, n]`.
-   !    !!                   It is an `intent(out)` argument.
-   !    module subroutine svd_rdp(A, s, u, vt)
-   !       !! Compute the singular value decomposition of a `Toeplitz` matrix.
-   !       type(Toeplitz), intent(in) :: A
-   !       !! Input matrix.
-   !       real(dp), intent(out) :: s(:)
-   !       !! Singular values in descending order.
-   !       real(dp), optional, intent(out) :: u(:, :)
-   !       !! Left singular vectors as columns.
-   !       real(dp), optional, intent(out) :: vt(:, :)
-   !       !! Right singular vectors as rows.
-   !    end subroutine
-   ! end interface
+   interface svd
+      !! This interface overloads the `svd` interface from `stdlib_linalg` to
+      !! compute the the singular value decomposition of a `Toeplitz` matrix
+      !! \(A\).
+      !!
+      !! #### Syntax
+      !!
+      !! ```fortran
+      !!    call svd(A, s, u, vt)
+      !! ```
+      !!
+      !! #### Arguments
+      !!
+      !! - `A` :  Matrix of `Toeplitz` type.
+      !!          It is an `intent(in)` argument.
+      !!
+      !! - `s` :  Rank-1 array `real` array returning the singular values of
+      !!          `A`. It is an `intent(out)` argument.
+      !!
+      !! - `u` (optional)  :  Rank-2 array of the same kind as `A` returning
+      !!                      the left singular vectors of `A` as columns. Its
+      !!                      size should be `[n, n]`.
+      !!                      It is an `intent(out)` argument.
+      !!
+      !! - `vt` (optional) :  Rank-2 array of the same kind as `A` returning
+      !!                      the right singular vectors of `A` as rows. Its
+      !!                      size should be `[n, n]`. It is an `intent(out)`
+      !!                      argument.
+      !!
+      !! @note
+      !! No analytic expression exist for the singular value of a general
+      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! its dense representation and the function `svdvals` from
+      !! `stdlib_linalg` is used.
+      !! @endnote
+      module subroutine svd_rdp(A, s, u, vt)
+         !! Compute the singular value decomposition of a `Toeplitz` matrix.
+         type(Toeplitz), intent(in) :: A
+         !! Input matrix.
+         real(dp), intent(out) :: s(:)
+         !! Singular values in descending order.
+         real(dp), optional, intent(out) :: u(:, :)
+         !! Left singular vectors as columns.
+         real(dp), optional, intent(out) :: vt(:, :)
+         !! Right singular vectors as rows.
+      end subroutine
+   end interface
 
    !--------------------------------------------
    !-----     Eigenvalue Decomposition     -----
@@ -331,6 +307,13 @@ module specialmatrices_toeplitz
       !!          It is an `intent(in)` argument.
       !!
       !! - `lambda` :  Vector of eigenvalues in increasing order.
+      !!
+      !! @note
+      !! No analytic expression exist for the eigenvalues of a general
+      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! its dense representation and the function `eigvals` from
+      !! `stdlib_linalg` is used.
+      !! @endnote
       module function eigvals_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real `Toeplitz`
          !! matrix.
@@ -368,6 +351,13 @@ module specialmatrices_toeplitz
       !! - `right` (optional) : `complex` rank-2 array of the same kind as `A`
       !!                         returning the right eigenvectors of `A`.
       !!                         It is an `intent(out)` argument.
+      !!
+      !! @note
+      !! No analytic expression exist for the eigendecomposition of a general
+      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! its dense representation and the function `eig` from
+      !! `stdlib_linalg` is used.
+      !! @endnote
       module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a
          !! `Toeplitz` matrix.
@@ -399,7 +389,7 @@ module specialmatrices_toeplitz
       !!          It is an `intent(in)` argument.
       !!
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
-      module function dense_rdp(A) result(B)
+      pure module function dense_rdp(A) result(B)
          !! Utility function to convert a `Toeplitz` matrix to a rank-2 array.
          type(Toeplitz), intent(in) :: A
          !! Input diagonal matrix.
