@@ -68,7 +68,7 @@ contains
       real(dp), allocatable :: V(:, :)       !  Krylov basis.
       type(Circulant) :: P                   !  Circulant Preconditioner.
 
-      !> Givens rotations.
+     !> Givens rotations.
       real(dp), allocatable :: c(:), s(:)    !  Cosine and sine components.
 
       !> Miscellaneous.

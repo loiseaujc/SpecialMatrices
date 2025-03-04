@@ -146,10 +146,11 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(toeplitz) :: A
       real(dp), allocatable :: vr(:), vc(:)
+      integer(ilp) :: i
 
       ! Initialize matrix.
-      allocate(vc(n)) ; call random_number(vc)
-      allocate(vr(n)) ; call random_number(vr)
+      vr = [(1.0_dp / (i+1), i=1, n)]
+      vc = [(1.0_dp / (i+1), i=1, n)]
       A = Toeplitz(vc, vr)
 
       ! Solve with a single right-hand side vector.
