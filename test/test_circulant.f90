@@ -2,7 +2,6 @@ module test_circulant
    ! Fortran standard library.
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
-   use stdlib_io_npy, only: save_npy
    use stdlib_linalg_constants, only: dp, ilp
    use stdlib_linalg, only: diag, inv, solve, svdvals, eigvals, hermitian, eye, norm, mnorm
    ! Testdrive.
@@ -243,8 +242,6 @@ contains
       ! Check error.
       allocate (Amat(n, n)); Amat = 0.0_dp
       Amat = real(matmul(right, matmul(diag(lambda), hermitian(left))))
-      call save_npy("Amat.npy", Amat)
-      call save_npy("A.npy", dense(A))
       call check(error, all_close(dense(A), Amat), &
                  "circulant eig failed.")
       return
