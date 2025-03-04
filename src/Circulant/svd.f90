@@ -20,7 +20,7 @@ contains
       !> Allocate variables.
       allocate(lambda(n), left(n, n), right(n, n))
       !> Eigendecomposition of the Circulant matrix.
-      call eig(A, lambda, right=right, left=left)
+      call eig(A, lambda, right=right, left=left) ; left = hermitian(left)
       !> Singular values.
       s = abs(A%c_hat)
       !> Right singular vectors.
