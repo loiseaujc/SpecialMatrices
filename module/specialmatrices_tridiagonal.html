@@ -1,0 +1,1923 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="TODO">
+    <meta name="author" content="Jean-Christophe Loiseau" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>specialmatrices_tridiagonal &ndash; SpecialMatrices</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+      <link href="../css/user.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">SpecialMatrices </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>specialmatrices_tridiagonal
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+            <li class="list-inline-item" id="meta-license"><i class="fa fa-legal"></i> <a rel="license" href="http://www.freebsd.org/copyright/freebsd-doc-license.html">FreeBSD Documentation License</a></li>
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 4.8% of total for modules and submodules.">144 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/specialmatrices_tridiagonal.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/specialmatrices_tridiagonal.f90.html'>specialmatrices_tridiagonal.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">specialmatrices_tridiagonal</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-tridiagonal">Tridiagonal</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-dense~8">dense</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-det~5">det</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-eig~4">eig</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-eigvals~4">eigvals</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-inv~5">inv</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-matmul~8">matmul</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-operator%28ASTERISK%29~6">operator(*)</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-shape~8">shape</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-size~8">size</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-solve~8">solve</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-svd~6">svd</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-svdvals~6">svdvals</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-trace~5">trace</a>
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#interface-transpose~6">transpose</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/specialmatrices_tridiagonal.html#type-tridiagonal">Tridiagonal</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item">stdlib_linalg_constants</li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                <li class="list-inline-item"><h5>Descendants:</h5></li>
+                  <li class="list-inline-item"><a href='tridiagonal_constructors.html'>tridiagonal_constructors</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_determinant.html'>tridiagonal_determinant</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_eigenvalue_decomposition.html'>tridiagonal_eigenvalue_decomposition</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_linear_solver.html'>tridiagonal_linear_solver</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_matvecs.html'>tridiagonal_matvecs</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_singular_value_decomposition.html'>tridiagonal_singular_value_decomposition</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_trace.html'>tridiagonal_trace</a></li>
+                  <li class="list-inline-item"><a href='tridiagonal_utils.html'>tridiagonal_utils</a></li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-tridiagonal"></span>
+      <h3>public        interface <a href='../interface/tridiagonal.html'>Tridiagonal</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface provides different methods to construct a
+<code>Tridiagonal</code> matrix. Only the non-zero elements of <script type="math/tex"> A </script> are
+stored, i.e.</p>
+<p>
+<script type="math/tex; mode=display">
+   A
+   =
+   \begin{bmatrix}
+      a_1   &  b_1  \\
+      c_1  &  a_2      &  b_2  \\
+            &  \ddots   &  \ddots   &  \ddots   \\
+            &           &  c_{n-2} &  a_{n-1}  &  b_{n-1} \\
+            &           &           &  c_{n-1} &  a_n
+   \end{bmatrix}.
+</script>
+</p>
+<h4>Syntax</h4>
+<ul>
+<li>Construct a <code>Tridiagonal</code> matrix filled with zeros:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">   </span><span class="k">type</span><span class="p">(</span><span class="n">Tridiagonal</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span>
+
+<span class="w">   </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tridiagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+
+<ul>
+<li>Construct a <code>Tridiagonal</code> matrix from rank-1 arrays:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dl</span><span class="p">(:),</span><span class="w"> </span><span class="n">dv</span><span class="p">(:),</span><span class="w"> </span><span class="n">du</span><span class="p">(:)</span>
+<span class="w">   </span><span class="k">type</span><span class="p">(</span><span class="n">Tridiagonal</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span>
+<span class="w">   </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w">   </span><span class="n">dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)];</span><span class="w"> </span><span class="n">dv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)];</span><span class="w"> </span><span class="n">du</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[(</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)]</span>
+<span class="w">   </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tridiagonal</span><span class="p">(</span><span class="n">dl</span><span class="p">,</span><span class="w"> </span><span class="n">dv</span><span class="p">,</span><span class="w"> </span><span class="n">du</span><span class="p">)</span>
+</code></pre></div>
+
+<ul>
+<li>Construct a <code>Tridiagonal</code> matrix with constant diagonals:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_dp</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_dp</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0_dp</span>
+<span class="w">   </span><span class="k">type</span><span class="p">(</span><span class="n">Tridiagonal</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span>
+
+<span class="w">   </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tridiagonal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Only <code>double precision</code> is currently supported for this matrix type.</p>
+</div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function construct(dl, dv, du) result(A)  
+
+    </h3>
+  <p>Construct a <code>Tridiagonal</code> matrix from the rank-1 arrays <code>dl</code>,
+<code>dv</code> and <code>du</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dl~6"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dl</strong>(:)</td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dv~13"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dv</strong>(:)</td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-du~6"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>du</strong>(:)</td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    <p>Tridiagonal matrix.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function construct_constant(dl, dv, du, n) result(A)  
+
+    </h3>
+  <p>Construct a <code>Tridiagonal</code> matrix with constant diagonal elements.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dl~7"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dl</strong></td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dv~14"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dv</strong></td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-du~7"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>du</strong></td>
+            <td>
+                <p>Tridiagonal elements of the matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~68"></span>
+              integer(kind=ilp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>Dimension of the matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    <p>Tridiagonal matrix.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function initialize(n) result(A)  
+
+    </h3>
+  <p>Construct a <code>Tridiagonal</code> matrix filled with zeros.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~67"></span>
+              integer(kind=ilp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>Dimension of the matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    <p>Tridiagonal matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-dense~8"></span>
+      <h3>public        interface <a href='../interface/dense~8.html'>dense</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface provides methods to convert a <code>Tridiagonal</code> matrix
+to a regular rank-2 array.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dense</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>B</code> :  Rank-2 array representation of the matrix <script type="math/tex"> A </script>.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function dense_rdp(A) result(B)  
+
+    </h3>
+  <p>Utility function to convert a <code>Tridiagonal</code> matrix to a rank-2
+array.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~135"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input diagonal matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Output dense rank-2 array.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-det~5"></span>
+      <h3>public        interface <a href='../interface/det~5.html'>det</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>det</code> interface from <code>stdlib_linag</code> to
+compute the determinant <script type="math/tex">\det(A)</script> where <script type="math/tex">A</script> is of type
+<code>Tridiagonal</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is in an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>d</code> :  Determinant of the matrix.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function det_rdp(A) result(d)  
+
+    </h3>
+  <p>Compute the determinant of a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~129"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    <p>Determinant of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-eig~4"></span>
+      <h3>public        interface <a href='../interface/eig~4.html'>eig</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>eig</code> interface from <code>stdlib_linalg</code>
+to compute the eigenvalues and eigenvectors of a real-valued matrix
+<script type="math/tex">A</script> whose type is <code>Tridiagonal</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="k">call </span><span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">lambda</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">left</span><span class="p">]</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">right</span><span class="p">])</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> : <code>real</code>-valued matrix of <code>Tridiagonal</code>.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>lambda</code>  :  Rank-1 <code>real</code> array returning the eigenvalues of <code>A</code>
+               in increasing order. It is an <code>intent(out)</code> argument.</p>
+</li>
+<li>
+<p><code>left</code> (optional)  :  <code>complex</code> rank-2 array of the same kind as
+                        <code>A</code> returning the left eigenvectors of <code>A</code>.
+                        It is an <code>intent(out)</code> argument.</p>
+</li>
+<li>
+<p><code>right</code> (optional) :  <code>complex</code> rank-2 array of the same kind as
+                        <code>A</code> returning the right eigenvectors of <code>A</code>.
+                        It is an <code>intent(out)</code> argument.</p>
+</li>
+</ul>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>No specialized eigensolvers for generic <code>Tridiagonal</code> matrices exist
+in LAPACK. This routine thus falls back to wrapping the <code>eig</code>
+procedure from <code>stdlib_linalg</code> which uses <code>*geev</code> under the hood.</p>
+</div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module subroutine eig_rdp(A, lambda, left, right)  
+
+    </h3>
+  <p>Utility function to compute the eigenvalues and eigenvectors of
+a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~134"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lambda~17"></span>
+              complex(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lambda</strong>(:)</td>
+            <td>
+                <p>Eigenvalues.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-left~5"></span>
+              complex(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>left</strong>(:,:)</td>
+            <td>
+                <p>Eigenvectors.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-right~5"></span>
+              complex(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>right</strong>(:,:)</td>
+            <td>
+                <p>Eigenvectors.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-eigvals~4"></span>
+      <h3>public        interface <a href='../interface/eigvals~4.html'>eigvals</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>eigvals</code> interface from
+<code>stdlib_linalg</code> to compute the eigenvalues of a real-valued matrix
+<script type="math/tex"> A </script> whose type is <code>Tridiagonal</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">lambda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  <code>real</code>-valued matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>lambda</code> :  Vector of eigenvalues in increasing order.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function eigvals_rdp(A) result(lambda)  
+
+    </h3>
+  <p>Utility function to compute the eigenvalues of a real
+<code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~133"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>complex(kind=dp), allocatable, (:)</small>
+    </h4>
+    <p>Eigenvalues.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-inv~5"></span>
+      <h3>public        interface <a href='../interface/inv~5.html'>inv</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function inv_rdp(A) result(B)  
+
+    </h3>
+  <p>Compute the inverse of a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~128"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Inverse of <code>A</code>.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-matmul~8"></span>
+      <h3>public        interface <a href='../interface/matmul~8.html'>matmul</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the Fortran intrinsic <code>matmul</code> for a
+<code>Tridiagonal</code> matrix, both for matrix-vector and matrix-matrix
+products. For a matrix-matrix product <script type="math/tex"> C = AB </script>, only the matrix
+<script type="math/tex"> A </script> has to be a <code>Tridiagonal</code> matrix. Both <script type="math/tex"> B </script> and <script type="math/tex"> C </script>
+need to be standard Fortran rank-2 arrays. All the underlying
+functions are defined as <code>pure</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function spmv(A, x) result(y)  
+
+    </h3>
+  <p>Compute the matrix-vector product <script type="math/tex">y = Ax</script> for a <code>Tridiagonal</code>
+matrix <script type="math/tex">A</script>. Both <code>x</code> and <code>y</code> are rank-1 arrays with the same
+kind as <code>A</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~124"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~29"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(:)</td>
+            <td>
+                <p>Input vector.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), target, allocatable, (:)</small>
+    </h4>
+    <p>Output vector.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function spmvs(A, X) result(Y)  
+
+    </h3>
+  <p>Compute the matrix-matrix product <script type="math/tex">Y = Ax</script> for a <code>Tridiagonal</code>
+matrix <script type="math/tex">A</script> and a dense matrix <script type="math/tex">X</script> (rank-2 array). <script type="math/tex">Y</script> is
+also a rank-2 array with the same dimensions as <script type="math/tex">X</script>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~125"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~8"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>X</strong>(:,:)</td>
+            <td>
+                <p>Input vectors.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Output vectors.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-operator%28ASTERISK%29~6"></span>
+      <h3>public        interface <a href='../interface/operator(ASTERISK)~6.html'>operator(*)</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)  
+
+    </h3>
+  <p>Scalar multiplication with a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~140"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-alpha~18"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>alpha</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function scalar_multiplication_rdp(alpha, A) result(B)  
+
+    </h3>
+  <p>Scalar multiplication with a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-alpha~17"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>alpha</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~139"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-shape~8"></span>
+      <h3>public        interface <a href='../interface/shape~8.html'>shape</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function shape_rdp(A) result(arr_shape)  
+
+    </h3>
+  <p>Return the shape of a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~138"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=ilp), (2)</small>
+    </h4>
+    <p>Shape of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-size~8"></span>
+      <h3>public        interface <a href='../interface/size~8.html'>size</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function size_rdp(A, dim) result(arr_size)  
+
+    </h3>
+  <p>Return the size of <code>Tridiagonal</code> matrix along a given dimension.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~137"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dim~8"></span>
+              integer(kind=ilp),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dim</strong></td>
+            <td>
+                <p>Queried dimension.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=ilp)</small>
+    </h4>
+    <p>Size of the matrix along the dimension dim.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-solve~8"></span>
+      <h3>public        interface <a href='../interface/solve~8.html'>solve</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>solve</code> interface from <code>stdlib_linalg</code>
+for solving a linear system <script type="math/tex"> Ax = b </script> where <script type="math/tex"> A </script> is a
+<code>Tridiagonal</code> matrix. It also enables to solve a linear system with
+multiple right-hand sides.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">refine</span><span class="p">])</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>b</code> :  Rank-1 or rank-2 array defining the right-hand side(s).
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>refine</code> (optional) : Logical switch to enable solution refinement.
+                        It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>x</code> :  Solution of the linear system.
+         It has the same type and shape as <code>b</code>.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function solve_multi_rhs(A, b, refine) result(x)  
+
+    </h3>
+  <p>Solve the linear system <script type="math/tex">AX=B</script> where <script type="math/tex">A</script> is of type
+<code>Tridiagonal</code> and <code>B</code> a standard rank-2 array. The solution
+matrix <code>X</code> has the same dimensions and kind as <code>B</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~127"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Coefficient matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~19"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(:,:)</td>
+            <td>
+                <p>Right-hand side vectors.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-refine~10"></span>
+              logical(kind=lk),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>refine</strong></td>
+            <td>
+                <p>Whether iterative refined is used or not.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, target, (:,:)</small>
+    </h4>
+    <p>Solution vectors.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private module function solve_single_rhs(A, b, refine) result(x)  
+
+    </h3>
+  <p>Solve the linear system <script type="math/tex">Ax=b</script> where <script type="math/tex">A</script> is of type
+<code>Tridiagonal</code> and <code>b</code> a standard rank-1 array. The solution
+vector <code>x</code> has the same dimension and kind as <code>b</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~126"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Coefficient matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~18"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(:)</td>
+            <td>
+                <p>Right-hand side vector.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-refine~9"></span>
+              logical(kind=lk),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>refine</strong></td>
+            <td>
+                <p>Whether iterative refinement is used or not.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, target, (:)</small>
+    </h4>
+    <p>Solution vector.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-svd~6"></span>
+      <h3>public        interface <a href='../interface/svd~6.html'>svd</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>svd</code> interface from <code>stdlib_linalg</code>
+to compute the the singular value decomposition of a <code>Tridiagonal</code>
+matrix <script type="math/tex">A</script>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="k">call </span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="n">vt</span><span class="p">])</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>s</code> :  Rank-1 array <code>real</code> array returning the singular values of
+         <code>A</code>. It is an <code>intent(out)</code> argument.</p>
+</li>
+<li>
+<p><code>u</code> (optional)  :  Rank-2 array of the same kind as <code>A</code> returning
+                     the left singular vectors of <code>A</code> as columns.
+                      Its size should be <code>[n, n]</code>.
+                     It is an <code>intent(out)</code> argument.</p>
+</li>
+<li>
+<p><code>vt</code> (optional) :  Rank-2 array of the same kind as <code>A</code> returning
+                     the right singular vectors of <code>A</code> as rows. Its
+                     size should be <code>[n, n]</code>.
+                     It is an <code>intent(out)</code> argument.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module subroutine svd_rdp(A, s, u, vt)  
+
+    </h3>
+  <p>Compute the singular value decomposition of a <code>Tridiagonal</code>
+matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~132"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~14"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>s</strong>(:)</td>
+            <td>
+                <p>Singular values in descending order.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-u~6"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>u</strong>(:,:)</td>
+            <td>
+                <p>Left singular vectors as columns.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-vt~6"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>vt</strong>(:,:)</td>
+            <td>
+                <p>Right singular vectors as rows.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-svdvals~6"></span>
+      <h3>public        interface <a href='../interface/svdvals~6.html'>svdvals</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>svdvals</code> interface from
+<code>stdlib_linalg</code> to compute the singular values of a <code>Tridiagonal</code>
+matrix <script type="math/tex">A</script>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">svdvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>s</code> :  Vector of singular values sorted in decreasing order.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function svdvals_rdp(A) result(s)  
+
+    </h3>
+  <p>Compute the singular values of a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~131"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:)</small>
+    </h4>
+    <p>Singular values in descending order.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-trace~5"></span>
+      <h3>public        interface <a href='../interface/trace~5.html'>trace</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>trace</code> interface from <code>stdlib_linalg</code>
+to compute the trace of a matrix <script type="math/tex"> A </script> of type <code>Tridiagonal</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">tr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>tr</code>:  Trace of the matrix.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function trace_rdp(A) result(tr)  
+
+    </h3>
+  <p>Compute the trace of a <code>Tridiagonal</code> matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~130"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    <p>Trace of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-transpose~6"></span>
+      <h3>public        interface <a href='../interface/transpose~6.html'>transpose</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the Fortran <code>intrinsic</code> procedure to define
+the transpose operation for a <code>Tridiagonal</code> matrix.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Tridiagonal</code> type.
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>B</code> :  Resulting transposed matrix. It is of the same type as <code>A</code>.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function transpose_rdp(A) result(B)  
+
+    </h3>
+  <p>Utility function to compute the transpose of a <code>Tridiagonal</code>
+matrix.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~136"></span>
+              type(<a href='../type/tridiagonal.html'>Tridiagonal</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tridiagonal.html'>Tridiagonal</a>)</small>
+    </h4>
+    <p>Transpose of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-tridiagonal"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/tridiagonal.html'>Tridiagonal</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Base type used to define a <code>Tridiagonal</code> matrix of size <code>[n, n]</code>
+with diagonals given by rank-1 arrays <code>dl</code> (size <code>n</code>), <code>dv</code>
+(size <code>n-1</code>) and <code>du</code> (size <code>n-1</code>).</p>
+
+
+        <h4>Constructor</h4>
+          <p>This interface provides different methods to construct a
+<code>Tridiagonal</code> matrix. Only the non-zero elements of <script type="math/tex"> A </script> are
+stored, i.e.</p><a href="../interface/tridiagonal.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+        <table class="table table-striped varlist">
+          <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>construct</strong>
+                    (dl, dv, du)
+                  </td>
+                  <td><p>Construct a <code>Tridiagonal</code> matrix from the rank-1 arrays <code>dl</code>,
+<code>dv</code> and <code>du</code>.</p></td>
+                </tr>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>construct_constant</strong>
+                    (dl, dv, du, n)
+                  </td>
+                  <td><p>Construct a <code>Tridiagonal</code> matrix with constant diagonal elements.</p></td>
+                </tr>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>initialize</strong>
+                    (n)
+                  </td>
+                  <td><p>Construct a <code>Tridiagonal</code> matrix filled with zeros.</p></td>
+                </tr>
+          </tbody>
+        </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              SpecialMatrices
+ was developed by Jean-Christophe Loiseau<br>              &copy; 2025 <a rel="license" href="http://www.freebsd.org/copyright/freebsd-doc-license.html">FreeBSD Documentation License</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-03-05T05:40:43.147093+0000 <br>&copy; <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>

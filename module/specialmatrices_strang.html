@@ -1,0 +1,1256 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="TODO">
+    <meta name="author" content="Jean-Christophe Loiseau" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>specialmatrices_strang &ndash; SpecialMatrices</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+      <link href="../css/user.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">SpecialMatrices </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>specialmatrices_strang
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+            <li class="list-inline-item" id="meta-license"><i class="fa fa-legal"></i> <a rel="license" href="http://www.freebsd.org/copyright/freebsd-doc-license.html">FreeBSD Documentation License</a></li>
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.1% of total for modules and submodules.">92 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/specialmatrices_strang.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/specialmatrices_strang.f90.html'>specialmatrices_strang.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">specialmatrices_strang</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-strang">Strang</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-dense~6">dense</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-det~3">det</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-eigh~3">eigh</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-eigvalsh~3">eigvalsh</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-matmul~6">matmul</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-shape~6">shape</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-size~6">size</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-solve~6">solve</a>
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#interface-trace~3">trace</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/specialmatrices_strang.html#type-strang">Strang</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item">stdlib_linalg_constants</li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                <li class="list-inline-item"><h5>Descendants:</h5></li>
+                  <li class="list-inline-item"><a href='strang_constructors.html'>strang_constructors</a></li>
+                  <li class="list-inline-item"><a href='strang_determinant.html'>strang_determinant</a></li>
+                  <li class="list-inline-item"><a href='strang_eigh.html'>strang_eigh</a></li>
+                  <li class="list-inline-item"><a href='strang_linear_solver.html'>strang_linear_solver</a></li>
+                  <li class="list-inline-item"><a href='strang_matvecs.html'>strang_matvecs</a></li>
+                  <li class="list-inline-item"><a href='strang_utils.html'>strang_utils</a></li>
+                  <li class="list-inline-item"><a href='strange_trace.html'>strange_trace</a></li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-strang"></span>
+      <h3>public        interface <a href='../interface/strang.html'>Strang</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Constructor for generating the <code>Strang</code> matrix of size <code>n</code>. The
+matrix corresponds to the standard 3-point finite-difference
+approximation of the 1D Laplace operator with unit grid-spacing
+(<script type="math/tex">\Delta x = 1</script>) and homogeneous Dirichlet boundary conditions.
+It reads</p>
+<p>
+<script type="math/tex; mode=display">
+   A
+   =
+   \begin{bmatrix}
+      2  &  -1 \\
+      -1 &  2        &  -1 \\
+         &  \ddots   &  \ddots   &  \ddots   \\
+         &           &  -1       &  2  &  -1 \\
+         &           &           &  -1 &  2
+   \end{bmatrix}
+</script>
+</p>
+<h4>Syntax</h4>
+<ul>
+<li>Construct a <code>Strang</code> matrix of size 100.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">   </span><span class="k">type</span><span class="p">(</span><span class="n">Strang</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">S</span>
+<span class="w">   </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Strang</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Only <code>double precision</code> is currently supported for this matrix type.</p>
+</div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function initialize(n) result(A)  
+
+    </h3>
+  <p>Construct the Strang matrix of size <code>n</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~31"></span>
+              integer(kind=ilp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>Dimension of the matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/strang.html'>Strang</a>)</small>
+    </h4>
+    <p>Strang matrix of size <code>n</code>.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-dense~6"></span>
+      <h3>public        interface <a href='../interface/dense~6.html'>dense</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Convert a matrix of type <code>Strang</code> to its dense representation as a
+standard rank-2 array</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dense</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of type <code>Strang</code>. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>B</code> :  Rank-2 array representation fo the matrix <script type="math/tex">A</script>.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function dense_rdp(A) result(B)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~93"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Dense representation.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-det~3"></span>
+      <h3>public        interface <a href='../interface/det~3.html'>det</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>det</code> interface from <code>stdlib_linalg</code>
+to compute the determinant <script type="math/tex">\det(A)</script> where <script type="math/tex">A</script> is of type
+<code>Strang</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of type <code>Strang</code>. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>d</code> :  Determinant of the matrix.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function det_rdp(A) result(d)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~89"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    <p>Determinant of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-eigh~3"></span>
+      <h3>public        interface <a href='../interface/eigh~3.html'>eigh</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>eigh</code> interface from <code>stdlib_linalg</code>
+to compute the eigenvalues and eigenvectors of a <code>Strang</code> matrix.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="k">call </span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">lambda</span><span class="p">,</span><span class="w"> </span><span class="n">vectors</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of type <code>Strang</code>. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>lambda</code>  :  Rank-1 <code>real</code> array returning the eigenvalues of <code>A</code>
+               in increasing order. It is an <code>intent(out)</code> argument.</p>
+</li>
+<li>
+<p><code>vectors</code>:  Rank-2 <code>real</code> array of size <code>[n x n]</code> returning the
+               eigenvectors of <code>A</code>. It is an <code>intent(out)</code> argument.</p>
+</li>
+</ul>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Eigenvalues and eigenvectors of the Strang matrix are known
+analytically and can thus be constructed very efficiently.</p>
+</div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module subroutine eigh_rdp(A, lambda, vectors)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~92"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lambda~12"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>lambda</strong>(:)</td>
+            <td>
+                <p>Eigenvalues.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-vectors~3"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>vectors</strong>(:,:)</td>
+            <td>
+                <p>Eigenvectors.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-eigvalsh~3"></span>
+      <h3>public        interface <a href='../interface/eigvalsh~3.html'>eigvalsh</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>eigvalsh</code> interface from <code>stdlib_linalg</code>
+to compute the eigenvalues of a <code>Strang</code> matrix. Note that these
+eigenvalues are known analytically.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">lambda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of type <code>Strang</code>. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>lambda</code>  :  Rank-1 <code>real</code> array returning the eigenvalues of <code>A</code>
+               in increasing order. It is an <code>intent(out)</code> argument.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function eigvalsh_rdp(A) result(lambda)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~91"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:)</small>
+    </h4>
+    <p>Eigenvalues.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-matmul~6"></span>
+      <h3>public        interface <a href='../interface/matmul~6.html'>matmul</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the Fortran intrinsic <code>matmul</code> for the
+<code>Strang</code> matrix, both for matrix-vector and matrix-matrix products.
+For matrix-matrix product <script type="math/tex"> C = A B </script>, only <script type="math/tex">A</script> can be a <code>Strang</code>
+matrix. Both <script type="math/tex"> B </script> and <script type="math/tex"> C </script> are standard rank-2 arrays. All
+underlying functions are defined as <code>pure</code>.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function spmv(A, x) result(y)  
+
+    </h3>
+  <p>Driver for the matrix-vector product.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~85"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~19"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(:)</td>
+            <td>
+                <p>Input vector.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:)</small>
+    </h4>
+    <p>Output vector.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function spmvs(A, X) result(Y)  
+
+    </h3>
+  <p>Driver for the matrix-matrix product.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~86"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~5"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>X</strong>(:,:)</td>
+            <td>
+                <p>Input vector.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Output vector.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-shape~6"></span>
+      <h3>public        interface <a href='../interface/shape~6.html'>shape</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Utility function returning the shape of a <code>Strang</code> matrix <script type="math/tex">A</script>.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function shape_rdp(A) result(arr_shape)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~94"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=ilp), (2)</small>
+    </h4>
+    <p>Shape of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-size~6"></span>
+      <h3>public        interface <a href='../interface/size~6.html'>size</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Utility function returning the size of a <code>Strang</code> matrix <script type="math/tex">A</script>
+along a given dimension.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function size_rdp(A, dim) result(arr_size)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~95"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dim~6"></span>
+              integer(kind=ilp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dim</strong></td>
+            <td>
+                <p>Queried dimension.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=ilp)</small>
+    </h4>
+    <p>Corresponding size.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-solve~6"></span>
+      <h3>public        interface <a href='../interface/solve~6.html'>solve</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>solve</code> interface from <code>stdlib_linalg</code>
+for solving a system <script type="math/tex">Ax = b</script> where <script type="math/tex">A</script> is a <code>Strang</code> matrix.
+It also enables to solve a linear system with multiple right-hand
+sides.</p>
+<h4>Syntax</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Strang</code> type. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>b</code> :  Rank-1 or rank-2 array defining the right-hand side(s).
+         It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>x</code> :  Solution of the linear system. It has the same type and
+         shape as <code>b</code>.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private module function solve_multi_rhs(A, b, refine) result(x)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~88"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Coefficient matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~12"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(:,:)</td>
+            <td>
+                <p>Right-hand side vectors.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-refine~6"></span>
+              logical(kind=lk),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>refine</strong></td>
+            <td>
+                <p>Whether iterative refinement is used or not.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:,:)</small>
+    </h4>
+    <p>Solution vectors.</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private module function solve_single_rhs(A, b, refine) result(x)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~87"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Coefficient matrix.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~11"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(:)</td>
+            <td>
+                <p>Right-hand side vector.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-refine~5"></span>
+              logical(kind=lk),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>refine</strong></td>
+            <td>
+                <p>Whether iterative refinement is used or not.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, target, (:)</small>
+    </h4>
+    <p>Solution vector.</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-trace~3"></span>
+      <h3>public        interface <a href='../interface/trace~3.html'>trace</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>This interface overloads the <code>trace</code> interface from <code>stdlib_linalg</code>
+to compute the trace of a matrix <script type="math/tex">A</script> of type <code>Strang</code>.</p>
+<h4>Strang</h4>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="n">tr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Arguments</h4>
+<ul>
+<li>
+<p><code>A</code> :  Matrix of <code>Strang</code> type. It is an <code>intent(in)</code> argument.</p>
+</li>
+<li>
+<p><code>tr</code>:  Trace of the matrix.</p>
+</li>
+</ul>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function trace_rdp(A) result(tr)  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~90"></span>
+              type(<a href='../type/strang.html'>Strang</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>A</strong></td>
+            <td>
+                <p>Input matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    <p>Trace of the matrix.</p>
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-strang"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/strang.html'>Strang</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Base type used to define the <code>Strang</code> matrix.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~30"></span>
+              integer(kind=ilp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Dimension of the matrix.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <h4>Constructor</h4>
+          <p>Constructor for generating the <code>Strang</code> matrix of size <code>n</code>. The
+matrix corresponds to the standard 3-point finite-difference
+approximation of the 1D Laplace operator with unit grid-spacing
+(<script type="math/tex">\Delta x = 1</script>) and homogeneous Dirichlet boundary conditions.
+It reads</p><a href="../interface/strang.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+        <table class="table table-striped varlist">
+          <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>initialize</strong>
+                    (n)
+                  </td>
+                  <td><p>Construct the Strang matrix of size <code>n</code>.</p></td>
+                </tr>
+          </tbody>
+        </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              SpecialMatrices
+ was developed by Jean-Christophe Loiseau<br>              &copy; 2025 <a rel="license" href="http://www.freebsd.org/copyright/freebsd-doc-license.html">FreeBSD Documentation License</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-03-05T05:40:43.147093+0000 <br>&copy; <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>
