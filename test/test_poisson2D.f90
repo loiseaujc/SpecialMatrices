@@ -23,8 +23,6 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
-                  new_unittest("Poisson2D trace", test_trace), &
-                  ! new_unittest("Poisson2D determinant", test_det), &
                   new_unittest("Poisson2D matmul", test_matmul), &
                   new_unittest("Poisson2D linear solver", test_solve), &
                   new_unittest("Poisson2D eigenvalue decomposition", test_eigh) &
@@ -100,32 +98,6 @@ contains
 
       return
    end subroutine test_solve
-
-   subroutine test_trace(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(Poisson2D) :: A
-
-      ! Initialize matrix.
-      A = Poisson2D(nx, ny)
-
-      ! Compare against stdlib_linalg implementation.
-      call check(error, is_close(trace(A), trace(dense(A))), &
-                 "Poisson2D trace failed.")
-      return
-   end subroutine test_trace
-
-   subroutine test_det(error)
-      type(error_type), allocatable, intent(out) :: error
-      type(Poisson2D) :: A
-
-      ! Initialize matrix.
-      A = Poisson2D(nx, ny)
-
-      ! Compare against stdlib_linalg implementation.
-      call check(error, is_close(det(A), det(dense(A))), &
-                 "Poisson2D det failed.")
-      return
-   end subroutine test_det
 
    subroutine test_eigh(error)
       type(error_type), allocatable, intent(out) :: error

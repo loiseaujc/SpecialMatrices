@@ -1,6 +1,5 @@
 module test_strang
    ! Fortran standard library.
-   use stdlib_io_npy, only: save_npy
    use stdlib_math, only: is_close, all_close
    use stdlib_linalg_constants, only: dp, ilp
    use stdlib_linalg, only: diag, det, trace, inv, solve, svdvals, eigvalsh

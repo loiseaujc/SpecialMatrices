@@ -10,6 +10,11 @@ contains
    end procedure
 
    module procedure transpose_rdp
+   real(dp), allocatable :: b_vec(:)
+   integer(ilp) :: n
+   n = A%n
+   b_vec = A%c(n:1:-1) ; b_vec = cshift(b_vec, -1)
+   B = Circulant(b_vec)
    end procedure
 
    module procedure size_rdp
