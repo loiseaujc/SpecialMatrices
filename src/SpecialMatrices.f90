@@ -7,6 +7,7 @@ module SpecialMatrices
    use specialmatrices_poisson2D
    use specialmatrices_circulant
    use specialmatrices_toeplitz
+   use specialmatrices_hankel
    implicit none
    private
 
