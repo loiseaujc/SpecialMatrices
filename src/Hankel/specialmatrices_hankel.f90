@@ -13,7 +13,6 @@ module specialmatrices_hankel
    public :: eigh, eigvalsh
 
    ! --> Utility functions.
-   public :: Toeplitz
    public :: dense
    public :: shape
    public :: size
@@ -24,16 +23,13 @@ module specialmatrices_hankel
    !---------------------------------------------------
 
    type, public :: Hankel
-      !! Base type to define a `Hankel` matrix of size [m x n]. The first
-      !! column is given by the vector `vc` while the first row is given by
-      !! `vr`.
+      !! Base type to define a `Hankel` matrix of size [m x n] generate from
+      !! the vector v.
       private
       integer(ilp) :: m, n
       !! Dimensions of the matrix.
-      real(dp), allocatable :: vc(:)
-      !! First column of the matrix.
-      real(dp), allocatable :: vr(:)
-      !! Last row of the matrix.
+      real(dp), allocatable :: v(:)
+      !! Generating vector.
    end type Hankel
 
    !--------------------------------
@@ -76,24 +72,16 @@ module specialmatrices_hankel
       !! @note
       !! Only `double precision` is currently supported for this matrix type.
       !! @endnote
-      pure module function construct(vc, vr) result(A)
+      pure module function construct(v, m, n) result(A)
+         implicit none(type, external)
          !! Construct a `Hankel` matrix from the rank-1 arrays `vc` and `vr`.
-         real(dp), intent(in) :: vc(:)
-         !! First column of the matrix.
-         real(dp), intent(in) :: vr(:)
-         !! Last row of the matrix.
+         real(dp), intent(in) :: v(:)
+         !! Generating vector.
+         integer(ilp), intent(in) :: m, n
+         !! Dimensions of the matrix.
          type(Hankel) :: A
          !! Corresponding hankel matrix.
       end function construct
-   end interface
-
-   interface Toeplitz
-      !! Utility function to transform an m x n `Hankel` matrix into an
-      !! m x n `Toeplitz` matrix.
-      pure module function Hankel2Toeplitz(H) result(T)
-         type(Hankel), intent(in) :: H
-         type(Toeplitz) :: T
-      end function Hankel2Toeplitz
    end interface
 
    !-------------------------------------------------------------------
