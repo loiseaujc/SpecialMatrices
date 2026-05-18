@@ -21,4 +21,5 @@ source-form = "free"
 
 [dependencies]
 stdlib = "*"
+blas = "*"
 fftpack = { git="https://github.com/nshalle/fftpack.git" }
