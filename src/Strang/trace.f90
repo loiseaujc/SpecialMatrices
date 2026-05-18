@@ -3,5 +3,5 @@ submodule(specialmatrices_strang) strange_trace
 contains
    module procedure trace_rdp
    tr = A%n*2
-   end procedure
-end submodule
+   end procedure trace_rdp
+end submodule strange_trace

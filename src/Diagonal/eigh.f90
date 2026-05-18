@@ -5,7 +5,7 @@ submodule(specialmatrices_diagonal) diagonal_hermitian_eigenvalue_decomposition
 contains
    module procedure eigvalsh_rdp
    lambda = A%dv; call sort(lambda)
-   end procedure
+   end procedure eigvalsh_rdp
 
    module procedure eigh_rdp
    integer(ilp) :: index(A%n)
@@ -15,5 +15,5 @@ contains
    if (present(vectors)) then
       vectors = eye(A%n); vectors = vectors(:, index)
    end if
-   end procedure
-end submodule
+   end procedure eigh_rdp
+end submodule diagonal_hermitian_eigenvalue_decomposition

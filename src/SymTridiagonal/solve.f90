@@ -20,7 +20,7 @@ contains
    else
       xmat = symtridiagonal_solver(A, bmat, refine_)
    end if
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    ! Local variables.
@@ -31,7 +31,7 @@ contains
    else
       x = symtridiagonal_solver(A, b, refine_)
    end if
-   end procedure
+   end procedure solve_multi_rhs
 
    !---------------------------------------------------
    !-----     Generic (Sym)Tridiagonal Solver     -----
@@ -182,7 +182,7 @@ contains
 
       ! ----- Allocations -----
       allocate (du2(n - 2), ipiv(n))
-      dl = A%ev; d = A%dv; du = A%ev; 
+      dl = A%ev; d = A%dv; du = A%ev
       ! ----- LU factorization -----
       call gttrf(n, dl, d, du, du2, ipiv, info)
       call handle_gttrf_info(n, info, err)
@@ -355,4 +355,4 @@ contains
       end if
    end function posdef_symtridiagonal_solver
 
-end submodule
+end submodule symtridiagonal_linear_solver

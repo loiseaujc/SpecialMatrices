@@ -13,7 +13,7 @@ contains
       allocate(x, mold=b)
       !> Solve the linear system with preconditioned GMRES.
       x = gmres(A, b)
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
       integer(ilp) :: i
@@ -22,7 +22,7 @@ contains
       do i = 1, size(b, 2)
          x(:, i) = solve(A, b(:, i))
       enddo
-   end procedure
+   end procedure solve_multi_rhs
 
    !--------------------------------------------
    !-----     CIRCULANT PRECONDITIONER     -----
@@ -33,10 +33,10 @@ contains
       type(Circulant)            :: C
       real(dp), allocatable      :: c_vec(:)
       integer(ilp)               :: i, n, n2
-      
+
       !> Dimension of the matrix.
       n = size(T, 1) ; n2 = n/2
-      
+
       !> Circulant vector.
       allocate(c_vec(n))
       do concurrent(i=1:n2+1)
@@ -48,7 +48,7 @@ contains
 
       !> Circulant matrix.
       C = Circulant(c_vec)
-   end function
+   end function strang_preconditioner
 
    !-------------------------------------------
    !-----     ITERATIVE SOLVER: GMRES     -----
@@ -90,7 +90,7 @@ contains
 
       !> Preconditioner.
       P = strang_preconditioner(A)
-   
+
       !> Set the tolerance.
       tol = atol + norm(b, 2)*rtol
 
@@ -146,7 +146,7 @@ contains
          !> Update the solution.
          x = x + solve(P, matmul(V(:, :k), y))
       enddo
-   end function
+   end function gmres
 
   !------------------------------------
   !-----     GIVENS ROTATIONS     -----
@@ -158,7 +158,7 @@ contains
     real(dp)             :: g(2)
     !! Entries of the Givens rotation matrix.
     g = x / norm(x, 2)
-  end function
+  end function givens_rotation
 
   pure subroutine apply_givens_rotation(h, c, s)
     real(dp), intent(inout) :: h(:)
@@ -187,7 +187,7 @@ contains
 
     !> Eliminate H(k+1, k).
     h(k) = c(k)*h(k) + s(k)*h(k+1) ; h(k+1) = 0.0_dp
-  end subroutine
+  end subroutine apply_givens_rotation
 
   !-------------------------------------------
   !-----     Upper Triangular solver     -----
@@ -213,6 +213,6 @@ contains
       x(i) = b(i) - dot_product(A(i, i+1:), x(i+1:))
       x(i) = x(i) / A(i, i)
     enddo
-  end function
+  end function solve_triangular
 
-end submodule
+end submodule toeplitz_linear_solver

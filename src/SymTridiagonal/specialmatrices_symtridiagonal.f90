@@ -32,7 +32,7 @@ module specialmatrices_symtridiagonal
       real(dp), allocatable :: dv(:), ev(:)
       !! SymTridiagonal elements of the matrix.
       logical(lk) :: isposdef
-   end type
+   end type SymTridiagonal
 
    !--------------------------------
    !-----     Constructors     -----
@@ -103,7 +103,7 @@ module specialmatrices_symtridiagonal
          !! Dimension of the matrix.
          type(SymTridiagonal) :: A
          !! Symmetric Tridiagonal matrix.
-      end function
+      end function initialize
 
       pure module function construct(dv, ev, isposdef) result(A)
          !! Construct a `SymTridiagonal` matrix from the rank-1 arrays
@@ -114,7 +114,7 @@ module specialmatrices_symtridiagonal
          !! Whether `A` is positive-definite or not.
          type(SymTridiagonal) :: A
          !! Symmetric Tridiagonal matrix.
-      end function
+      end function construct
 
       pure module function construct_constant(d, e, n, isposdef) result(A)
          !! Construct a `SymTridiagonal` matrix with constant diagonal
@@ -127,7 +127,7 @@ module specialmatrices_symtridiagonal
          !! Whether `A` is positive-definite or not.
          type(SymTridiagonal) :: A
          !! Symmetric Tridiagonal matrix.
-      end function
+      end function construct_constant
    end interface
 
    !-------------------------------------------------------------------
@@ -157,7 +157,7 @@ module specialmatrices_symtridiagonal
          !! Input vector.
          real(dp), target, allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `SymTridiagonal`
@@ -169,7 +169,7 @@ module specialmatrices_symtridiagonal
          !! Input vectors.
          real(dp), allocatable :: Y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -212,7 +212,7 @@ module specialmatrices_symtridiagonal
          !! Whether iterative refinement of the solution is used or not.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       module function solve_multi_rhs(A, b, refine) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type
@@ -226,7 +226,7 @@ module specialmatrices_symtridiagonal
          !! Whether iterative refinement of the solution is used or not.
          real(dp), allocatable :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
@@ -236,7 +236,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !-----------------------------------------
@@ -266,7 +266,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp) :: d
          !! Determinant of the matrix.
-      end function
+      end function det_rdp
    end interface
 
    interface trace
@@ -291,7 +291,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp) :: tr
          !! Trace of the matrix.
-      end function
+      end function trace_rdp
    end interface
 
    !------------------------------------------------
@@ -320,7 +320,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -362,7 +362,7 @@ module specialmatrices_symtridiagonal
          !! Left singular vectors as columns.
          real(dp), allocatable, optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -393,7 +393,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvalsh_rdp
    end interface
 
    interface eigh
@@ -427,7 +427,7 @@ module specialmatrices_symtridiagonal
          !! Eigenvalues.
          real(dp), allocatable, optional, target, intent(out) :: vectors(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -456,7 +456,7 @@ module specialmatrices_symtridiagonal
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -481,7 +481,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          type(SymTridiagonal) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -494,7 +494,7 @@ module specialmatrices_symtridiagonal
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -504,7 +504,7 @@ module specialmatrices_symtridiagonal
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -523,4 +523,4 @@ module specialmatrices_symtridiagonal
       end function scalar_multiplication_bis_rdp
    end interface
 
-end module
+end module specialmatrices_symtridiagonal

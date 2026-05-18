@@ -34,7 +34,7 @@ module specialmatrices_toeplitz
       !! First column of the matrix.
       real(dp), allocatable :: vr(:)
       !! First row of the matrix.
-   end type
+   end type Toeplitz
 
    !--------------------------------
    !-----     Constructors     -----
@@ -84,7 +84,7 @@ module specialmatrices_toeplitz
          !! First row of the matrix.
          type(Toeplitz) :: A
          !! Corresponding Toeplitz matrix.
-      end function
+      end function construct
    end interface
 
    interface Circulant
@@ -93,7 +93,7 @@ module specialmatrices_toeplitz
       pure module function Toeplitz2Circulant(T) result(C)
          type(Toeplitz), intent(in) :: T
          type(Circulant) :: C
-      end function
+      end function Toeplitz2Circulant
    end interface
 
    !-------------------------------------------------------------------
@@ -129,7 +129,7 @@ module specialmatrices_toeplitz
          !! Input vector.
          real(dp), allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Toeplitz` matrix `A`.
@@ -140,7 +140,7 @@ module specialmatrices_toeplitz
          !! Input matrix.
          real(dp), allocatable :: y(:, :)
          !! Output matrix.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -187,7 +187,7 @@ module specialmatrices_toeplitz
          !! Right-hand side vector.
          real(dp), allocatable :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B`
@@ -199,7 +199,7 @@ module specialmatrices_toeplitz
          !! Right-hand side vectors.
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    !------------------------------------------------
@@ -235,7 +235,7 @@ module specialmatrices_toeplitz
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -283,7 +283,7 @@ module specialmatrices_toeplitz
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -321,7 +321,7 @@ module specialmatrices_toeplitz
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvals_rdp
    end interface
 
    interface eig
@@ -367,7 +367,7 @@ module specialmatrices_toeplitz
          !! Eigenvalues.
          complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eig_rdp
    end interface
 
    !-------------------------------------
@@ -395,7 +395,7 @@ module specialmatrices_toeplitz
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -420,7 +420,7 @@ module specialmatrices_toeplitz
          !! Input matrix.
          type(Toeplitz) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -433,7 +433,7 @@ module specialmatrices_toeplitz
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -444,7 +444,7 @@ module specialmatrices_toeplitz
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -462,4 +462,4 @@ module specialmatrices_toeplitz
          type(Toeplitz) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-end module
+end module specialmatrices_toeplitz

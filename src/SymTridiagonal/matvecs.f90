@@ -15,7 +15,7 @@ contains
    ! Matrix-vector product.
    call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, A%ev, xmat, ldx, beta, ymat, ldy)
 
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
    ! Local variables.
@@ -28,5 +28,5 @@ contains
    ! Matrix-vector product.
    call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, A%ev, x, ldx, beta, y, ldy)
 
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule symtridiagonal_matvecs

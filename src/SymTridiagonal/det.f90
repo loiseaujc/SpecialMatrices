@@ -14,5 +14,5 @@ contains
       ! Store previous values.
       f_1 = f_0; f_0 = d
    end do
-   end procedure
-end submodule
+   end procedure det_rdp
+end submodule symtridiagonal_determinant

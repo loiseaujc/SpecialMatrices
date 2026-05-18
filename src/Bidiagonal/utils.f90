@@ -18,7 +18,7 @@ contains
       end do
       B(n, n) = A%dv(n)
    end select
-   end procedure
+   end procedure dense_rdp
 
    module procedure transpose_rdp
    B = A
@@ -27,22 +27,22 @@ contains
    else
       B%which = "L"
    end if
-   end procedure
+   end procedure transpose_rdp
 
    module procedure shape_rdp
    arr_shape = A%n
-   end procedure
+   end procedure shape_rdp
 
    module procedure size_rdp
    arr_size = A%n
-   end procedure
+   end procedure size_rdp
 
    module procedure scalar_multiplication_rdp
    B = Bidiagonal(alpha*A%dv, alpha*A%ev, A%which)
-   end procedure
+   end procedure scalar_multiplication_rdp
 
    module procedure scalar_multiplication_bis_rdp
    B = Bidiagonal(alpha*A%dv, alpha*A%ev, A%which)
-   end procedure
+   end procedure scalar_multiplication_bis_rdp
 
-end submodule
+end submodule bidiagonal_utils

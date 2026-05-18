@@ -47,7 +47,7 @@ contains
          call dst(ny, xmat(i, :), wsave_y)
       enddo
       xmat = scale * xmat
-  end procedure
+  end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
       integer(ilp) :: i
@@ -55,6 +55,6 @@ contains
       do concurrent(i=1:size(b, 2))
          x(:, i) = solve(A, b(:, i))
       enddo
-   end procedure
+   end procedure solve_multi_rhs
 
-end submodule
+end submodule poisson2D_solve

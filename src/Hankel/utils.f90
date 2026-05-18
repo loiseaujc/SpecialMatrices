@@ -1,4 +1,4 @@
-submodule(specialmatrices_toeplitz) toeplitz_utilities
+submodule(specialmatrices_hankel) hankel_utilities
    implicit none(type, external)
 contains
    module procedure dense_rdp
@@ -13,7 +13,7 @@ contains
    end procedure dense_rdp
 
    module procedure transpose_rdp
-      B = Toeplitz(A%vr, A%vc)
+      B = Hankel(A%vr, A%vc)
    end procedure transpose_rdp
 
    module procedure size_rdp
@@ -36,18 +36,18 @@ contains
    end procedure shape_rdp
 
    module procedure scalar_multiplication_rdp
-      B = Toeplitz(alpha*A%vc, alpha*A%vr)
+      B = Hankel(alpha*A%vc, alpha*A%vr)
    end procedure scalar_multiplication_rdp
 
    module procedure scalar_multiplication_bis_rdp
-      B = Toeplitz(alpha*A%vc, alpha*A%vr)
+      B = Hankel(alpha*A%vc, alpha*A%vr)
    end procedure scalar_multiplication_bis_rdp
 
-   module procedure Toeplitz2Circulant
-      real(dp), allocatable :: c_vec(:)
+   module procedure Hankel2Toeplitz
       integer(ilp) :: m, n
-      m = T%m ; n = T%n ; allocate(c_vec(m+n))
-      c_vec(:m) = T%vc ; c_vec(m+1:) = cshift(T%vr(n:1:-1), -1)
-      C = Circulant(c_vec)
-   end procedure Toeplitz2Circulant
-end submodule toeplitz_utilities
+      real(dp), allocatable :: vc(:), vr(:)
+      m = H%m ; n = H%n
+      vc = H%vr(2:2+m) ; vr = H%vc  ! Incorrect
+      T = Toeplitz(vc, vr)
+   end procedure Hankel2Toeplitz
+end submodule hankel_utilities

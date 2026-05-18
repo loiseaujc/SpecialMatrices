@@ -8,5 +8,5 @@ contains
    A%vc = vc ; A%vr = vr
    !> Ensure vc[1] and vr[1] are the same.
    A%vr(1) = A%vc(1)
-   end procedure
-end submodule
+   end procedure construct
+end submodule toeplitz_constructors

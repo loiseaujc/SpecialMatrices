@@ -5,7 +5,7 @@ contains
       integer(ilp) :: i
       y = x
       y = real(ifft(fft(cmplx(y, kind=dp), A%n) * A%c_hat, A%n)) / A%n
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
       integer(ilp) :: i
@@ -13,5 +13,5 @@ contains
       do concurrent(i=1:size(x, 2))
       y(:, i) = matmul(A, x(:, i))
       enddo
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule circulant_matvecs

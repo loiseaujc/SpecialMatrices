@@ -23,6 +23,7 @@ module SpecialMatrices
    public :: Poisson2D
    public :: Circulant
    public :: Toeplitz
+   public :: Hankel
 
    !----------------------------------
    !-----     Linear Algebra     -----

@@ -21,7 +21,7 @@ contains
 
       !> Sort eigenvalues.
       call sort(lambda)
-   end procedure
+   end procedure eigvalsh_rdp
 
    module procedure eigh_rdp
       integer(ilp) :: i, j, index(A%nx*A%ny)
@@ -56,5 +56,5 @@ contains
 
       !> Sort eigenvalues and eigenvectors.
       call sort_index(lambda, index) ; vectors = vectors(:, index)
-   end procedure
-end submodule
+   end procedure eigh_rdp
+end submodule poisson2D_eigh

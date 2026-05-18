@@ -6,17 +6,17 @@ contains
    module procedure initialize
    A%n = n; allocate (A%dv(n)); allocate (A%ev(n - 1))
    A%dv = 0.0_dp; A%ev = 0.0_dp; A%which = "L"
-   end procedure
+   end procedure initialize
 
    module procedure construct
    integer(ilp) :: n
    n = size(dv)
    A%n = n; A%dv = dv; A%ev = ev; A%which = optval(which, "L")
-   end procedure
+   end procedure construct
 
    module procedure construct_constant
    integer(ilp) :: i
    A%n = n; A%which = optval(which, "L")
    A%dv = [(d, i=1, n)]; A%ev = [(e, i=1, n - 1)]
-   end procedure
-end submodule
+   end procedure construct_constant
+end submodule bidiagonal_constructors

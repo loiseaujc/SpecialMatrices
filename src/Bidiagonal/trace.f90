@@ -3,5 +3,5 @@ submodule(specialmatrices_bidiagonal) bidiagonal_trace
 contains
    module procedure trace_rdp
    tr = sum(A%dv)
-   end procedure
-end submodule
+   end procedure trace_rdp
+end submodule bidiagonal_trace

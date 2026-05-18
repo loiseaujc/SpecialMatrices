@@ -29,7 +29,7 @@ module specialmatrices_poisson2D
       !! Dimension of the grid in each direction.
       real(dp) :: dx, dy
       !! Grid spacing in each direction.
-   end type
+   end type Poisson2D
 
    !--------------------------------
    !-----     Constructors     -----
@@ -58,7 +58,7 @@ module specialmatrices_poisson2D
       !! @note
       !! Only `doube precision` is currently supported for this matrix type.
       !! @endnote
-      !! 
+      !!
       !! @note
       !! Note that `Lx` and `Ly` are optional. If not specified, they default
       !! to `1.0_dp`.
@@ -71,7 +71,7 @@ module specialmatrices_poisson2D
          !! Physical extent of each dimension.
          type(Poisson2D) :: A
          !! Corresponding Poisson2D matrix.
-      end function
+      end function initialize
    end interface
 
    !-------------------------------------------------------------------
@@ -99,7 +99,7 @@ module specialmatrices_poisson2D
          !! Input vector.
          real(dp), allocatable, target :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y=AX\) for a `Poisson2D` matrix \( A \).
@@ -110,7 +110,7 @@ module specialmatrices_poisson2D
          !! Input vectors.
          real(dp), allocatable, target :: y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -155,7 +155,7 @@ module specialmatrices_poisson2D
          !! Right-hand side vector.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, b) result(x)
          !! Solve the linear system \(AX=B\) using a fast Poisson solver.
@@ -165,7 +165,7 @@ module specialmatrices_poisson2D
          !! Right-hand side vectors.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    !--------------------------------------------
@@ -198,7 +198,7 @@ module specialmatrices_poisson2D
          !! Input matrix.
          real(dp), allocatable, target :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvalsh_rdp
    end interface
 
    interface eigh
@@ -232,7 +232,7 @@ module specialmatrices_poisson2D
          real(dp), allocatable, intent(out), target :: lambda(:)
          !! Eigenvalues.
          real(dp), allocatable, intent(out) :: vectors(:, :)
-      end subroutine
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -260,7 +260,7 @@ module specialmatrices_poisson2D
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Dense representation.
-      end function
+      end function dense_rdp
    end interface
 
    interface shape
@@ -271,7 +271,7 @@ module specialmatrices_poisson2D
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface size
@@ -285,8 +285,8 @@ module specialmatrices_poisson2D
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Corresponding size.
-      end function
+      end function size_rdp
    end interface
 
 contains
-end module
+end module specialmatrices_poisson2D

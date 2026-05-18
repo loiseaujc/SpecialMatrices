@@ -3,10 +3,10 @@ submodule (specialmatrices_toeplitz) toeplitz_eigendecomposition
 contains
    module procedure eigvals_rdp
       lambda = eigvals(dense(A))
-   end procedure
+   end procedure eigvals_rdp
 
    module procedure eig_rdp
       real(dp), allocatable :: Amat(:, :)
       Amat = dense(A) ; call eig(Amat, lambda, right=right, left=left, overwrite_a=.true.)
-   end procedure
-end submodule
+   end procedure eig_rdp
+end submodule toeplitz_eigendecomposition

@@ -14,14 +14,14 @@ contains
    refine_ = optval(refine, .false.)
    x = b; xmat(1:A%n, 1:1) => x; bmat(1:A%n, 1:1) => b
    xmat = posdef_symtridiagonal_solver(A, bmat, refine_)
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    ! Local variables.
    logical(lk) :: refine_
    refine_ = optval(refine, .false.)
    x = posdef_symtridiagonal_solver(A, b, refine_)
-   end procedure
+   end procedure solve_multi_rhs
 
    !-----------------------------------------------------------
    !-----     Positive-definite SymTridiagonal Solver     -----
@@ -171,5 +171,5 @@ contains
       end if
    end function posdef_symtridiagonal_solver
 
-end submodule
+end submodule strang_linear_solver
 

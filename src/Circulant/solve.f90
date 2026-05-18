@@ -3,7 +3,7 @@ submodule(specialmatrices_circulant) circulant_linear_solver
 contains
    module procedure solve_single_rhs
       x = real(ifft(fft(cmplx(b, kind=dp), A%n) / A%c_hat, A%n)) / A%n
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
       integer(ilp) :: i
@@ -11,5 +11,5 @@ contains
       do concurrent(i=1:size(b, 2))
          x(:, i) = solve(A, b(:, i))
       enddo
-   end procedure
-end submodule
+   end procedure solve_multi_rhs
+end submodule circulant_linear_solver

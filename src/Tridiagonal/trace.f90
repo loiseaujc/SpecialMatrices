@@ -3,5 +3,5 @@ submodule(specialmatrices_tridiagonal) tridiagonal_trace
 contains
    module procedure trace_rdp
    tr = sum(A%dv)
-   end procedure
-end submodule
+   end procedure trace_rdp
+end submodule tridiagonal_trace

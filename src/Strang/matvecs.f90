@@ -9,7 +9,7 @@ contains
       y(i) = -x(i - 1) + 2*x(i) - x(i + 1)
    end do
    y(n) = 2*x(n) - x(n - 1)
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
    integer(ilp) :: i
@@ -17,5 +17,5 @@ contains
    do concurrent(i=1:size(x, 2))
       y(:, i) = spmv(A, x(:, i))
    end do
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule strang_matvecs

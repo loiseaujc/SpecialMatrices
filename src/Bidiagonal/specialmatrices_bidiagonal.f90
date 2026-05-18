@@ -33,7 +33,7 @@ module specialmatrices_bidiagonal
       !! Bidiagonal elements of the matrix.
       character :: which
       !! Whether `A` is lower- or upper-bidiagonal.
-   end type
+   end type Bidiagonal
 
    !--------------------------------
    !-----     Constructors     -----
@@ -117,7 +117,7 @@ module specialmatrices_bidiagonal
          !! Dimension of the matrix.
          type(Bidiagonal) :: A
          !! Symmetric Bidiagonal matrix.
-      end function
+      end function initialize
 
       pure module function construct(dv, ev, which) result(A)
          !! Construct a `Bidiagonal` matrix from the rank-1 arrays `dv`
@@ -128,7 +128,7 @@ module specialmatrices_bidiagonal
          !! Whether `A` is lower- or upper-diagonal.
          type(Bidiagonal) :: A
          !! Bidiagonal matrix.
-      end function
+      end function construct
 
       pure module function construct_constant(d, e, n, which) result(A)
          !! Construct a `Bidiagonal` matrix with constant diagonal elements.
@@ -140,7 +140,7 @@ module specialmatrices_bidiagonal
          !! Whether `A` is lower- or upper-bidiagonal.
          type(Bidiagonal) :: A
          !! Symmetric Bidiagonal matrix.
-      end function
+      end function construct_constant
    end interface
 
    !-------------------------------------------------------------------
@@ -170,7 +170,7 @@ module specialmatrices_bidiagonal
          !! Input vector.
          real(dp), target, allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Bidiagonal`
@@ -182,7 +182,7 @@ module specialmatrices_bidiagonal
          !! Input vectors.
          real(dp), allocatable :: Y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -221,7 +221,7 @@ module specialmatrices_bidiagonal
          !! Right-hand side vector.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, b) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type
@@ -233,7 +233,7 @@ module specialmatrices_bidiagonal
          !! Right-hand side vectors.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
@@ -243,7 +243,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !-----------------------------------------
@@ -273,7 +273,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          real(dp) :: d
          !! Determinant of the matrix.
-      end function
+      end function det_rdp
    end interface
 
    interface trace
@@ -298,7 +298,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          real(dp) :: tr
          !! Trace of the matrix.
-      end function
+      end function trace_rdp
    end interface
 
    !------------------------------------------------
@@ -328,7 +328,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -369,7 +369,7 @@ module specialmatrices_bidiagonal
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -400,7 +400,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvals_rdp
    end interface
 
    interface eig
@@ -444,7 +444,7 @@ module specialmatrices_bidiagonal
          !! Eigenvalues.
          complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eig_rdp
    end interface
 
    !-------------------------------------
@@ -474,7 +474,7 @@ module specialmatrices_bidiagonal
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -500,7 +500,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          type(Bidiagonal) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -513,7 +513,7 @@ module specialmatrices_bidiagonal
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -523,7 +523,7 @@ module specialmatrices_bidiagonal
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -544,4 +544,4 @@ module specialmatrices_bidiagonal
       end function scalar_multiplication_bis_rdp
    end interface
 
-end module
+end module specialmatrices_bidiagonal

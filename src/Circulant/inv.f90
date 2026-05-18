@@ -3,5 +3,5 @@ submodule(specialmatrices_circulant) circulant_inverse
 contains
    module procedure inv_rdp
    B = circulant(real(ifft(1.0_dp/A%c_hat)) / A%n)
-   end procedure
-end submodule
+   end procedure inv_rdp
+end submodule circulant_inverse

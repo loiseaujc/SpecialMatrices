@@ -9,7 +9,7 @@ contains
    allocate(x_circ(m+n)) ; x_circ = 0.0_dp ; x_circ(:n) = x
    !> Toeplitz spmv via Circulant embedding.
    y_circ = matmul(Circulant(A), x_circ) ; y = y_circ(:m)
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
    integer(ilp) :: m, n
@@ -20,5 +20,5 @@ contains
    allocate(x_circ(m+n, size(x, 2))) ; x_circ = 0.0_dp ; x_circ(:n, :) = x
    !> Toeplitz spmv via Circulant embedding.
    y_circ = matmul(Circulant(A), x_circ) ; y = y_circ(:m, :)
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule toeplitz_matvecs

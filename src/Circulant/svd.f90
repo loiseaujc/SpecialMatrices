@@ -8,7 +8,7 @@ contains
       s = abs(A%c_hat)
       !> Sort in decreasing order.
       call sort(s, reverse=.true.)
-   end procedure
+   end procedure svdvals_rdp
 
    module procedure svd_rdp
       integer(ilp) :: i, n
@@ -32,7 +32,7 @@ contains
       !> Sort the SVD.
       allocate(indices(n)) ; call sort_index(s, indices, reverse=.true.)
       u = u(:, indices) ; vt = vt(indices, :)
-   end procedure
+   end procedure svd_rdp
 
    pure function discrete_hartley_transform(F)  result(H)
       complex(dp), intent(in) :: F(:, :)
@@ -40,5 +40,5 @@ contains
       real(dp), allocatable :: H(:, :)
       !! Hartley transform of F.
       H = F%re + F%im
-   end function
-end submodule
+   end function discrete_hartley_transform
+end submodule circulant_svd

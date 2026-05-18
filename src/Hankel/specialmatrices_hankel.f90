@@ -34,7 +34,7 @@ module specialmatrices_hankel
       !! First column of the matrix.
       real(dp), allocatable :: vr(:)
       !! Last row of the matrix.
-   end type
+   end type Hankel
 
    !--------------------------------
    !-----     Constructors     -----
@@ -84,7 +84,7 @@ module specialmatrices_hankel
          !! Last row of the matrix.
          type(Hankel) :: A
          !! Corresponding hankel matrix.
-      end function
+      end function construct
    end interface
 
    interface Toeplitz
@@ -93,7 +93,7 @@ module specialmatrices_hankel
       pure module function Hankel2Toeplitz(H) result(T)
          type(Hankel), intent(in) :: H
          type(Toeplitz) :: T
-      end function
+      end function Hankel2Toeplitz
    end interface
 
    !-------------------------------------------------------------------
@@ -130,7 +130,7 @@ module specialmatrices_hankel
          !! Input vector.
          real(dp), allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Hankel` matrix `A`.
@@ -141,7 +141,7 @@ module specialmatrices_hankel
          !! Input matrix.
          real(dp), allocatable :: y(:, :)
          !! Output matrix.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -188,7 +188,7 @@ module specialmatrices_hankel
          !! Right-hand side vector.
          real(dp), allocatable :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Hankel` and `B`
@@ -200,7 +200,7 @@ module specialmatrices_hankel
          !! Right-hand side vectors.
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    !------------------------------------------------
@@ -236,7 +236,7 @@ module specialmatrices_hankel
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -284,7 +284,7 @@ module specialmatrices_hankel
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -322,7 +322,7 @@ module specialmatrices_hankel
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvalsh_rdp
    end interface
 
    interface eigh
@@ -364,7 +364,7 @@ module specialmatrices_hankel
          !! Eigenvalues.
          real(dp), optional, intent(out) :: vectors(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -392,7 +392,7 @@ module specialmatrices_hankel
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -417,7 +417,7 @@ module specialmatrices_hankel
          !! Input matrix.
          type(Hankel) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -430,7 +430,7 @@ module specialmatrices_hankel
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -441,7 +441,7 @@ module specialmatrices_hankel
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -459,4 +459,4 @@ module specialmatrices_hankel
          type(Hankel) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-end module
+end module specialmatrices_hankel

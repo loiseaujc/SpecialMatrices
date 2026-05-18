@@ -4,7 +4,7 @@ submodule(specialmatrices_circulant) circulant_eigenvalue_decomposition
 contains
    module procedure eigvals_rdp
    lambda = A%c_hat
-   end procedure
+   end procedure eigvals_rdp
 
    module procedure eig_rdp
    real(dp), allocatable :: Amat(:, :)
@@ -25,5 +25,5 @@ contains
          left(:, i) = ifft(left(:, i), n) / sqrt(1.0_dp*n)
       enddo
    endif
-   end procedure
-end submodule
+   end procedure eig_rdp
+end submodule circulant_eigenvalue_decomposition

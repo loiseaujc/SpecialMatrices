@@ -8,7 +8,7 @@ contains
    do concurrent(i=1:A%n)
       x(i) = b(i)/A%dv(i)
    end do
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    ! Solve \(AX = B\).
@@ -18,5 +18,5 @@ contains
    do concurrent(i=1:A%n, j=1:size(b, 2))
       x(i, j) = b(i, j)*inv_dv(i)
    end do
-   end procedure
-end submodule
+   end procedure solve_multi_rhs
+end submodule diagonal_linear_solver

@@ -4,11 +4,11 @@ submodule(specialmatrices_tridiagonal) tridiagonal_singular_value_decomposition
 contains
    module procedure svdvals_rdp
    s = stdlib_svdvals(dense(A))
-   end procedure
+   end procedure svdvals_rdp
 
    module procedure svd_rdp
    real(dp), allocatable :: Amat(:, :)
    Amat = dense(A)
    call stdlib_svd(Amat, s, u, vt, overwrite_a=.true.)
-   end procedure
-end submodule
+   end procedure svd_rdp
+end submodule tridiagonal_singular_value_decomposition

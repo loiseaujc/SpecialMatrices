@@ -54,7 +54,7 @@ contains
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, xmat, n, info)
    call handle_gtsv_info(n, nrhs, n, info, err0)
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    type(linalg_state_type) :: err0
@@ -72,5 +72,5 @@ contains
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, x, n, info)
    call handle_gtsv_info(n, nrhs, n, info, err0)
-   end procedure
-end submodule
+   end procedure solve_multi_rhs
+end submodule bidiagonal_linear_solver

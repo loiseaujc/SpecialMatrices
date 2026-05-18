@@ -20,7 +20,7 @@ contains
       else
          d2x = (xmat(i-1, j) -2*xmat(i, j) + xmat(i+1, j))/dx**2
       endif
-   
+
       ! Vertical contribution.
       if (j == 1) then
          d2y = (-2*xmat(i, j) + xmat(i, j+1))/dy**2
@@ -32,8 +32,8 @@ contains
 
       ! Laplacien.
       ymat(i, j) = d2x + d2y
-   enddo 
-   end procedure
+   enddo
+   end procedure spmv
 
    module procedure spmvs
    real(dp), pointer, contiguous :: ymat(:, :, :), xmat(:, :, :)
@@ -54,7 +54,7 @@ contains
       else
          d2x = (xmat(i-1, j, k) -2*xmat(i, j, k) + xmat(i+1, j, k))/dx**2
       endif
-   
+
       ! Vertical contribution.
       if (j == 1) then
          d2y = (-2*xmat(i, j, k) + xmat(i, j+1, k))/dy**2
@@ -67,5 +67,5 @@ contains
       ! Laplacien.
       ymat(i, j, k) = d2x + d2y
    enddo
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule poisson2D_matvecs

@@ -30,7 +30,7 @@ module specialmatrices_diagonal
       !! Dimension of the matrix.
       real(dp), allocatable :: dv(:)
       !! Diagonal elements of the matrix.
-   end type
+   end type Diagonal
 
    !--------------------------------
    !-----     Constructors     -----
@@ -141,7 +141,7 @@ module specialmatrices_diagonal
    !-------------------------------------------------------------------
 
    interface matmul
-      !! This interface overloads the Fortran intrinsic `matmul` for a 
+      !! This interface overloads the Fortran intrinsic `matmul` for a
       !! `Diagonal` matrix, both for matrix-vector and matrix-matrix
       !! products. For a matrix-matrix product \( C = AB \), only the matrix
       !! \( A \) has to be a `Diagonal` matrix. Both \( B \) and \( C \)
@@ -163,7 +163,7 @@ module specialmatrices_diagonal
          !! Input vector.
          real(dp), allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product \(Y = AX\) for a `Diagonal`
@@ -175,7 +175,7 @@ module specialmatrices_diagonal
          !! Input vectors.
          real(dp), allocatable :: Y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -214,7 +214,7 @@ module specialmatrices_diagonal
          !! Right-hand side vector.
          real(dp), allocatable :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, b) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type
@@ -227,7 +227,7 @@ module specialmatrices_diagonal
          !! Right-hand side vectors.
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
@@ -237,7 +237,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          type(Diagonal) :: B
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !-----------------------------------------
@@ -267,7 +267,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          real(dp) :: d
          !! Determinant of the matrix.
-      end function
+      end function det_rdp
    end interface
 
    interface trace
@@ -292,7 +292,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          real(dp) :: tr
          !! Trace of the matrix.
-      end function
+      end function trace_rdp
    end interface
 
    !------------------------------------------------
@@ -322,7 +322,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -363,7 +363,7 @@ module specialmatrices_diagonal
          !! Left singular vectors as columns.
          real(dp), allocatable, optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -394,7 +394,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvalsh_rdp
    end interface
 
    interface eigh
@@ -428,7 +428,7 @@ module specialmatrices_diagonal
          !! Eigenvalues.
          real(dp), allocatable, optional, intent(out) :: vectors(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -457,7 +457,7 @@ module specialmatrices_diagonal
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -482,7 +482,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          type(Diagonal) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -495,7 +495,7 @@ module specialmatrices_diagonal
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -505,7 +505,7 @@ module specialmatrices_diagonal
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -525,4 +525,4 @@ module specialmatrices_diagonal
          type(Diagonal) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-end module
+end module specialmatrices_diagonal

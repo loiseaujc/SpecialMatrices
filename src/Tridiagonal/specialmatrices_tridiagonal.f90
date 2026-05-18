@@ -31,7 +31,7 @@ module specialmatrices_tridiagonal
       !! Dimension of the matrix.
       real(dp), allocatable :: dl(:), dv(:), du(:)
       !! Tridiagonal elements of the matrix.
-   end type
+   end type Tridiagonal
 
    !--------------------------------
    !-----     Constructors     -----
@@ -96,7 +96,7 @@ module specialmatrices_tridiagonal
          !! Dimension of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function initialize
 
       pure module function construct(dl, dv, du) result(A)
          !! Construct a `Tridiagonal` matrix from the rank-1 arrays `dl`,
@@ -105,7 +105,7 @@ module specialmatrices_tridiagonal
          !! Tridiagonal elements of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function construct
 
       pure module function construct_constant(dl, dv, du, n) result(A)
          !! Construct a `Tridiagonal` matrix with constant diagonal elements.
@@ -115,7 +115,7 @@ module specialmatrices_tridiagonal
          !! Dimension of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function construct_constant
    end interface
 
    !-------------------------------------------------------------------
@@ -145,7 +145,7 @@ module specialmatrices_tridiagonal
          !! Input vector.
          real(dp), target, allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Tridiagonal`
@@ -157,7 +157,7 @@ module specialmatrices_tridiagonal
          !! Input vectors.
          real(dp), allocatable :: Y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -201,7 +201,7 @@ module specialmatrices_tridiagonal
          !! Whether iterative refinement is used or not.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       module function solve_multi_rhs(A, b, refine) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type
@@ -215,7 +215,7 @@ module specialmatrices_tridiagonal
          !! Whether iterative refined is used or not.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
@@ -225,7 +225,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !-----------------------------------------
@@ -255,7 +255,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          real(dp) :: d
          !! Determinant of the matrix.
-      end function
+      end function det_rdp
    end interface
 
    interface trace
@@ -280,7 +280,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          real(dp) :: tr
          !! Trace of the matrix.
-      end function
+      end function trace_rdp
    end interface
 
    !------------------------------------------------
@@ -310,7 +310,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -352,7 +352,7 @@ module specialmatrices_tridiagonal
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -383,7 +383,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvals_rdp
    end interface
 
    interface eig
@@ -427,7 +427,7 @@ module specialmatrices_tridiagonal
          !! Eigenvalues.
          complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eig_rdp
    end interface
 
    !-------------------------------------
@@ -457,7 +457,7 @@ module specialmatrices_tridiagonal
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -483,7 +483,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          type(Tridiagonal) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -495,7 +495,7 @@ module specialmatrices_tridiagonal
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
@@ -505,7 +505,7 @@ module specialmatrices_tridiagonal
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
@@ -524,4 +524,4 @@ module specialmatrices_tridiagonal
       end function scalar_multiplication_bis_rdp
    end interface
 
-end module
+end module specialmatrices_tridiagonal
