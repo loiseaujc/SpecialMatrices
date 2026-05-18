@@ -7,7 +7,7 @@ module test_hankel
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices, only: Hankel, dense, transpose, matmul, operator(*)
+   use SpecialMatrices, only: hankel, dense, transpose, matmul, operator(*)
    implicit none(type, external)
    private
 
@@ -49,7 +49,7 @@ contains
 
       ! Check error.
       call check(error, all_close(dense(transpose(H)), transpose(A)), &
-                 "transposition failed.")
+                 "Transposition failed.")
    end subroutine test_transpose
 
    subroutine test_scalar_multiplication(error)
@@ -69,14 +69,14 @@ contains
 
       ! Check error.
       call check(error, all_close(alpha*dense(A), dense(B)), &
-                 "alpha*toeplitz failed.")
+                 "alpha*Hankel failed.")
       if (allocated(error)) return
 
       ! Matrix-scalar multipliation.
       B = A*alpha
       ! Check error.
       call check(error, all_close(alpha*dense(A), dense(B)), &
-                 "toeplitz*alpha failed.")
+                 "Hankel*alpha failed.")
 
       return
    end subroutine test_scalar_multiplication
@@ -85,7 +85,7 @@ contains
       implicit none(type, external)
       type(error_type), allocatable, intent(out) :: error
       integer, parameter :: m = 8, n = 6
-      type(Hankel) :: A
+      type(hankel) :: A
       real(dp), allocatable :: v(:)
 
       ! Initialize matrix.

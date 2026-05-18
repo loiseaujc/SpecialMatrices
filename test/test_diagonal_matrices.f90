@@ -6,8 +6,10 @@ module test_diagonal
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: diagonal, operator(*), dense, trace, det, &
+                              matmul, solve, inv, &
+                              svdvals, svd, eigh, eigvalsh
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 512
@@ -244,4 +246,4 @@ contains
       return
    end subroutine test_eigh
 
-end module
+end module test_diagonal

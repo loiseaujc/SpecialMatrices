@@ -6,8 +6,8 @@ module test_poisson2D
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: Poisson2D, dense, matmul, solve, eigh, eigvalsh
+   implicit none(type, external)
    private
 
    integer, parameter :: nx = 16, ny = 8, n = nx*ny
@@ -124,4 +124,4 @@ contains
                  "Poisson2D eigh failed.")
       return
    end subroutine test_eigh
-end module
+end module test_poisson2D

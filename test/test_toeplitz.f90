@@ -7,8 +7,8 @@ module test_toeplitz
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: Toeplitz, dense, matmul, solve, operator(*)
+   implicit none(type, external)
    private
 
    integer, parameter :: m = 128, n = 128
@@ -38,9 +38,9 @@ contains
       real(dp) :: alpha
 
       ! Initialize matrix.
-      allocate(vc(m)) ; call random_number(vc)
-      allocate(vr(n)) ; call random_number(vr)
-      A = Toeplitz(vc, vr) ; call random_number(alpha)
+      allocate (vc(m)); call random_number(vc)
+      allocate (vr(n)); call random_number(vr)
+      A = Toeplitz(vc, vr); call random_number(alpha)
 
       ! Scalar-matrix multiplication.
       B = alpha*A
@@ -63,8 +63,8 @@ contains
       real(dp), allocatable :: vc(:), vr(:)
 
       ! Initialize matrix.
-      allocate(vc(m)) ; call random_number(vc)
-      allocate(vr(n)) ; call random_number(vr)
+      allocate (vc(m)); call random_number(vc)
+      allocate (vr(n)); call random_number(vr)
       A = Toeplitz(vc, vr)
 
       ! Matrix-vector product.
@@ -96,8 +96,8 @@ contains
       integer(ilp) :: i
 
       ! Initialize matrix.
-      vr = [(1.0_dp / (i+1), i=1, n)]
-      vc = [(1.0_dp / (i+1), i=1, n)]
+      vr = [(1.0_dp/(i + 1), i=1, n)]
+      vc = [(1.0_dp/(i + 1), i=1, n)]
       A = Toeplitz(vc, vr)
 
       ! Solve with a single right-hand side vector.
@@ -105,7 +105,7 @@ contains
          real(dp), allocatable :: x(:), b(:)
          allocate (b(n))
          ! Random rhs.
-         call random_number(b) ; b = b / norm(b, 2)
+         call random_number(b); b = b/norm(b, 2)
          ! Solve with SpecialMatrices.
          x = solve(A, b)
          ! Check error.
@@ -122,19 +122,19 @@ contains
          ! Random rhs.
          call random_number(b)
          do i = 1, n
-            b(:, i) = b(:, i) / norm(b, 2)
-         enddo
+            b(:, i) = b(:, i)/norm(b, 2)
+         end do
          ! Solve with SpecialMatrices.
          x = solve(A, b)
          ! Check error.
          do i = 1, n
             call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= 1e-8_dp, &
-                      "toeplitz solve with multiple rhs failed.")
+                       "toeplitz solve with multiple rhs failed.")
             if (allocated(error)) return
-         enddo
+         end do
       end block
 
       return
    end subroutine test_solve
 
-end module
+end module test_toeplitz

@@ -6,8 +6,9 @@ module test_bidiagonal
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: bidiagonal, operator(*), trace, det, matmul, &
+                              solve, svd, svdvals, dense, eig
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 512
@@ -29,7 +30,7 @@ contains
                   new_unittest("Bidiagonal linear solver", test_solve), &
                   ! new_unittest("Bidiagonal eigenvalue decomposition", test_eig), &
                   new_unittest("Bidiagonal singular value decomposition", test_svd) &
-]
+                  ]
       return
    end subroutine collect_bidiagonal_testsuite
 
@@ -147,13 +148,13 @@ contains
       real(dp), allocatable :: dv(:), ev(:)
 
       ! Initialize matrix.
-      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
       A = Bidiagonal(dv, ev)
 
       ! Compare against stdlib_linalg implementation.
       call check(error, is_close(trace(A), trace(dense(A))), &
-      "Bidiagonal trace failed.")
-      
+                 "Bidiagonal trace failed.")
+
    end subroutine test_trace
 
    subroutine test_det(error)
@@ -162,13 +163,13 @@ contains
       real(dp), allocatable :: dv(:), ev(:)
 
       ! Initialize matrix.
-      allocate (dv(n), ev(n-1)); call random_number(dv); call random_number(ev)
+      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
       A = Bidiagonal(dv, ev)
 
       ! Compare against stdlib_linalg implementation.
       call check(error, is_close(det(A), det(dense(A))), &
-      "Bidiagonal det failed.")
-      
+                 "Bidiagonal det failed.")
+
    end subroutine test_det
 
    subroutine test_scalar_multiplication(error)
@@ -241,11 +242,11 @@ contains
       allocate (s(n), u(n, n), vt(n, n))
       call svd(A, s, u, vt)
 
-     ! Check error.
+      ! Check error.
       Amat = matmul(u, matmul(diag(s), vt))
       call check(error, maxval(abs(dense(A) - Amat)) < 10*n**2*epsilon(1.0_dp), &
                  "Bidiagonal svd failed.")
 
       return
    end subroutine test_svd
-end module
+end module test_bidiagonal

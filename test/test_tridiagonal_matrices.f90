@@ -6,8 +6,9 @@ module test_tridiagonal
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: tridiagonal, operator(*), dense, trace, det, &
+                              matmul, solve, eig, eigvals, svd, svdvals
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 512
@@ -216,11 +217,11 @@ contains
       allocate (s(n), u(n, n), vt(n, n))
       call svd(A, s, u, vt)
 
-     ! Check error.
+      ! Check error.
       Amat = matmul(u, matmul(diag(s), vt))
       call check(error, mnorm(dense(A) - Amat, 2) < 10*n**2*epsilon(1.0_dp), &
                  "Tridiagonal svd failed.")
 
       return
    end subroutine test_svd
-end module
+end module test_tridiagonal

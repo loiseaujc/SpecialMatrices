@@ -6,8 +6,8 @@ module test_strang
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: strang, dense, matmul, solve, det, eigh, trace, eigvalsh
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 512
@@ -154,4 +154,4 @@ contains
                  "Strang eigh failed.")
       return
    end subroutine test_eigh
-end module
+end module test_strang

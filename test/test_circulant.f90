@@ -7,8 +7,10 @@ module test_circulant
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: circulant, operator(*), inv, matmul, solve, &
+                              svd, svdvals, &
+                              eigvals, eig, dense
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 256
@@ -173,23 +175,23 @@ contains
       allocate (dv(n)); call random_number(dv); A = circulant(dv)
 
       ! Compute singular value decomposition.
-      allocate(s(n), u(n, n), vt(n, n))
+      allocate (s(n), u(n, n), vt(n, n))
       call svd(A, s, u, vt)
 
       ! Check orthogonality of the left singular vectors.
       block
-      real(dp), allocatable :: G(:, :)
-      G = matmul(transpose(u), u)
-      call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
-                "Orthogonality of the left singular vectors failed.")
+         real(dp), allocatable :: G(:, :)
+         G = matmul(transpose(u), u)
+         call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
+                    "Orthogonality of the left singular vectors failed.")
       end block
 
       ! Check orthogonality of the right singular vectors.
       block
-      real(dp), allocatable :: G(:, :)
-      G = matmul(vt, transpose(vt))
-      call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
-                 "Orthogonality of the right singular vectors failed.")
+         real(dp), allocatable :: G(:, :)
+         G = matmul(vt, transpose(vt))
+         call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
+                    "Orthogonality of the right singular vectors failed.")
       end block
 
       ! Check error.
@@ -213,15 +215,15 @@ contains
       ! Compute singular values.
       lambda = eigvals(A); lambda_stdlib = eigvals(dense(A))
       ! Re-order eigenvalues for comparison.
-      allocate(lambda_check(n)) ; lambda_check = 0.0_dp
+      allocate (lambda_check(n)); lambda_check = 0.0_dp
       do i = 1, n
          do j = 1, n
             if (is_close(lambda(i), lambda_stdlib(j))) then
                lambda_check(j) = lambda_stdlib(j)
                exit
-            endif
-         enddo
-      enddo
+            end if
+         end do
+      end do
       ! Check error.
       call check(error, all_close(lambda_check, lambda_stdlib), &
                  "circulant eigvals failed.")
@@ -247,4 +249,4 @@ contains
       return
    end subroutine test_eig
 
-end module
+end module test_circulant
