@@ -50,11 +50,13 @@ contains
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
    case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, xmat, n, info)
    call handle_gtsv_info(n, nrhs, n, info, err0)
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    type(linalg_state_type) :: err0
@@ -68,9 +70,11 @@ contains
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
    case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, x, n, info)
    call handle_gtsv_info(n, nrhs, n, info, err0)
-   end procedure
-end submodule
+   end procedure solve_multi_rhs
+end submodule bidiagonal_linear_solver

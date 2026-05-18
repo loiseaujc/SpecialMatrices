@@ -4,11 +4,11 @@ submodule(specialmatrices_bidiagonal) bidiagonal_eigenvalue_decomposition
 contains
    module procedure eigvals_rdp
    lambda = stdlib_eigvals(dense(A))
-   end procedure
+   end procedure eigvals_rdp
 
    module procedure eig_rdp
    real(dp), allocatable :: Amat(:, :)
    Amat = dense(A)
    call stdlib_eig(Amat, lambda, right=right, left=left, overwrite_a=.true.)
-   end procedure
-end submodule
+   end procedure eig_rdp
+end submodule bidiagonal_eigenvalue_decomposition

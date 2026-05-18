@@ -32,7 +32,7 @@ module specialmatrices_circulant
       !! Generating vector.
       complex(dp), allocatable :: c_hat(:)
       !! Fourier Transform of the generating vector.
-   end type
+   end type Circulant
 
    !--------------------------------
    !-----     Constructors     -----
@@ -70,11 +70,12 @@ module specialmatrices_circulant
       !! @endnote
       pure module function construct(c) result(A)
          !! Construct a `Circulant` matrix from the rank-1 array `c`.
+         implicit none(type, external)
          real(dp), intent(in) :: c(:)
          !! Generating vector.
          type(Circulant) :: A
          !! Corresponding Circulant matrix.
-      end function
+      end function construct
    end interface
 
    !-------------------------------------------------------------------
@@ -97,24 +98,26 @@ module specialmatrices_circulant
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Circulant` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
          real(dp), allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Circulant` matrix `A`.
          !! Both `X` and `Y` are rank-2 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:, :)
          !! Input matrix.
          real(dp), allocatable :: y(:, :)
          !! Output matrix.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -153,36 +156,39 @@ module specialmatrices_circulant
          !! Solve the linear system \(Ax=b\) where \(A\) is `Circulant` and
          !! `b` a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
          real(dp), allocatable :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Circulant` and
          !! `B` is a rank-2 array. The solution matrix `X` has the same
          !! dimension and kind as the right-hand side matrix `B`.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hand side vectors.
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
       pure module function inv_rdp(A) result(B)
          !! Utility function to compute the inverse of a `Circulant` matrix.
          !! If `A` is circulant, its inverse also is circulant.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          type(Circulant) :: B
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !------------------------------------------------
@@ -207,11 +213,12 @@ module specialmatrices_circulant
       !! - `s` :  Vector of singular values sorted in decreasing order.
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -249,6 +256,7 @@ module specialmatrices_circulant
       !! @endnote
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
@@ -257,7 +265,7 @@ module specialmatrices_circulant
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -289,11 +297,12 @@ module specialmatrices_circulant
       module function eigvals_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real `Circulant`
          !! matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvals_rdp
    end interface
 
    interface eig
@@ -331,13 +340,14 @@ module specialmatrices_circulant
       module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a
          !! `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
          !! Eigenvalues.
          complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eig_rdp
    end interface
 
    !-------------------------------------
@@ -361,11 +371,12 @@ module specialmatrices_circulant
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       module function dense_rdp(A) result(B)
          !! Utility function to convert a `Circulant` matrix to a rank-2 array.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -386,11 +397,12 @@ module specialmatrices_circulant
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          type(Circulant) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
@@ -399,30 +411,33 @@ module specialmatrices_circulant
       pure module function size_rdp(A, dim) result(arr_size)
          !! Utility function to return the size of `Circulant` matrix along a
          !! given dimension.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
       !! Utility function to return the shape of a `Circulant` matrix.
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Circulant` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Circulant), intent(in) :: A
          type(Circulant) :: B
@@ -431,9 +446,10 @@ module specialmatrices_circulant
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Circulant` matrix.
+         implicit none(type, external)
          type(Circulant), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Circulant) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-end module
+end module specialmatrices_circulant

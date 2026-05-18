@@ -11,28 +11,28 @@ contains
       B(i, i + 1) = A%ev(i)
    end do
    B(n, n - 1) = A%ev(n - 1); B(n, n) = A%dv(n)
-   end procedure
+   end procedure dense_rdp
 
    module procedure transpose_rdp
    B = A
-   end procedure
+   end procedure transpose_rdp
 
    module procedure shape_rdp
    arr_shape = A%n
-   end procedure
+   end procedure shape_rdp
 
    module procedure size_rdp
    arr_size = A%n
-   end procedure
+   end procedure size_rdp
 
    module procedure scalar_multiplication_rdp
    B = SymTridiagonal(alpha*A%dv, alpha*A%ev)
    if (alpha <= 0.0_dp) B%isposdef = .false.
-   end procedure
+   end procedure scalar_multiplication_rdp
 
    module procedure scalar_multiplication_bis_rdp
    B = SymTridiagonal(alpha*A%dv, alpha*A%ev)
    if (alpha <= 0.0_dp) B%isposdef = .false.
-   end procedure
+   end procedure scalar_multiplication_bis_rdp
 
-end submodule
+end submodule symtridiagonal_utils

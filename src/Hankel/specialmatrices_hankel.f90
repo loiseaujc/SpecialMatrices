@@ -1,7 +1,7 @@
-module specialmatrices_toeplitz
+module specialmatrices_hankel
    use stdlib_linalg_constants, only: dp, ilp, lk
    use stdlib_linalg, only: eig, eigvals, svd, svdvals
-   use specialmatrices_circulant, only: circulant, matmul, solve
+   use specialmatrices_toeplitz, only: Toeplitz, matmul
    implicit none(type, external)
    private
 
@@ -10,50 +10,46 @@ module specialmatrices_toeplitz
    public :: matmul
    public :: solve
    public :: svd, svdvals
-   public :: eig, eigvals
+   public :: eigh, eigvalsh
 
    ! --> Utility functions.
-   public :: Circulant
    public :: dense
    public :: shape
    public :: size
    public :: operator(*)
 
    !---------------------------------------------------
-   !-----     Base type for Toeplitz matrices     -----
+   !-----     Base type for Hankel matrices     -----
    !---------------------------------------------------
 
-   type, public :: Toeplitz
-      !! Base type to define a `Toeplitz` matrix of size [m x n]. The first
-      !! column is given by the vector `vc` while the first row is given by
-      !! `vr`.
+   type, public :: Hankel
+      !! Base type to define a `Hankel` matrix of size [m x n] generate from
+      !! the vector v.
       private
       integer(ilp) :: m, n
       !! Dimensions of the matrix.
-      real(dp), allocatable :: vc(:)
-      !! First column of the matrix.
-      real(dp), allocatable :: vr(:)
-      !! First row of the matrix.
-   end type Toeplitz
+      real(dp), allocatable :: v(:)
+      !! Generating vector.
+   end type Hankel
 
    !--------------------------------
    !-----     Constructors     -----
    !--------------------------------
 
-   interface Toeplitz
-      !! This interface provides methods to construct `Toeplitz` matrices.
+   interface Hankel
+      !! This interface provides methods to construct `Hankel` matrices.
       !! Given a vector `vc` specifying the first column of the matrix and a
-      !! vector `vr` specifying its first row, the associated `Toeplitz`
+      !! vector `vr` specifying its last row, the associated `Hankel`
       !! matrix is the following \(m \times n\) matrix
       !!
       !! \[
       !!    A
       !!    =
       !!    \begin{bmatrix}
-      !!       t_0      &  t_{-1}      &  \cdots   &  t_{-(n-1)}      \\
-      !!       t_1      &  t_0      &  \cdots   &  \vdots   \\
-      !!       \vdots   &  \ddots   &  \ddots   &  t_{-1}      \\
-      !!       t_{m-1}      &  \cdots   &  t_1      &  t_0
+      !!       h_0      &  h_1      &  \cdots   &  h_{(n-1)}      \\
+      !!       h_1      &  h_0      &  \cdots   &  \vdots   \\
+      !!       \vdots   &  \ddots   &  \ddots   &  h_{n-1+m-2}      \\
+      !!       h_{m-1}      &  \cdots   &  t_1      &  h_{n+m-2}
       !!    \end{bmatrix}.
       !! \]
       !!
@@ -62,40 +58,30 @@ module specialmatrices_toeplitz
       !! ```fortran
       !!    integer, parameter :: m = 100, n = 200
       !!    real(dp) :: vc(n), vr(n)
-      !!    type(Toeplitz) :: A
+      !!    type(Hankel) :: A
       !!
       !!    call random_number(vc) ; call random_number(vr)
-      !!    A = Toeplitz(vc, vr)
+      !!    A = hankel(Hc, vr)
       !! ```
       !!
       !! @warning
-      !! The element \( A_{11} \) is read from the first entry of the vector
+      !! The element \( A_{m1} \) is read from the last entry of the vector
       !! `vc`. The first entry of `vr` is not referenced.
       !! @endwarning
       !!
       !! @note
       !! Only `double precision` is currently supported for this matrix type.
       !! @endnote
-      pure module function construct(vc, vr) result(A)
-         !! Construct a `Toeplitz` matrix from the rank-1 arrays `vc` and `vr`.
+      pure module function construct(v, m, n) result(A)
          implicit none(type, external)
-         real(dp), intent(in) :: vc(:)
-         !! First column of the matrix.
-         real(dp), intent(in) :: vr(:)
-         !! First row of the matrix.
-         type(Toeplitz) :: A
-         !! Corresponding Toeplitz matrix.
+         !! Construct a `Hankel` matrix from the rank-1 arrays `vc` and `vr`.
+         real(dp), intent(in) :: v(:)
+         !! Generating vector.
+         integer(ilp), intent(in) :: m, n
+         !! Dimensions of the matrix.
+         type(Hankel) :: A
+         !! Corresponding hankel matrix.
       end function construct
-   end interface
-
-   interface Circulant
-      !! Utility function to embed an m x n `Toeplitz` matrix into an
-      !! (m+n) x (m+n) `Circulant` matrix.
-      pure module function Toeplitz2Circulant(T) result(C)
-         implicit none(type, external)
-         type(Toeplitz), intent(in) :: T
-         type(Circulant) :: C
-      end function Toeplitz2Circulant
    end interface
 
    !-------------------------------------------------------------------
@@ -104,9 +90,9 @@ module specialmatrices_toeplitz
 
    interface matmul
       !! This interface overloads the Fortran intrinsic `matmul` for a
-      !! `Toeplitz` matrix, both for matrix-vector and matrix-matrix products.
+      !! `Hankel` matrix, both for matrix-vector and matrix-matrix products.
       !! For a matrix-matrix product \( C = AB \), only the matrix \( A \)
-      !! has to be a `Toeplitz` matrix. Both \( B \) and \( C \) need to be
+      !! has to be a `Hankel` matrix. Both \( B \) and \( C \) need to be
       !! standard Fortran rank-2 arrays. All the underlying functions are
       !! defined as `pure`.
       !!
@@ -117,16 +103,17 @@ module specialmatrices_toeplitz
       !! ```
       !!
       !! @note
-      !! Matrix-vector products for `Toeplitz` matrices can be efficiently
-      !! computed by embedding the `Toeplitz` matrix into a `Circulant` matrix
-      !! of size `[m+n x m+n]` and using the Fast Fourier Transform provided
+      !! Matrix-vector products for `Hankel` matrices can be efficiently
+      !! computed by transforming the matrix into a `Toeplitz` one and
+      !! embedding the `Toeplitz` matrix into a `Circulant` matrix of size
+      !! `[m+n x m+n]` and using the Fast Fourier Transform provided
       !! by `fftpack`.
       !! @endnote
       pure module function spmv(A, x) result(y)
-         !! Compute the matrix-vector product for a `Toeplitz` matrix \(A\).
+         !! Compute the matrix-vector product for a `Hankel` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
          !! Input vector.
@@ -135,10 +122,10 @@ module specialmatrices_toeplitz
       end function spmv
 
       pure module function spmvs(A, X) result(Y)
-         !! Compute the matrix-matrix product for a `Toeplitz` matrix `A`.
+         !! Compute the matrix-matrix product for a `Hankel` matrix `A`.
          !! Both `X` and `Y` are rank-2 arrays with the same kind as `A`.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:, :)
          !! Input matrix.
@@ -153,13 +140,13 @@ module specialmatrices_toeplitz
 
    interface solve
       !! This interface overloads the `solve` interface from `stdlib_linalg`
-      !! for solving a linear system \( Ax = b \) where \( A \) is a `Toeplitz`
+      !! for solving a linear system \( Ax = b \) where \( A \) is a `Hankel`
       !! matrix. It also enables to solve a linear system with multiple
       !! right-hand sides.
       !!
       !! #### Syntax
       !!
-      !! To solve a system with \( A \) being of type `Toeplitz`:
+      !! To solve a system with \( A \) being of type `Hankel`:
       !!
       !! ```fortran
       !!    x = solve(A, b)
@@ -167,7 +154,7 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `b` :  Rank-1 or rank-2 array defining the right-hand side(s).
@@ -182,11 +169,11 @@ module specialmatrices_toeplitz
       !! relative tolerance of \(10^{-8}\) is reached.
       !! @endnote
       pure module function solve_single_rhs(A, b) result(x)
-         !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b`
+         !! Solve the linear system \(Ax=b\) where \(A\) is `Hankel` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
@@ -195,11 +182,11 @@ module specialmatrices_toeplitz
       end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, B) result(X)
-         !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B`
+         !! Solve the linear system \(AX=B\), where `A` is `Hankel` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
          !! Right-hand side vectors.
@@ -214,7 +201,7 @@ module specialmatrices_toeplitz
 
    interface svdvals
       !! This interface overloads the `svdvals` interface from `stdlib_linalg`
-      !! to compute the singular values of a `Toeplitz` matrix \(A\).
+      !! to compute the singular values of a `Hankel` matrix \(A\).
       !!
       !! #### Syntax
       !!
@@ -224,21 +211,21 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `s` :  Vector of singular values sorted in decreasing order.
       !!
       !! @note
       !! No analytic expression exist for the singular values of a general
-      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! `Hankel` matrix. Under the hood, the matrix `A` is converted to
       !! its dense representation and the function `svdvals` from
       !! `stdlib_linalg` is used.
       !! @endnote
       module function svdvals_rdp(A) result(s)
-         !! Compute the singular values of a `Toeplitz` matrix.
+         !! Compute the singular values of a `hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
@@ -247,7 +234,7 @@ module specialmatrices_toeplitz
 
    interface svd
       !! This interface overloads the `svd` interface from `stdlib_linalg` to
-      !! compute the the singular value decomposition of a `Toeplitz` matrix
+      !! compute the the singular value decomposition of a `Hankel` matrix
       !! \(A\).
       !!
       !! #### Syntax
@@ -258,7 +245,7 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `s` :  Rank-1 array `real` array returning the singular values of
@@ -276,14 +263,14 @@ module specialmatrices_toeplitz
       !!
       !! @note
       !! No analytic expression exist for the singular value of a general
-      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! `Hankel` matrix. Under the hood, the matrix `A` is converted to
       !! its dense representation and the function `svdvals` from
       !! `stdlib_linalg` is used.
       !! @endnote
       module subroutine svd_rdp(A, s, u, vt)
-         !! Compute the singular value decomposition of a `Toeplitz` matrix.
+         !! Compute the singular value decomposition of a `Hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
          !! Singular values in descending order.
@@ -298,10 +285,10 @@ module specialmatrices_toeplitz
    !-----     Eigenvalue Decomposition     -----
    !--------------------------------------------
 
-   interface eigvals
+   interface eigvalsh
       !! This interface overloads the `eigvals` interface from `stdlib_linalg`
       !! to compute the eigenvalues of a real-valued matrix \( A \) whose
-      !! type is `Toeplitz`.
+      !! type is `Hankel`.
       !!
       !! #### Syntax
       !!
@@ -311,73 +298,69 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  `real`-valued matrix of `Toeplitz` type.
+      !! - `A` :  `real`-valued matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `lambda` :  Vector of eigenvalues in increasing order.
       !!
       !! @note
       !! No analytic expression exist for the eigenvalues of a general
-      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
+      !! `Hankel` matrix. Under the hood, the matrix `A` is converted to
       !! its dense representation and the function `eigvals` from
       !! `stdlib_linalg` is used.
       !! @endnote
-      module function eigvals_rdp(A) result(lambda)
-         !! Utility function to compute the eigenvalues of a real `Toeplitz`
+      module function eigvalsh_rdp(A) result(lambda)
+         !! Utility function to compute the eigenvalues of a real `Hankel`
          !! matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
-         complex(dp), allocatable :: lambda(:)
+         real(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function eigvals_rdp
+      end function eigvalsh_rdp
    end interface
 
-   interface eig
-      !! This interface overloads the `eig` interface from `stdlib_linalg` to
+   interface eigh
+      !! This interface overloads the `eigh` interface from `stdlib_linalg` to
       !! compute the eigenvalues and eigenvectors of a real-valued matrix
-      !! \(A\) whose type is `Toeplitz`.
+      !! \(A\) whose type is `Hankel`.
       !!
       !! #### Syntax
       !!
       !! ```fortran
-      !!    call eig(A, lambda [, left] [, right])
+      !!    call eigh(A, lambda [, left] [, right])
       !! ```
       !!
       !! #### Arguments
       !!
-      !! - `A` : `real`-valued matrix of `Toeplitz`.
+      !! - `A` : `real`-valued matrix of `Hankel`.
       !!          It is an `intent(in)` argument.
       !!
       !! - `lambda`  :  Rank-1 `real` array returning the eigenvalues of `A`
       !!                in increasing order.
       !!                It is an `intent(out)` argument.
       !!
-      !! - `left` (optional) :  `complex` rank-2 array of the same kind as `A`
-      !!                         returning the left eigenvectors of `A`.
-      !!                         It is an `intent(out)` argument.
-      !!
-      !! - `right` (optional) : `complex` rank-2 array of the same kind as `A`
-      !!                         returning the right eigenvectors of `A`.
-      !!                         It is an `intent(out)` argument.
+      !! - `vectors` (optional)  :  `real` rank-2 array of the same kind as `A`
+      !!                            returning the left eigenvectors of `A`.
+      !!                            It is an `intent(out)` argument.
       !!
       !! @note
       !! No analytic expression exist for the eigendecomposition of a general
-      !! `Toeplitz` matrix. Under the hood, the matrix `A` is converted to
-      !! its dense representation and the function `eig` from
+      !! `hankel` matrix. Under the hood, the matrix `A` is converted to
+      !! its dense representation and the function `eigh` from
       !! `stdlib_linalg` is used.
       !! @endnote
-      module subroutine eig_rdp(A, lambda, left, right)
+      module subroutine eigh_rdp(A, lambda, vectors)
          !! Utility function to compute the eigenvalues and eigenvectors of a
-         !! `Toeplitz` matrix.
+         !! `Hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
-         complex(dp), intent(out) :: lambda(:)
+         real(dp), intent(out) :: lambda(:)
          !! Eigenvalues.
-         complex(dp), optional, intent(out) :: right(:, :), left(:, :)
+         real(dp), optional, intent(out) :: vectors(:, :)
          !! Eigenvectors.
-      end subroutine eig_rdp
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -385,7 +368,7 @@ module specialmatrices_toeplitz
    !-------------------------------------
 
    interface dense
-      !! Convert a `Toeplitz` matrix to a standard rank-2 array.
+      !! Convert a `Hankel` matrix to a standard rank-2 array.
       !!
       !! #### Syntax
       !!
@@ -395,14 +378,14 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       pure module function dense_rdp(A) result(B)
-         !! Utility function to convert a `Toeplitz` matrix to a rank-2 array.
+         !! Utility function to convert a `Hankel` matrix to a rank-2 array.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
@@ -411,7 +394,7 @@ module specialmatrices_toeplitz
 
    interface transpose
       !! This interface overloads the Fortran `intrinsic` procedure to define
-      !! the transpose operation of a `Toeplitz` matrix.
+      !! the transpose operation of a `Hankel` matrix.
       !!
       !! #### Syntax
       !!
@@ -421,26 +404,26 @@ module specialmatrices_toeplitz
       !!
       !! #### Arguments
       !!
-      !! - `A` :  Matrix of `Toeplitz` type.
+      !! - `A` :  Matrix of `Hankel` type.
       !!          It is an `intent(in)` argument.
       !!
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
-         !! Utility function to compute the transpose of a `Toeplitz` matrix.
+         !! Utility function to compute the transpose of a `hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
-         type(Toeplitz) :: B
+         type(Hankel) :: B
          !! Transpose of the matrix.
       end function transpose_rdp
    end interface
 
    interface size
-      !! Utility function to return the size of `Toeplitz` matrix along a
+      !! Utility function to return the size of `Hankel` matrix along a
       !! given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
          !! Queried dimension.
@@ -450,11 +433,11 @@ module specialmatrices_toeplitz
    end interface
 
    interface shape
-      !! Utility function to return the size of a `Toeplitz` matrix.
+      !! Utility function to return the size of a `Hankel` matrix.
       pure module function shape_rdp(A) result(arr_shape)
-         !! Utility function to get the shape of a `Toeplitz` matrix.
+         !! Utility function to get the shape of a `Hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(hankel), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
@@ -463,19 +446,19 @@ module specialmatrices_toeplitz
 
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
-         !! Utility function to perform a scalar multiplication with a `Toeplitz` matrix.
+         !! Utility function to perform a scalar multiplication with a `Hankel` matrix.
          implicit none(type, external)
          real(dp), intent(in) :: alpha
-         type(Toeplitz), intent(in) :: A
-         type(Toeplitz) :: B
+         type(Hankel), intent(in) :: A
+         type(Hankel) :: B
       end function scalar_multiplication_rdp
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
-         !! Utility function to perform a scalar multiplication with a `Toeplitz` matrix.
+         !! Utility function to perform a scalar multiplication with a `Hankel` matrix.
          implicit none(type, external)
-         type(Toeplitz), intent(in) :: A
+         type(Hankel), intent(in) :: A
          real(dp), intent(in) :: alpha
-         type(Toeplitz) :: B
+         type(Hankel) :: B
       end function scalar_multiplication_bis_rdp
    end interface
-end module specialmatrices_toeplitz
+end module specialmatrices_hankel

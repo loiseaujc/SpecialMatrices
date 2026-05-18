@@ -1,6 +1,6 @@
 submodule(specialmatrices_poisson2D) poisson2D_utils
    use stdlib_linalg, only: eye, kron => kronecker_product
-   use specialmatrices_strang
+   use specialmatrices_strang, only: strang
    implicit none(type, external)
 contains
 
@@ -18,13 +18,13 @@ contains
    ! Corresponding 2D Laplace operator.
    Idx = eye(nx, mold=1.0_dp); Idy = eye(ny, mold=1.0_dp)
    B = kron(Idy, D2x) + kron(D2y, Idx)
-   end procedure
+   end procedure dense_rdp
 
    module procedure shape_rdp
-      arr_shape = A%nx * A%ny
-   end procedure
+   arr_shape = A%nx*A%ny
+   end procedure shape_rdp
 
    module procedure size_rdp
-      arr_size = A%nx * A%ny
-   end procedure
-end submodule
+   arr_size = A%nx*A%ny
+   end procedure size_rdp
+end submodule poisson2D_utils

@@ -5,7 +5,7 @@ contains
    module procedure eigvalsh_rdp
    integer(ilp) :: k, n
    n = A%n; lambda = 2*[(1 - cos((pi*k)/(n + 1)), k=1, n)]
-   end procedure
+   end procedure eigvalsh_rdp
 
    module procedure eigh_rdp
    integer(ilp) :: i, j, n
@@ -15,5 +15,5 @@ contains
    do concurrent(i=1:n, j=1:n)
       vectors(i, j) = sqrt(2.0_dp/(n + 1))*sin((i*j*pi)/(n + 1))
    end do
-   end procedure
-end submodule
+   end procedure eigh_rdp
+end submodule strang_eigh

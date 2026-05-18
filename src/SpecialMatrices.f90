@@ -7,7 +7,8 @@ module SpecialMatrices
    use specialmatrices_poisson2D
    use specialmatrices_circulant
    use specialmatrices_toeplitz
-   implicit none
+   use specialmatrices_hankel
+   implicit none(type, external)
    private
 
    !--------------------------------
@@ -22,6 +23,7 @@ module SpecialMatrices
    public :: Poisson2D
    public :: Circulant
    public :: Toeplitz
+   public :: Hankel
 
    !----------------------------------
    !-----     Linear Algebra     -----
@@ -46,9 +48,4 @@ module SpecialMatrices
    public :: size
    public :: operator(*)
 
-   public :: say_hello
-contains
-   subroutine say_hello
-      print *, "Hello, SpecialMatrices!"
-   end subroutine say_hello
 end module SpecialMatrices

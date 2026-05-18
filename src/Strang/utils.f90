@@ -10,13 +10,13 @@ contains
       B(i, i - 1) = -1; B(i, i) = 2; B(i, i + 1) = -1
    end do
    B(n, n - 1) = -1; B(n, n) = 2
-   end procedure
+   end procedure dense_rdp
 
    module procedure shape_rdp
    arr_shape = A%n
-   end procedure
+   end procedure shape_rdp
 
    module procedure size_rdp
    arr_size = A%n
-   end procedure
-end submodule
+   end procedure size_rdp
+end submodule strang_utils

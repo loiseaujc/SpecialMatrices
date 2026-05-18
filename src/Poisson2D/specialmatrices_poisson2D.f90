@@ -15,7 +15,6 @@ module specialmatrices_poisson2D
    public :: shape
    public :: size
 
-
    !------------------------------------------------------
    !-----     Base type for the Poisson2D matrix     -----
    !------------------------------------------------------
@@ -29,7 +28,7 @@ module specialmatrices_poisson2D
       !! Dimension of the grid in each direction.
       real(dp) :: dx, dy
       !! Grid spacing in each direction.
-   end type
+   end type Poisson2D
 
    !--------------------------------
    !-----     Constructors     -----
@@ -58,20 +57,21 @@ module specialmatrices_poisson2D
       !! @note
       !! Only `doube precision` is currently supported for this matrix type.
       !! @endnote
-      !! 
+      !!
       !! @note
       !! Note that `Lx` and `Ly` are optional. If not specified, they default
       !! to `1.0_dp`.
       !! @endnote
       pure module function initialize(nx, ny, Lx, Ly) result(A)
          !! Utility function to construct a `Poisson2D` matrix.
+         implicit none(type, external)
          integer(ilp), intent(in) :: nx, ny
          !! Number of grid points in each direction.
          real(dp), optional, intent(in) :: Lx, Ly
          !! Physical extent of each dimension.
          type(Poisson2D) :: A
          !! Corresponding Poisson2D matrix.
-      end function
+      end function initialize
    end interface
 
    !-------------------------------------------------------------------
@@ -93,24 +93,26 @@ module specialmatrices_poisson2D
       module function spmv(A, x) result(y)
          !! Compute the matrix-vector product \(y = Ax\) for a `Poisson2D` matrix \( A \).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), target, intent(in) :: x(:)
          !! Input vector.
          real(dp), allocatable, target :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y=AX\) for a `Poisson2D` matrix \( A \).
          !! \(X\) and \(Y\) are rank-2 arrays of appropriate size with the same kind as \(A\).
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), target, contiguous, intent(in) :: x(:, :)
          !! Input vectors.
          real(dp), allocatable, target :: y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -149,23 +151,25 @@ module specialmatrices_poisson2D
       !! @endnote
       pure module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax = b\) using a fast Poisson solver.
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       pure module function solve_multi_rhs(A, b) result(x)
          !! Solve the linear system \(AX=B\) using a fast Poisson solver.
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
          !! Right-hand side vectors.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    !--------------------------------------------
@@ -194,11 +198,12 @@ module specialmatrices_poisson2D
       !! and can thus be computed efficiently.
       !! @endnote
       module function eigvalsh_rdp(A) result(lambda)
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, target :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvalsh_rdp
    end interface
 
    interface eigh
@@ -227,12 +232,13 @@ module specialmatrices_poisson2D
       !! known analytically and can thus be constructed efficiently.
       !! @endnote
       module subroutine eigh_rdp(A, lambda, vectors)
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out), target :: lambda(:)
          !! Eigenvalues.
          real(dp), allocatable, intent(out) :: vectors(:, :)
-      end subroutine
+      end subroutine eigh_rdp
    end interface
 
    !-------------------------------------
@@ -256,22 +262,24 @@ module specialmatrices_poisson2D
       !! - `B` :  Rank-2 `real` array corresponding to the dense representation
       !!          of `A`.
       pure module function dense_rdp(A) result(B)
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Dense representation.
-      end function
+      end function dense_rdp
    end interface
 
    interface shape
       !! Utility function to return the shape a `Poisson2D` matrix \(A\).
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of the `Poisson2D` matrix.
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface size
@@ -279,14 +287,15 @@ module specialmatrices_poisson2D
       !! along a given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
          !! Utility function to return the size of a `Poisson2D` matrix along a given dimension.
+         implicit none(type, external)
          type(Poisson2D), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Corresponding size.
-      end function
+      end function size_rdp
    end interface
 
 contains
-end module
+end module specialmatrices_poisson2D

@@ -75,10 +75,10 @@ contains
 
    ! Return results.
    lambda = dv
-   end procedure
+   end procedure eigh_rdp
 
    module procedure eigvalsh_rdp
    call eigh(A, lambda)
-   end procedure
+   end procedure eigvalsh_rdp
 
 end submodule symtridiagonal_eigenvalue_decomposition

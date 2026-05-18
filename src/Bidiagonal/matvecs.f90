@@ -20,9 +20,11 @@ contains
       call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, dummy, xmat, ldx, beta, ymat, ldy)
    case ("U")
       call lagtm(trans, n, nrhs, alpha, dummy, A%dv, A%ev, xmat, ldx, beta, ymat, ldy)
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
 
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
    ! Local variables.
@@ -40,7 +42,9 @@ contains
       call lagtm(trans, n, nrhs, alpha, A%ev, A%dv, dummy, x, ldx, beta, y, ldy)
    case ("U")
       call lagtm(trans, n, nrhs, alpha, dummy, A%dv, A%ev, x, ldx, beta, y, ldy)
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
 
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule bidiagonal_matvecs

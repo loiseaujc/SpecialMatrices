@@ -3,5 +3,5 @@ submodule(specialmatrices_strang) strang_constructors
 contains
    module procedure initialize
    A%n = n
-   end procedure
-end submodule
+   end procedure initialize
+end submodule strang_constructors

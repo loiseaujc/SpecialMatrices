@@ -6,8 +6,11 @@ module test_symtridiagonal
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
-   use SpecialMatrices
-   implicit none
+   use SpecialMatrices, only: symtridiagonal, operator(*), dense, trace, det, &
+                              matmul, solve, &
+                              eigh, eigvalsh, &
+                              svd, svdvals
+   implicit none(type, external)
    private
 
    integer, parameter :: n = 512
@@ -265,4 +268,4 @@ contains
                  "SymTridiagonal svd failed.")
       return
    end subroutine test_svd
-end module
+end module test_symtridiagonal

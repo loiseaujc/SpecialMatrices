@@ -31,7 +31,7 @@ module specialmatrices_tridiagonal
       !! Dimension of the matrix.
       real(dp), allocatable :: dl(:), dv(:), du(:)
       !! Tridiagonal elements of the matrix.
-   end type
+   end type Tridiagonal
 
    !--------------------------------
    !-----     Constructors     -----
@@ -92,30 +92,33 @@ module specialmatrices_tridiagonal
       !! @endnote
       pure module function initialize(n) result(A)
          !! Construct a `Tridiagonal` matrix filled with zeros.
+         implicit none(type, external)
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function initialize
 
       pure module function construct(dl, dv, du) result(A)
          !! Construct a `Tridiagonal` matrix from the rank-1 arrays `dl`,
          !! `dv` and `du`.
+         implicit none(type, external)
          real(dp), intent(in) :: dl(:), dv(:), du(:)
          !! Tridiagonal elements of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function construct
 
       pure module function construct_constant(dl, dv, du, n) result(A)
          !! Construct a `Tridiagonal` matrix with constant diagonal elements.
+         implicit none(type, external)
          real(dp), intent(in) :: dl, dv, du
          !! Tridiagonal elements of the matrix.
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(Tridiagonal) :: A
          !! Tridiagonal matrix.
-      end function
+      end function construct_constant
    end interface
 
    !-------------------------------------------------------------------
@@ -139,25 +142,27 @@ module specialmatrices_tridiagonal
          !! Compute the matrix-vector product \(y = Ax\) for a `Tridiagonal`
          !! matrix \(A\). Both `x` and `y` are rank-1 arrays with the same
          !! kind as `A`.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), target, intent(in) :: x(:)
          !! Input vector.
          real(dp), target, allocatable :: y(:)
          !! Output vector.
-      end function
+      end function spmv
 
       pure module function spmvs(A, x) result(y)
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Tridiagonal`
          !! matrix \(A\) and a dense matrix \(X\) (rank-2 array). \(Y\) is
          !! also a rank-2 array with the same dimensions as \(X\).
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
          !! Input vectors.
          real(dp), allocatable :: Y(:, :)
          !! Output vectors.
-      end function
+      end function spmvs
    end interface
 
    !-----------------------------------------------
@@ -193,6 +198,7 @@ module specialmatrices_tridiagonal
          !! Solve the linear system \(Ax=b\) where \(A\) is of type
          !! `Tridiagonal` and `b` a standard rank-1 array. The solution
          !! vector `x` has the same dimension and kind as `b`.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in), target :: b(:)
@@ -201,12 +207,13 @@ module specialmatrices_tridiagonal
          !! Whether iterative refinement is used or not.
          real(dp), allocatable, target :: x(:)
          !! Solution vector.
-      end function
+      end function solve_single_rhs
 
       module function solve_multi_rhs(A, b, refine) result(x)
          !! Solve the linear system \(AX=B\) where \(A\) is of type
          !! `Tridiagonal` and `B` a standard rank-2 array. The solution
          !! matrix `X` has the same dimensions and kind as `B`.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
@@ -215,17 +222,18 @@ module specialmatrices_tridiagonal
          !! Whether iterative refined is used or not.
          real(dp), allocatable, target :: x(:, :)
          !! Solution vectors.
-      end function
+      end function solve_multi_rhs
    end interface
 
    interface inv
       pure module function inv_rdp(A) result(B)
          !! Compute the inverse of a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
          !! Inverse of `A`.
-      end function
+      end function inv_rdp
    end interface
 
    !-----------------------------------------
@@ -251,11 +259,12 @@ module specialmatrices_tridiagonal
       !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: d
          !! Determinant of the matrix.
-      end function
+      end function det_rdp
    end interface
 
    interface trace
@@ -276,11 +285,12 @@ module specialmatrices_tridiagonal
       !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: tr
          !! Trace of the matrix.
-      end function
+      end function trace_rdp
    end interface
 
    !------------------------------------------------
@@ -306,11 +316,12 @@ module specialmatrices_tridiagonal
       !! - `s` :  Vector of singular values sorted in decreasing order.
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
          !! Singular values in descending order.
-      end function
+      end function svdvals_rdp
    end interface
 
    interface svd
@@ -344,6 +355,7 @@ module specialmatrices_tridiagonal
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Tridiagonal`
          !! matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
@@ -352,7 +364,7 @@ module specialmatrices_tridiagonal
          !! Left singular vectors as columns.
          real(dp), optional, intent(out) :: vt(:, :)
          !! Right singular vectors as rows.
-      end subroutine
+      end subroutine svd_rdp
    end interface
 
    !--------------------------------------------
@@ -379,11 +391,12 @@ module specialmatrices_tridiagonal
       module function eigvals_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real
          !! `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
          !! Eigenvalues.
-      end function
+      end function eigvals_rdp
    end interface
 
    interface eig
@@ -421,13 +434,14 @@ module specialmatrices_tridiagonal
       module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of
          !! a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
          !! Eigenvalues.
          complex(dp), optional, intent(out) :: right(:, :), left(:, :)
          !! Eigenvectors.
-      end subroutine
+      end subroutine eig_rdp
    end interface
 
    !-------------------------------------
@@ -453,11 +467,12 @@ module specialmatrices_tridiagonal
       module function dense_rdp(A) result(B)
          !! Utility function to convert a `Tridiagonal` matrix to a rank-2
          !! array.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
          !! Output dense rank-2 array.
-      end function
+      end function dense_rdp
    end interface
 
    interface transpose
@@ -479,38 +494,42 @@ module specialmatrices_tridiagonal
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Tridiagonal`
          !! matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          type(Tridiagonal) :: B
          !! Transpose of the matrix.
-      end function
+      end function transpose_rdp
    end interface
 
    interface size
       pure module function size_rdp(A, dim) result(arr_size)
          !! Return the size of `Tridiagonal` matrix along a given dimension.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
          !! Queried dimension.
          integer(ilp) :: arr_size
          !! Size of the matrix along the dimension dim.
-      end function
+      end function size_rdp
    end interface
 
    interface shape
       pure module function shape_rdp(A) result(arr_shape)
          !! Return the shape of a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
          !! Shape of the matrix.
-      end function
+      end function shape_rdp
    end interface
 
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Scalar multiplication with a `Tridiagonal` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Tridiagonal), intent(in) :: A
          type(Tridiagonal) :: B
@@ -518,10 +537,11 @@ module specialmatrices_tridiagonal
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Scalar multiplication with a `Tridiagonal` matrix.
+         implicit none(type, external)
          type(Tridiagonal), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Tridiagonal) :: B
       end function scalar_multiplication_bis_rdp
    end interface
 
-end module
+end module specialmatrices_tridiagonal

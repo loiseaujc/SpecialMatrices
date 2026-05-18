@@ -3,5 +3,5 @@ submodule(specialmatrices_bidiagonal) bidiagonal_determinant
 contains
    module procedure det_rdp
    d = product(A%dv)
-   end procedure
-end submodule
+   end procedure det_rdp
+end submodule bidiagonal_determinant

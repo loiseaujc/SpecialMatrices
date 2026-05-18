@@ -4,8 +4,8 @@ contains
    module procedure construct
    integer(ilp) :: n
    !> Initialize the standard matrix data.
-   n = size(c) ; A%n = n; A%c = c
+   n = size(c); A%n = n; A%c = c
    !> Fourier Transform of the generating vector.
    A%c_hat = fft(cmplx(c, kind=dp), n)
-   end procedure
-end submodule
+   end procedure construct
+end submodule circulant_constructors

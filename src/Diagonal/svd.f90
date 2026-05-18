@@ -5,7 +5,7 @@ submodule(specialmatrices_diagonal) diagonal_singular_value_decomposition
 contains
    module procedure svdvals_rdp
    s = abs(A%dv); call sort(s, reverse=.true.)
-   end procedure
+   end procedure svdvals_rdp
 
    module procedure svd_rdp
    integer(ilp) :: i, index(A%n)
@@ -19,5 +19,5 @@ contains
       vt(i, i) = -1.0_dp
    end do
    vt = vt(index, :)
-   end procedure
-end submodule
+   end procedure svd_rdp
+end submodule diagonal_singular_value_decomposition

@@ -11,26 +11,26 @@ contains
       B(i, i + 1) = A%du(i)
    end do
    B(n, n - 1) = A%dl(n - 1); B(n, n) = A%dv(n)
-   end procedure
+   end procedure dense_rdp
 
    module procedure transpose_rdp
    B = A
-   end procedure
+   end procedure transpose_rdp
 
    module procedure shape_rdp
    arr_shape = A%n
-   end procedure
+   end procedure shape_rdp
 
    module procedure size_rdp
    arr_size = A%n
-   end procedure
+   end procedure size_rdp
 
    module procedure scalar_multiplication_rdp
    B = Tridiagonal(alpha*A%dl, alpha*A%dv, alpha*A%du)
-   end procedure
+   end procedure scalar_multiplication_rdp
 
    module procedure scalar_multiplication_bis_rdp
    B = Tridiagonal(alpha*A%dl, alpha*A%dv, alpha*A%du)
-   end procedure
+   end procedure scalar_multiplication_bis_rdp
 
-end submodule
+end submodule tridiagonal_utils

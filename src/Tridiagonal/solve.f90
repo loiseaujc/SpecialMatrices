@@ -153,7 +153,7 @@ contains
 
       ! ----- Allocations -----
       allocate (du2(n - 2), ipiv(n))
-      dl = A%dl; d = A%dv; du = A%du; 
+      dl = A%dl; d = A%dv; du = A%du
       ! ----- LU factorization -----
       call gttrf(n, dl, d, du, du2, ipiv, info)
       call handle_gttrf_info(n, info, err)
@@ -187,12 +187,12 @@ contains
    refine_ = optval(refine, .false.)
    x = b; xmat(1:A%n, 1:1) => x; bmat(1:A%n, 1:1) => b
    xmat = tridiagonal_solver(A, bmat, refine_)
-   end procedure
+   end procedure solve_single_rhs
 
    module procedure solve_multi_rhs
    ! Local variables.
    logical(lk) :: refine_
    refine_ = optval(refine, .false.)
    x = tridiagonal_solver(A, b, refine_)
-   end procedure
-end submodule
+   end procedure solve_multi_rhs
+end submodule tridiagonal_linear_solver

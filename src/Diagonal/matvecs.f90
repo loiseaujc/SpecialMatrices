@@ -8,7 +8,7 @@ contains
    do concurrent(i=1:size(x))
       y(i) = A%dv(i)*x(i)
    end do
-   end procedure
+   end procedure spmv
 
    module procedure spmvs
    ! Utility function to compute multiple matrix-vector products.
@@ -17,5 +17,5 @@ contains
    do concurrent(i=1:size(x, 1), j=1:size(x, 2))
       y(i, j) = A%dv(i)*x(i, j)
    end do
-   end procedure
-end submodule
+   end procedure spmvs
+end submodule diagonal_matvecs

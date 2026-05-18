@@ -4,7 +4,7 @@ contains
    module procedure svdvals_rdp
    ! Get singular values from the eigendecomposition.
    s = abs(eigvalsh(A))
-   end procedure
+   end procedure svdvals_rdp
 
    module procedure svd_rdp
    integer(ilp) :: i, n
@@ -21,5 +21,5 @@ contains
    end if
    ! Singular values.
    s = abs(s)
-   end procedure
-end submodule
+   end procedure svd_rdp
+end submodule symtridiagonal_singular_value_decomposition
