@@ -5,7 +5,7 @@ contains
    integer(ilp) :: i, j, m, n
    m = A%m; n = A%n; allocate (B(m, n), source=0.0_dp)
    do concurrent(j=1:n)
-      B(:, j) = A%v(j:j + m)
+      B(:, j) = A%v(j:j + m - 1)
    end do
    end procedure dense_rdp
 
