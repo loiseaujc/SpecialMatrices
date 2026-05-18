@@ -17,6 +17,8 @@ contains
          B(i, i + 1) = A%ev(i)
       end do
       B(n, n) = A%dv(n)
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
    end procedure dense_rdp
 

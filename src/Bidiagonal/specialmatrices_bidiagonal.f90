@@ -113,6 +113,7 @@ module specialmatrices_bidiagonal
       !! @endnote
       pure module function initialize(n) result(A)
          !! Construct a `Bidiagonal` matrix filled with zeros.
+         implicit none(type, external)
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(Bidiagonal) :: A
@@ -122,6 +123,7 @@ module specialmatrices_bidiagonal
       pure module function construct(dv, ev, which) result(A)
          !! Construct a `Bidiagonal` matrix from the rank-1 arrays `dv`
          !! and `ev`.
+         implicit none(type, external)
          real(dp), intent(in) :: dv(:), ev(:)
          !! Bidiagonal elements of the matrix.
          character, optional, intent(in) :: which
@@ -132,6 +134,7 @@ module specialmatrices_bidiagonal
 
       pure module function construct_constant(d, e, n, which) result(A)
          !! Construct a `Bidiagonal` matrix with constant diagonal elements.
+         implicit none(type, external)
          real(dp), intent(in) :: d, e
          !! Bidiagonal elements of the matrix.
          integer(ilp), intent(in) :: n
@@ -164,6 +167,7 @@ module specialmatrices_bidiagonal
          !! Compute the matrix-vector product \(y = Ax\) for a `Bidiagonal`
          !! matrix \(A\). Both `x` and `y` are rank-1 arrays with the same
          !! kind as `A`.
+         implicit none(type, external)
          type(Bidiagonal), target, intent(in) :: A
          !! Input matrix.
          real(dp), target, intent(in) :: x(:)
@@ -176,6 +180,7 @@ module specialmatrices_bidiagonal
          !! Compute the matrix-matrix product \(Y = Ax\) for a `Bidiagonal`
          !! matrix \(A\) and a dense matrix \(X\) (rank-2 array). \(Y\) is
          !! also a rank-2 array with the same dimensions as \(X\).
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
@@ -215,6 +220,7 @@ module specialmatrices_bidiagonal
          !! Solve the linear system \(Ax=b\) where \(A\) is of type
          !! `Bidiagonal` and `b` a standard rank-1 array. The solution
          !! vector `x` has the same dimension and kind as `b`.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -227,6 +233,7 @@ module specialmatrices_bidiagonal
          !! Solve the linear system \(AX=B\) where \(A\) is of type
          !! `Bidiagonal` and `B` a standard rank-2 array. The solution matrix
          !! `X` has the same dimensions and kind as `B`.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
@@ -239,6 +246,7 @@ module specialmatrices_bidiagonal
    interface inv
       pure module function inv_rdp(A) result(B)
          !! Utility function to compute the inverse of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
@@ -269,6 +277,7 @@ module specialmatrices_bidiagonal
       !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: d
@@ -294,6 +303,7 @@ module specialmatrices_bidiagonal
       !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: tr
@@ -324,6 +334,7 @@ module specialmatrices_bidiagonal
       !! - `s` :  Vector of singular values sorted in decreasing order.
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
@@ -361,6 +372,7 @@ module specialmatrices_bidiagonal
       !!                      `intent(out)` argument.
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
@@ -396,6 +408,7 @@ module specialmatrices_bidiagonal
       module function eigvals_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real
          !! `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
@@ -438,6 +451,7 @@ module specialmatrices_bidiagonal
       module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a
          !! `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
@@ -470,6 +484,7 @@ module specialmatrices_bidiagonal
       module function dense_rdp(A) result(B)
          !! Utility function to convert a `Bidiagonal` matrix to a
          !! rank-2 array.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
@@ -496,6 +511,7 @@ module specialmatrices_bidiagonal
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Bidiagonal`
          !! matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          type(Bidiagonal) :: B
@@ -507,6 +523,7 @@ module specialmatrices_bidiagonal
       pure module function size_rdp(A, dim) result(arr_size)
          !! Utility function to return the size of `Bidiagonal` matrix along
          !! a given dimension.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -519,6 +536,7 @@ module specialmatrices_bidiagonal
    interface shape
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -530,6 +548,7 @@ module specialmatrices_bidiagonal
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Bidiagonal` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Bidiagonal), intent(in) :: A
          type(Bidiagonal) :: B
@@ -538,6 +557,7 @@ module specialmatrices_bidiagonal
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Bidiagonal` matrix.
+         implicit none(type, external)
          type(Bidiagonal), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Bidiagonal) :: B

@@ -1,6 +1,6 @@
 module specialmatrices_diagonal
    use stdlib_linalg_constants, only: dp, ilp
-   implicit none
+   implicit none(type, external)
    private
 
    ! --> Linear Algebra.
@@ -98,6 +98,7 @@ module specialmatrices_diagonal
       pure module function initialize(n) result(A)
          !! Utility function to construct a `Diagonal` matrix filled with
          !! zeros.
+         implicit none(type, external)
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(Diagonal) :: A
@@ -107,6 +108,7 @@ module specialmatrices_diagonal
       pure module function construct(dv) result(A)
          !! Utility function to construct a `Diagonal` matrix from a rank-1
          !! array.
+         implicit none(type, external)
          real(dp), intent(in) :: dv(:)
          !! Diagonal elements of the matrix.
          type(Diagonal) :: A
@@ -116,6 +118,7 @@ module specialmatrices_diagonal
       pure module function construct_constant(d, n) result(A)
          !! Utility function to construct a `Diagonal` matrix with constant
          !! diagonal element.
+         implicit none(type, external)
          real(dp), intent(in) :: d
          !! Constant diagonal element of the matrix.
          integer(ilp), intent(in) :: n
@@ -128,6 +131,7 @@ module specialmatrices_diagonal
          !! Utility function to construct a `Diagonal` matrix from a rank-2
          !! array. The resulting matrix is constructed from the diagonal
          !! element of the input matrix, even if the latter is not diagonal.
+         implicit none(type, external)
          real(dp), intent(in) :: A(:, :)
          !! Dense \(n \times n\) matrix from which to construct the
          !! `Diagonal` one.
@@ -157,6 +161,7 @@ module specialmatrices_diagonal
          !! Compute the matrix-vector product \(y = Ax\) for a `Diagonal`
          !! matrix \(A\). Both `x` and `y` are rank-1 arrays with the same
          !! kind as `A`.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
@@ -169,6 +174,7 @@ module specialmatrices_diagonal
          !! Compute the matrix-matrix product \(Y = AX\) for a `Diagonal`
          !! matrix \(A\) and a dense matrix \(X\) (rank-2 array). \(Y\) is
          !! also a rank-2 array with the same dimensions as \(X\).
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
@@ -208,6 +214,7 @@ module specialmatrices_diagonal
          !! `Diagonal` and `b` a standard rank-1 array. The solution vector
          !! `x` has the same dimension and kind as the right-hand side
          !! vector `b`.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -221,6 +228,7 @@ module specialmatrices_diagonal
          !! `Diagonal` and `B` a standard rank-2 array. The solution matrix
          !! `X` has the same dimensions and kind as the right-hand side
          !! matrix `B`.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
@@ -233,6 +241,7 @@ module specialmatrices_diagonal
    interface inv
       pure module function inv_rdp(A) result(B)
          !! Utility function to compute the inverse of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          type(Diagonal) :: B
@@ -263,6 +272,7 @@ module specialmatrices_diagonal
       !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: d
@@ -288,6 +298,7 @@ module specialmatrices_diagonal
       !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: tr
@@ -318,6 +329,7 @@ module specialmatrices_diagonal
       !! - `s` :  Vector of singular values sorted in decreasing order.
       pure module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
@@ -355,6 +367,7 @@ module specialmatrices_diagonal
       !!                   argument.
       module subroutine svd_rdp(A, u, s, vt)
          !! Compute the singular value decomposition of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: s(:)
@@ -390,6 +403,7 @@ module specialmatrices_diagonal
       module function eigvalsh_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real `Diagonal`
          !! matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
@@ -422,6 +436,7 @@ module specialmatrices_diagonal
       module subroutine eigh_rdp(A, lambda, vectors)
          !! Utility function to compute the eigenvalues and eigenvectors of
          !! a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: lambda(:)
@@ -453,6 +468,7 @@ module specialmatrices_diagonal
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       module function dense_rdp(A) result(B)
          !! Convert a `Diagonal` matrix to a rank-2 array.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
@@ -478,6 +494,7 @@ module specialmatrices_diagonal
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          type(Diagonal) :: B
@@ -489,6 +506,7 @@ module specialmatrices_diagonal
       pure module function size_rdp(A, dim) result(arr_size)
          !! Utility function to return the size of `Diagonal` matrix along a
          !! given dimension.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -501,6 +519,7 @@ module specialmatrices_diagonal
    interface shape
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -512,6 +531,7 @@ module specialmatrices_diagonal
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Diagonal` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Diagonal), intent(in) :: A
          type(Diagonal) :: B
@@ -520,6 +540,7 @@ module specialmatrices_diagonal
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a
          !! `Diagonal` matrix.
+         implicit none(type, external)
          type(Diagonal), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Diagonal) :: B

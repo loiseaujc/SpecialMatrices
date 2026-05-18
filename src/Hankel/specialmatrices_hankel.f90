@@ -1,7 +1,7 @@
 module specialmatrices_hankel
    use stdlib_linalg_constants, only: dp, ilp, lk
    use stdlib_linalg, only: eig, eigvals, svd, svdvals
-   use specialmatrices_toeplitz
+   use specialmatrices_toeplitz, only: Toeplitz, matmul
    implicit none(type, external)
    private
 
@@ -112,6 +112,7 @@ module specialmatrices_hankel
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Hankel` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
@@ -123,6 +124,7 @@ module specialmatrices_hankel
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Hankel` matrix `A`.
          !! Both `X` and `Y` are rank-2 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:, :)
@@ -170,6 +172,7 @@ module specialmatrices_hankel
          !! Solve the linear system \(Ax=b\) where \(A\) is `Hankel` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -182,6 +185,7 @@ module specialmatrices_hankel
          !! Solve the linear system \(AX=B\), where `A` is `Hankel` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
@@ -220,6 +224,7 @@ module specialmatrices_hankel
       !! @endnote
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `hankel` matrix.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
@@ -264,6 +269,7 @@ module specialmatrices_hankel
       !! @endnote
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Hankel` matrix.
+         implicit none(type, external)
          type(hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
@@ -306,6 +312,7 @@ module specialmatrices_hankel
       module function eigvalsh_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real `Hankel`
          !! matrix.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
@@ -346,6 +353,7 @@ module specialmatrices_hankel
       module subroutine eigh_rdp(A, lambda, vectors)
          !! Utility function to compute the eigenvalues and eigenvectors of a
          !! `Hankel` matrix.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: lambda(:)
@@ -376,6 +384,7 @@ module specialmatrices_hankel
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       pure module function dense_rdp(A) result(B)
          !! Utility function to convert a `Hankel` matrix to a rank-2 array.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
@@ -401,6 +410,7 @@ module specialmatrices_hankel
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `hankel` matrix.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          type(Hankel) :: B
@@ -412,6 +422,7 @@ module specialmatrices_hankel
       !! Utility function to return the size of `Hankel` matrix along a
       !! given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -425,6 +436,7 @@ module specialmatrices_hankel
       !! Utility function to return the size of a `Hankel` matrix.
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Hankel` matrix.
+         implicit none(type, external)
          type(hankel), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -435,6 +447,7 @@ module specialmatrices_hankel
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a `Hankel` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Hankel), intent(in) :: A
          type(Hankel) :: B
@@ -442,6 +455,7 @@ module specialmatrices_hankel
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a `Hankel` matrix.
+         implicit none(type, external)
          type(Hankel), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Hankel) :: B

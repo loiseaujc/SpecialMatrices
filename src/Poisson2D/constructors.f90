@@ -6,7 +6,7 @@ contains
    ! Grid spacing.
    real(dp) :: dx, dy
    A%nx = nx; A%ny = ny
-   dx = optval(Lx, 1.0_dp)/(nx+1); dy = optval(Ly, 1.0_dp)/(ny+1)
+   dx = optval(Lx, 1.0_dp)/(nx + 1); dy = optval(Ly, 1.0_dp)/(ny + 1)
    A%dx = dx; A%dy = dy
    end procedure initialize
 end submodule poisson2D_constructors

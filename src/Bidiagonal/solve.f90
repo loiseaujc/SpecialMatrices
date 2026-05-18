@@ -50,6 +50,8 @@ contains
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
    case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, xmat, n, info)
@@ -68,6 +70,8 @@ contains
       dv = A%dv; dl = A%ev; du = 0.0_dp*A%ev
    case ("U")
       dv = A%dv; dl = 0.0_dp*A%ev; du = A%ev
+   case default
+      error stop "Provided uplo param is neither U nor L."
    end select
    ! Solve.
    call gtsv(n, nrhs, dl, dv, du, x, n, info)

@@ -62,6 +62,7 @@ module specialmatrices_strang
       !! @endnote
       pure module function initialize(n) result(A)
          !! Construct the Strang matrix of size `n`.
+         implicit none(type, external)
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(Strang) :: A
@@ -87,6 +88,7 @@ module specialmatrices_strang
       !! ```
       pure module function spmv(A, x) result(y)
          !! Driver for the matrix-vector product.
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
@@ -97,6 +99,7 @@ module specialmatrices_strang
 
       pure module function spmvs(A, X) result(Y)
          !! Driver for the matrix-matrix product.
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
@@ -132,6 +135,7 @@ module specialmatrices_strang
       !! - `x` :  Solution of the linear system. It has the same type and
       !!          shape as `b`.
       module function solve_single_rhs(A, b, refine) result(x)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Coefficient matrix.
          real(dp), target, intent(in) :: b(:)
@@ -143,6 +147,7 @@ module specialmatrices_strang
       end function solve_single_rhs
 
       module function solve_multi_rhs(A, b, refine) result(x)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
@@ -175,6 +180,7 @@ module specialmatrices_strang
       !!
       !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp) :: d
@@ -198,6 +204,7 @@ module specialmatrices_strang
       !!
       !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp) :: tr
@@ -227,6 +234,7 @@ module specialmatrices_strang
       !! - `lambda`  :  Rank-1 `real` array returning the eigenvalues of `A`
       !!                in increasing order. It is an `intent(out)` argument.
       pure module function eigvalsh_rdp(A) result(lambda)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
@@ -259,6 +267,7 @@ module specialmatrices_strang
       !! analytically and can thus be constructed very efficiently.
       !! @endnote
       pure module subroutine eigh_rdp(A, lambda, vectors)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: lambda(:)
@@ -288,6 +297,7 @@ module specialmatrices_strang
       !!
       !! - `B` :  Rank-2 array representation fo the matrix \(A\).
       pure module function dense_rdp(A) result(B)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
@@ -298,6 +308,7 @@ module specialmatrices_strang
    interface shape
       !! Utility function returning the shape of a `Strang` matrix \(A\).
       pure module function shape_rdp(A) result(arr_shape)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -309,6 +320,7 @@ module specialmatrices_strang
       !! Utility function returning the size of a `Strang` matrix \(A\)
       !! along a given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
+         implicit none(type, external)
          type(Strang), intent(in) :: A
          !! Input matrix.
          integer(ilp), intent(in) :: dim

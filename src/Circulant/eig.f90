@@ -14,16 +14,16 @@ contains
    if (present(right)) then
       right = eye(n, mold=1.0_dp)
       do concurrent(i=1:n)
-         right(:, i) = fft(right(:, i), n) / sqrt(1.0_dp*n)
-      enddo
+         right(:, i) = fft(right(:, i), n)/sqrt(1.0_dp*n)
+      end do
       right = hermitian(right)
-   endif
+   end if
 
    if (present(left)) then
       left = eye(n, mold=1.0_dp)
       do concurrent(i=1:n)
-         left(:, i) = ifft(left(:, i), n) / sqrt(1.0_dp*n)
-      enddo
-   endif
+         left(:, i) = ifft(left(:, i), n)/sqrt(1.0_dp*n)
+      end do
+   end if
    end procedure eig_rdp
 end submodule circulant_eigenvalue_decomposition

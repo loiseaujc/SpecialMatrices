@@ -1,7 +1,7 @@
 module specialmatrices_toeplitz
    use stdlib_linalg_constants, only: dp, ilp, lk
    use stdlib_linalg, only: eig, eigvals, svd, svdvals
-   use specialmatrices_circulant
+   use specialmatrices_circulant, only: circulant, matmul, solve
    implicit none(type, external)
    private
 
@@ -78,6 +78,7 @@ module specialmatrices_toeplitz
       !! @endnote
       pure module function construct(vc, vr) result(A)
          !! Construct a `Toeplitz` matrix from the rank-1 arrays `vc` and `vr`.
+         implicit none(type, external)
          real(dp), intent(in) :: vc(:)
          !! First column of the matrix.
          real(dp), intent(in) :: vr(:)
@@ -91,6 +92,7 @@ module specialmatrices_toeplitz
       !! Utility function to embed an m x n `Toeplitz` matrix into an
       !! (m+n) x (m+n) `Circulant` matrix.
       pure module function Toeplitz2Circulant(T) result(C)
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: T
          type(Circulant) :: C
       end function Toeplitz2Circulant
@@ -123,6 +125,7 @@ module specialmatrices_toeplitz
       pure module function spmv(A, x) result(y)
          !! Compute the matrix-vector product for a `Toeplitz` matrix \(A\).
          !! Both `x` and `y` are rank-1 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:)
@@ -134,6 +137,7 @@ module specialmatrices_toeplitz
       pure module function spmvs(A, X) result(Y)
          !! Compute the matrix-matrix product for a `Toeplitz` matrix `A`.
          !! Both `X` and `Y` are rank-2 arrays with the same kind as `A`.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: x(:, :)
@@ -181,6 +185,7 @@ module specialmatrices_toeplitz
          !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
@@ -193,6 +198,7 @@ module specialmatrices_toeplitz
          !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
@@ -231,6 +237,7 @@ module specialmatrices_toeplitz
       !! @endnote
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
@@ -275,6 +282,7 @@ module specialmatrices_toeplitz
       !! @endnote
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          real(dp), intent(out) :: s(:)
@@ -317,6 +325,7 @@ module specialmatrices_toeplitz
       module function eigvals_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real `Toeplitz`
          !! matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          complex(dp), allocatable :: lambda(:)
@@ -361,6 +370,7 @@ module specialmatrices_toeplitz
       module subroutine eig_rdp(A, lambda, left, right)
          !! Utility function to compute the eigenvalues and eigenvectors of a
          !! `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          complex(dp), intent(out) :: lambda(:)
@@ -391,6 +401,7 @@ module specialmatrices_toeplitz
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       pure module function dense_rdp(A) result(B)
          !! Utility function to convert a `Toeplitz` matrix to a rank-2 array.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
@@ -416,6 +427,7 @@ module specialmatrices_toeplitz
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Utility function to compute the transpose of a `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          type(Toeplitz) :: B
@@ -427,6 +439,7 @@ module specialmatrices_toeplitz
       !! Utility function to return the size of `Toeplitz` matrix along a
       !! given dimension.
       pure module function size_rdp(A, dim) result(arr_size)
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -440,6 +453,7 @@ module specialmatrices_toeplitz
       !! Utility function to return the size of a `Toeplitz` matrix.
       pure module function shape_rdp(A) result(arr_shape)
          !! Utility function to get the shape of a `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -450,6 +464,7 @@ module specialmatrices_toeplitz
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Utility function to perform a scalar multiplication with a `Toeplitz` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(Toeplitz), intent(in) :: A
          type(Toeplitz) :: B
@@ -457,6 +472,7 @@ module specialmatrices_toeplitz
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Utility function to perform a scalar multiplication with a `Toeplitz` matrix.
+         implicit none(type, external)
          type(Toeplitz), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(Toeplitz) :: B

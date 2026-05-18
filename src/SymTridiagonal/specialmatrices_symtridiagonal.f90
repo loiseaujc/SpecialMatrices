@@ -99,6 +99,7 @@ module specialmatrices_symtridiagonal
       !! @endnote
       pure module function initialize(n) result(A)
          !! Construct a `SymTridiagonal` matrix filled with zeros.
+         implicit none(type, external)
          integer(ilp), intent(in) :: n
          !! Dimension of the matrix.
          type(SymTridiagonal) :: A
@@ -108,6 +109,7 @@ module specialmatrices_symtridiagonal
       pure module function construct(dv, ev, isposdef) result(A)
          !! Construct a `SymTridiagonal` matrix from the rank-1 arrays
          !! `dv` and `ev`.
+         implicit none(type, external)
          real(dp), intent(in) :: dv(:), ev(:)
          !! SymTridiagonal elements of the matrix.
          logical(lk), optional, intent(in) :: isposdef
@@ -119,6 +121,7 @@ module specialmatrices_symtridiagonal
       pure module function construct_constant(d, e, n, isposdef) result(A)
          !! Construct a `SymTridiagonal` matrix with constant diagonal
          !! elements.
+         implicit none(type, external)
          real(dp), intent(in) :: d, e
          !! SymTridiagonal elements of the matrix.
          integer(ilp), intent(in) :: n
@@ -151,6 +154,7 @@ module specialmatrices_symtridiagonal
          !! Compute the matrix-vector product \(y = Ax\) for a `SymTridiagonal`
          !! matrix \(A\). Both `x` and `y` are rank-1 arrays with the same
          !! kind as `A`.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), target, intent(in) :: x(:)
@@ -163,6 +167,7 @@ module specialmatrices_symtridiagonal
          !! Compute the matrix-matrix product \(Y = Ax\) for a `SymTridiagonal`
          !! matrix \(A\) and a dense matrix \(X\) (rank-2 array). \(Y\) is
          !! also a rank-2 array with the same dimensions as \(X\).
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), intent(in) :: X(:, :)
@@ -204,6 +209,7 @@ module specialmatrices_symtridiagonal
          !! Solve the linear system \(Ax=b\) where \(A\) is of type
          !! `SymTridiagonal` and `b` a standard rank-1 array. The solution
          !! vector `x` has the same dimension and kind as `b`.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), target, intent(in) :: b(:)
@@ -218,6 +224,7 @@ module specialmatrices_symtridiagonal
          !! Solve the linear system \(AX=B\) where \(A\) is of type
          !! `SymTridiagonal` and `B` a standard rank-2 array. The solution
          !! matrix `X` has the same dimensions and kind as `B`.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:, :)
@@ -232,6 +239,7 @@ module specialmatrices_symtridiagonal
    interface inv
       pure module function inv_rdp(A) result(B)
          !! Compute the inverse of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: B(:, :)
@@ -262,6 +270,7 @@ module specialmatrices_symtridiagonal
       !! - `d` :  Determinant of the matrix.
       pure module function det_rdp(A) result(d)
          !! Compute the determinant of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: d
@@ -287,6 +296,7 @@ module specialmatrices_symtridiagonal
       !! - `tr`:  Trace of the matrix.
       pure module function trace_rdp(A) result(tr)
          !! Compute the trace of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp) :: tr
@@ -316,6 +326,7 @@ module specialmatrices_symtridiagonal
       !! - `s` :  Vector of singular values sorted in decreasing order.
       module function svdvals_rdp(A) result(s)
          !! Compute the singular values of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: s(:)
@@ -354,6 +365,7 @@ module specialmatrices_symtridiagonal
       module subroutine svd_rdp(A, s, u, vt)
          !! Compute the singular value decomposition of a `SymTridiagonal`
          !! matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: s(:)
@@ -389,6 +401,7 @@ module specialmatrices_symtridiagonal
       module function eigvalsh_rdp(A) result(lambda)
          !! Utility function to compute the eigenvalues of a real
          !! `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable :: lambda(:)
@@ -421,6 +434,7 @@ module specialmatrices_symtridiagonal
       module subroutine eigh_rdp(A, lambda, vectors)
          !! Compute the eigenvalues and eigenvectors of a `SymTridiagonal`
          !! matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          real(dp), allocatable, intent(out) :: lambda(:)
@@ -452,6 +466,7 @@ module specialmatrices_symtridiagonal
       !! - `B` :  Rank-2 array representation of the matrix \( A \).
       module function dense_rdp(A) result(B)
          !! Convert a `SymTridiagonal` matrix to a rank-2 array.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input diagonal matrix.
          real(dp), allocatable :: B(:, :)
@@ -477,6 +492,7 @@ module specialmatrices_symtridiagonal
       !! - `B` :  Resulting transposed matrix. It is of the same type as `A`.
       pure module function transpose_rdp(A) result(B)
          !! Compute the transpose of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          type(SymTridiagonal) :: B
@@ -488,6 +504,7 @@ module specialmatrices_symtridiagonal
       pure module function size_rdp(A, dim) result(arr_size)
          !! Return the size of `SymTridiagonal` matrix along a given
          !! dimension.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp), optional, intent(in) :: dim
@@ -500,6 +517,7 @@ module specialmatrices_symtridiagonal
    interface shape
       pure module function shape_rdp(A) result(arr_shape)
          !! Return the shape of a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          !! Input matrix.
          integer(ilp) :: arr_shape(2)
@@ -510,6 +528,7 @@ module specialmatrices_symtridiagonal
    interface operator(*)
       pure module function scalar_multiplication_rdp(alpha, A) result(B)
          !! Scalar multiplication with a `SymTridiagonal` matrix.
+         implicit none(type, external)
          real(dp), intent(in) :: alpha
          type(SymTridiagonal), intent(in) :: A
          type(SymTridiagonal) :: B
@@ -517,6 +536,7 @@ module specialmatrices_symtridiagonal
 
       pure module function scalar_multiplication_bis_rdp(A, alpha) result(B)
          !! Scalar multiplication with a `SymTridiagonal` matrix.
+         implicit none(type, external)
          type(SymTridiagonal), intent(in) :: A
          real(dp), intent(in) :: alpha
          type(SymTridiagonal) :: B

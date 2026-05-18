@@ -3,17 +3,17 @@ submodule(specialmatrices_circulant) circulant_utilities
 contains
    module procedure dense_rdp
    integer(ilp) :: j, n
-   n = A%n ; allocate(B(n, n)) ; B = 0.0_dp
+   n = A%n; allocate (B(n, n)); B = 0.0_dp
    do concurrent(j=1:n)
-      B(:, j) = cshift(A%c, -j+1)
-   enddo
+      B(:, j) = cshift(A%c, -j + 1)
+   end do
    end procedure dense_rdp
 
    module procedure transpose_rdp
    real(dp), allocatable :: b_vec(:)
    integer(ilp) :: n
    n = A%n
-   b_vec = A%c(n:1:-1) ; b_vec = cshift(b_vec, -1)
+   b_vec = A%c(n:1:-1); b_vec = cshift(b_vec, -1)
    B = Circulant(b_vec)
    end procedure transpose_rdp
 

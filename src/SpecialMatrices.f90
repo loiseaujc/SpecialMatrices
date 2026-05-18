@@ -8,7 +8,7 @@ module SpecialMatrices
    use specialmatrices_circulant
    use specialmatrices_toeplitz
    use specialmatrices_hankel
-   implicit none
+   implicit none(type, external)
    private
 
    !--------------------------------
@@ -48,9 +48,4 @@ module SpecialMatrices
    public :: size
    public :: operator(*)
 
-   public :: say_hello
-contains
-   subroutine say_hello
-      print *, "Hello, SpecialMatrices!"
-   end subroutine say_hello
 end module SpecialMatrices
