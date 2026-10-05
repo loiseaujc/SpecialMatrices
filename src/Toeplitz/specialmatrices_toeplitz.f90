@@ -181,7 +181,7 @@ module specialmatrices_toeplitz
       !! Circulant preconditioner. By design, `gmres` is run until a
       !! relative tolerance of \(10^{-8}\) is reached.
       !! @endnote
-      pure module function solve_single_rhs(A, b) result(x)
+      module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is `Toeplitz` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
@@ -194,7 +194,7 @@ module specialmatrices_toeplitz
          !! Solution vector.
       end function solve_single_rhs
 
-      pure module function solve_multi_rhs(A, B) result(X)
+      module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Toeplitz` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
