@@ -109,7 +109,7 @@ contains
          ! Solve with SpecialMatrices.
          x = solve(A, b)
          ! Check error.
-         call check(error, norm(matmul(A, x) - b, 2) <= 1e-8_dp, &
+         call check(error, norm(matmul(A, x) - b, 2) <= sqrt(epsilon(1.0_dp)), &
                     "toeplitz solve with a single rhs failed.")
          if (allocated(error)) return
       end block
@@ -117,8 +117,7 @@ contains
       ! Solve with multiple right-hand side vectors.
       block
          real(dp), allocatable :: x(:, :), b(:, :)
-         integer(ilp) :: i
-         allocate (b(n, n))
+         allocate (b(n, n), source=0.0_dp)
          ! Random rhs.
          call random_number(b)
          do i = 1, n
@@ -128,7 +127,7 @@ contains
          x = solve(A, b)
          ! Check error.
          do i = 1, n
-            call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= 1e-8_dp, &
+            call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= sqrt(epsilon(1.0_dp)), &
                        "toeplitz solve with multiple rhs failed.")
             if (allocated(error)) return
          end do
