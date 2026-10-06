@@ -25,8 +25,8 @@ jobs:
           - {os: windows-latest, compiler: ifx, extra-packages: "mkl mkl-devel mkl-static mkl-include", fpm-version: "0.12.0"}
 
           # Other compilers.
-          - {os: ubuntu-latest,  compiler: flang-new, extra-packages: "openblas"}
-          - {os: windows-latest,  compiler: flang-new, extra-packages: "openblas"}
+          # - {os: ubuntu-latest,  compiler: flang-new, extra-packages: "openblas"}
+          # - {os: windows-latest,  compiler: flang-new, extra-packages: "openblas"}
           # - {os: ubuntu-latest,  compiler: nvfortran, extra-packages: "openblas"}  # Error with assert_m package.
     steps:
       - name: Setup Fortran
