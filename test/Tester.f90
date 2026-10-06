@@ -23,6 +23,7 @@ program Tester
 
    status = 0
 
+   allocate (testsuites(9))
    testsuites = [ &
                 new_testsuite("Diagonal Matrices", collect_diagonal_testsuite), &
                 new_testsuite("Bidiagonal Matrices", collect_bidiagonal_testsuite), &
@@ -48,5 +49,7 @@ program Tester
    else if (status == 0) then
       write (output_unit, *) "All tests succesfully passed!", new_line("a")
    end if
+
+   deallocate (testsuites)
 
 end program Tester

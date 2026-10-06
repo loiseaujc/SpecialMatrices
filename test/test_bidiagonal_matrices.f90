@@ -163,7 +163,9 @@ contains
       real(dp), allocatable :: dv(:), ev(:)
 
       ! Initialize matrix.
-      allocate (dv(n), ev(n - 1)); call random_number(dv); call random_number(ev)
+      allocate (dv(n), ev(n - 1), source=0.0_dp)
+      call random_number(dv)
+      call random_number(ev)
       A = Bidiagonal(dv, ev)
 
       ! Compare against stdlib_linalg implementation.

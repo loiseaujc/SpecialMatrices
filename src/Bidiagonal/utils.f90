@@ -3,7 +3,8 @@ submodule(specialmatrices_bidiagonal) bidiagonal_utils
 contains
    module procedure dense_rdp
    integer(ilp) :: i, n
-   n = A%n; allocate (B(n, n)); B = 0.0_dp
+   n = A%n
+   allocate (B(n, n), source=0.0_dp)
    select case (A%which)
    case ("L")
       B(1, 1) = A%dv(1)

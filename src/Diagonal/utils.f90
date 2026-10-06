@@ -3,6 +3,7 @@ submodule(specialmatrices_diagonal) diagonal_utilities
    implicit none(type, external)
 contains
    module procedure dense_rdp
+   allocate (B(A%n, A%n), source=0.0_dp)
    B = diag(A%dv)
    end procedure dense_rdp
 

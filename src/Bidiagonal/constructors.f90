@@ -9,9 +9,10 @@ contains
    end procedure initialize
 
    module procedure construct
-   integer(ilp) :: n
-   n = size(dv)
-   A%n = n; A%dv = dv; A%ev = ev; A%which = optval(which, "L")
+   A%n = size(dv)
+   allocate (A%dv(A%n), source=0.0_dp); A%dv = dv
+   allocate (A%ev(A%n - 1), source=0.0_dp); A%ev = ev
+   A%which = optval(which, "L")
    end procedure construct
 
    module procedure construct_constant
