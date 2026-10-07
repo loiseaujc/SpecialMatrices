@@ -3,12 +3,12 @@ module test_hankel
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: norm, diag, svdvals, eye, mnorm
+   use stdlib_linalg, only: norm, svdvals, eye, mnorm, diag
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
    use SpecialMatrices, only: hankel, dense, transpose, matmul, operator(*), &
-                              svd, svdvals 
+                              svd, svdvals, solve
    implicit none(type, external)
    private
 
@@ -28,7 +28,8 @@ contains
                   new_unittest("Hankel scalar multiplication", test_scalar_multiplication), &
                   new_unittest("Hankel matmul", test_matmul), &
                   new_unittest("Hankel svdvals", test_svdvals), &
-                  new_unittest("Hankel svd", test_svd) &
+                  new_unittest("Hankel svd", test_svd), &
+                  new_unittest("Hankel solve", test_solve) &
                   ]
       return
    end subroutine collect_hankel_testsuite
@@ -138,7 +139,7 @@ contains
    subroutine test_svd(error)
       type(error_type), allocatable, intent(out) :: error
       integer, parameter :: m = 8, n = 6
-      integer :: i
+      integer :: k = min(m, n)
       type(hankel) :: A
       real(dp), allocatable :: v(:), Amat(:, :)
       real(dp), allocatable :: u(:, :), s(:), vt(:, :)
@@ -149,7 +150,7 @@ contains
       A = Hankel(v, m, n)
 
       ! Compute singular value decomosition.
-      allocate(s(min(m, n)), u(m, m), vt(n, n))
+      allocate(s(k), u(m, m), vt(n, n))
       call svd(A, s, u, vt)
 
       ! Check orthogonality of the left singular vectors.
@@ -168,19 +169,59 @@ contains
                     "Orthogonality of the right singular vectors failed.")
       end block
        
-      ! Build Sigma
-      allocate(sigma(m, n)); sigma = 0.0_dp
-      do i = 1, min(m, n)
-         sigma(i, i) = s(i)
-      end do
-
       ! Check error.
       allocate (Amat(m, n)); Amat = 0.0_dp
-      Amat = matmul(u, matmul(sigma, vt)) ! s = mxn or full_matrices=.false.
+      Amat = matmul(u(:, :k), matmul(diag(s), vt(:k, :)))
       call check(error, mnorm(dense(A) - Amat, 2) < 1e-8_dp, &
                  "hankel svd failed.")
       return
    end subroutine test_svd
 
+   subroutine test_solve(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(Hankel) :: A
+      real(dp), allocatable :: v(:)
+      integer, parameter :: n = 8
+      integer(ilp) :: i
+      ! Initialize matrix.
+      allocate(v(2*n-1),source=0.0_dp); call random_number(v)
+      v = 2.0_dp*v -1.0_dp ![(1.0_dp/(i + 1), i=1, 2*n - 1)]
+      A = Hankel(v, n, n)
+
+      ! Solve with a single right-hand side vector.
+      block
+         real(dp), allocatable :: x(:), b(:)
+         allocate (b(n))
+         ! Random rhs.
+         call random_number(b); b = b/norm(b, 2)
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Check error.
+         call check(error, norm(matmul(A, x) - b, 2) <= sqrt(epsilon(1.0_dp)), &
+                    "hankel solve with a single rhs failed.")
+         if (allocated(error)) return
+      end block
+
+      ! Solve with multiple right-hand side vectors.
+      block
+         real(dp), allocatable :: x(:, :), b(:, :)
+         allocate (b(n, n), source=0.0_dp)
+         ! Random rhs.
+         call random_number(b)
+         do i = 1, n
+            b(:, i) = b(:, i)/norm(b(:, i), 2)
+         end do
+         ! Solve with SpecialMatrices.
+         x = solve(A, b)
+         ! Check error.
+         do i = 1, n
+            call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= sqrt(epsilon(1.0_dp)), &
+                       "hankel solve with multiple rhs failed.")
+            if (allocated(error)) return
+         end do
+      end block
+
+      return
+   end subroutine test_solve
 
 end module test_hankel
