@@ -1,8 +1,7 @@
 module specialmatrices_hankel
    use stdlib_linalg_constants, only: dp, ilp, lk
-   use stdlib_linalg, only: eig, eigvals, svd, svdvals
+   use stdlib_linalg, only: eigh, eigvalsh, svd, svdvals
    use specialmatrices_toeplitz, only: Toeplitz, matmul
-   use specialmatrices_circulant, only: Circulant, solve
    implicit none(type, external)
    private
 

@@ -3,12 +3,12 @@ module test_hankel
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: norm, svdvals, eye, mnorm, diag
+   use stdlib_linalg, only: norm, svdvals, eye, mnorm, diag, eigvalsh, eigh
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
    use SpecialMatrices, only: hankel, dense, transpose, matmul, operator(*), &
-                              svd, svdvals, solve
+                              svd, svdvals, solve, eigvalsh, eigh
    implicit none(type, external)
    private
 
@@ -29,7 +29,9 @@ contains
                   new_unittest("Hankel matmul", test_matmul), &
                   new_unittest("Hankel svdvals", test_svdvals), &
                   new_unittest("Hankel svd", test_svd), &
-                  new_unittest("Hankel solve", test_solve) &
+                  new_unittest("Hankel solve", test_solve), &
+                  new_unittest("Hankel eigvalsh", test_eigvalsh), &
+                  new_unittest("Hankel eigh", test_eigh) &
                   ]
       return
    end subroutine collect_hankel_testsuite
@@ -223,5 +225,49 @@ contains
 
       return
    end subroutine test_solve
+
+subroutine test_eigvalsh(error)
+   type(error_type), allocatable, intent(out) :: error
+   integer, parameter :: n = 10
+   real(dp), allocatable :: v(:)
+   real(dp), allocatable :: lambda(:), lambda_stdlib(:)
+   type(Hankel) :: A
+
+   ! Initialize matrix.
+   allocate(v(2*n - 1))
+   call random_number(v)
+   A = Hankel(v, n, n)
+
+   ! Compute eigenvalues.
+   lambda = eigvalsh(A)
+   lambda_stdlib = eigvalsh(dense(A))
+
+   ! Check error.
+   call check(error, all_close(lambda, lambda_stdlib), &
+              "hankel eigvalsh failed.")
+
+end subroutine test_eigvalsh
+
+
+   subroutine test_eigh(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(ilp) :: n = 10
+      real(dp), allocatable :: v(:), Amat(:, :), vectors(:, :), lambda(:)
+      type(Hankel) :: A
+
+      ! Initialize array.
+      allocate(v(2*n - 1)); call random_number(v)
+      A = Hankel(v, n, n)
+      ! Compute singular value decomposition.
+      allocate (lambda(n), vectors(n,n))
+      call eigh(A, lambda, vectors=vectors)
+      ! Check error.
+      allocate (Amat(n, n)); Amat = 0.0_dp
+      Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors))) 
+      call check(error, all_close(dense(A), Amat), &
+                 "hankel eigh failed.")
+      return
+   end subroutine test_eigh
+
 
 end module test_hankel
