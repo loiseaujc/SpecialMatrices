@@ -1,6 +1,6 @@
 module specialmatrices_hankel
    use stdlib_linalg_constants, only: dp, ilp, lk
-   use stdlib_linalg, only: eig, eigvals, svd, svdvals
+   use stdlib_linalg, only: eigh, eigvalsh, svd, svdvals
    use specialmatrices_toeplitz, only: Toeplitz, matmul
    implicit none(type, external)
    private
@@ -168,7 +168,7 @@ module specialmatrices_hankel
       !! Circulant preconditioner. By design, `gmres` is run until a
       !! relative tolerance of \(10^{-8}\) is reached.
       !! @endnote
-      pure module function solve_single_rhs(A, b) result(x)
+      module function solve_single_rhs(A, b) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is `Hankel` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
@@ -181,7 +181,7 @@ module specialmatrices_hankel
          !! Solution vector.
       end function solve_single_rhs
 
-      pure module function solve_multi_rhs(A, B) result(X)
+      module function solve_multi_rhs(A, B) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Hankel` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
