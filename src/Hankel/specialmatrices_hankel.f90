@@ -168,7 +168,7 @@ module specialmatrices_hankel
       !! Circulant preconditioner. By design, `gmres` is run until a
       !! relative tolerance of \(10^{-8}\) is reached.
       !! @endnote
-      module function solve_single_rhs(A, b) result(x)
+      module function solve_single_rhs(A, b, rtol, atol, maxiter, kdim) result(x)
          !! Solve the linear system \(Ax=b\) where \(A\) is `Hankel` and `b`
          !! a standard rank-1 array. The solution vector `x` has the same
          !! dimension and kind as the right-hand side vector `b`.
@@ -177,11 +177,19 @@ module specialmatrices_hankel
          !! Coefficient matrix.
          real(dp), intent(in) :: b(:)
          !! Right-hand side vector.
+         real(dp), optional, intent(in) :: atol
+         !! Absolute tolerance
+         real(dp), optional, intent(in) :: rtol
+         !! Relative tolerance
+         integer(ilp), optional, intent(in) :: maxiter
+         !! GMRES maximum number of iterations.
+         integer(ilp), optional, intent(in) :: kdim
+         !! Dimension of GMRES Krylov subspace.
          real(dp), allocatable :: x(:)
          !! Solution vector.
       end function solve_single_rhs
 
-      module function solve_multi_rhs(A, B) result(X)
+      module function solve_multi_rhs(A, B, rtol, atol, maxiter, kdim) result(X)
          !! Solve the linear system \(AX=B\), where `A` is `Hankel` and `B`
          !! is a rank-2 array. The solution matrix `X` has the same dimension
          !! and kind as the right-hand side matrix `B`.
@@ -189,7 +197,15 @@ module specialmatrices_hankel
          type(Hankel), intent(in) :: A
          !! Coefficient matrix.
          real(dp), intent(in) :: B(:, :)
-         !! Right-hand side vectors.
+         !! Right-hand side vector.
+         real(dp), optional, intent(in) :: atol
+         !! Absolute tolerance
+         real(dp), optional, intent(in) :: rtol
+         !! Relative tolerance
+         integer(ilp), optional, intent(in) :: maxiter
+         !! GMRES maximum number of iterations.
+         integer(ilp), optional, intent(in) :: kdim
+         !! Dimension of GMRES Krylov subspace.
          real(dp), allocatable :: X(:, :)
          !! Solution vectors.
       end function solve_multi_rhs

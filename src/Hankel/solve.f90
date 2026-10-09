@@ -21,8 +21,11 @@ contains
         T = Toeplitz(A%v(n:), A%v(n:1:-1))
 
         ! Solve Ty = b
-        y = toeplitz_solve(T, b)
-
+        y = toeplitz_solve(T, b, &
+                    rtol=rtol, &          
+                    atol=atol, &
+                    maxiter=maxiter, &
+                    kdim=kdim)
         ! y -> x
         x = y(n:1:-1)
 
@@ -43,7 +46,11 @@ contains
         T = Toeplitz(A%v(n:), A%v(n:1:-1))
         
         ! Solve TY = B.
-        Y = toeplitz_solve(T, B)
+        Y = toeplitz_solve(T, B, &
+                      rtol=rtol, &
+                      atol=atol, &
+                      maxiter=maxiter, &
+                      kdim=kdim)
 
         ! Y -> X
         X = Y(n:1:-1, :)
