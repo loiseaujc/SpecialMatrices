@@ -1,4 +1,4 @@
-submodule(specialmatrices_hankel) hankel_svd 
+submodule(specialmatrices_hankel) hankel_svd
    implicit none(type, external)
 contains
    module procedure svdvals_rdp

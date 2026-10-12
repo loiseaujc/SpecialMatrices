@@ -1,68 +1,61 @@
 submodule(specialmatrices_hankel) hankel_linear_solver
-    use specialmatrices_toeplitz, only: toeplitz_solve => solve
+   use specialmatrices_toeplitz, only: toeplitz_solve => solve
 
-    implicit none(type, external)
+   implicit none(type, external)
 
 contains
-    module procedure solve_single_rhs
-        integer(ilp) :: n
-        type(Toeplitz) :: T
-        real(dp), allocatable :: y(:)
+   module procedure solve_single_rhs
+   integer(ilp) :: n
+   type(Toeplitz) :: T
+   real(dp), allocatable :: y(:)
 
-        ! Matrix must be square.
+   ! Matrix must be square.
 
-        if (size(A, 1) /= size(A,2)) error stop "Matrix is not square."
-        
-        n = size (A, 2)
-        
-        if (size(b) /= n) error stop "Dimension of b is inconsistent with A"
-        
-        ! Hankel -> Toeplitz
-        T = Toeplitz(A%v(n:), A%v(n:1:-1))
+   if (size(A, 1) /= size(A, 2)) error stop "Matrix is not square."
 
-        ! Solve Ty = b
-        y = toeplitz_solve(T, b, &
-                    rtol=rtol, &          
-                    atol=atol, &
-                    maxiter=maxiter, &
-                    kdim=kdim)
-        ! y -> x
-        x = y(n:1:-1)
+   n = size(A, 2)
 
-    end procedure solve_single_rhs
+   if (size(b) /= n) error stop "Dimension of b is inconsistent with A"
 
-    module procedure solve_multi_rhs
-        integer(ilp) :: n
-        type(Toeplitz) :: T
-        real(dp), allocatable :: Y(:, :)
+   ! Hankel -> Toeplitz
+   T = Toeplitz(A%v(n:), A%v(n:1:-1))
 
-        if (size(A, 1) /= size(A,2)) error stop "Matrix A is not square."
-        
-        n = size (A, 2)
-        
-        if (size(B, 1) /= n) error stop "Dimension of B is inconsistent with A"
+   ! Solve Ty = b
+   y = toeplitz_solve(T, b, &
+                      rtol=rtol, &
+                      atol=atol, &
+                      maxiter=maxiter, &
+                      kdim=kdim)
+   ! y -> x
+   x = y(n:1:-1)
 
-        ! Hankel -> Toeplitz
-        T = Toeplitz(A%v(n:), A%v(n:1:-1))
-        
-        ! Solve TY = B.
-        Y = toeplitz_solve(T, B, &
+   end procedure solve_single_rhs
+
+   module procedure solve_multi_rhs
+   integer(ilp) :: n
+   type(Toeplitz) :: T
+   real(dp), allocatable :: Y(:, :)
+
+   if (size(A, 1) /= size(A, 2)) error stop "Matrix A is not square."
+
+   n = size(A, 2)
+
+   if (size(B, 1) /= n) error stop "Dimension of B is inconsistent with A"
+
+   ! Hankel -> Toeplitz
+   T = Toeplitz(A%v(n:), A%v(n:1:-1))
+
+   ! Solve TY = B.
+   Y = toeplitz_solve(T, B, &
                       rtol=rtol, &
                       atol=atol, &
                       maxiter=maxiter, &
                       kdim=kdim)
 
-        ! Y -> X
-        X = Y(n:1:-1, :)
+   ! Y -> X
+   X = Y(n:1:-1, :)
 
-    end procedure solve_multi_rhs
+   end procedure solve_multi_rhs
 
 end submodule
-
-
-
-
-
-
-
 

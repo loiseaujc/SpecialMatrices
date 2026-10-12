@@ -128,7 +128,7 @@ contains
       real(dp), allocatable :: s(:), s_stdlib(:)
 
       ! Initialize Matrix.
-      allocate (v(m + n -1)); call random_number(v)
+      allocate (v(m + n - 1)); call random_number(v)
       A = Hankel(v, m, n)
       ! Compute singular values.
       s = svdvals(A); s_stdlib = svdvals(dense(A))
@@ -148,11 +148,11 @@ contains
       real(dp), allocatable :: sigma(:, :)
 
       !Initialize Matrix.
-      allocate(v(m + n -1)); call random_number(v)
+      allocate (v(m + n - 1)); call random_number(v)
       A = Hankel(v, m, n)
 
       ! Compute singular value decomosition.
-      allocate(s(k), u(m, m), vt(n, n))
+      allocate (s(k), u(m, m), vt(n, n))
       call svd(A, s, u, vt)
 
       ! Check orthogonality of the left singular vectors.
@@ -170,7 +170,7 @@ contains
          call check(error, norm(G - eye(n, mold=1.0_dp), "inf") < 1e-10_dp, &
                     "Orthogonality of the right singular vectors failed.")
       end block
-       
+
       ! Check error.
       allocate (Amat(m, n)); Amat = 0.0_dp
       Amat = matmul(u(:, :k), matmul(diag(s), vt(:k, :)))
@@ -186,8 +186,8 @@ contains
       integer, parameter :: n = 8
       integer(ilp) :: i
       ! Initialize matrix.
-      allocate(v(2*n-1),source=0.0_dp); call random_number(v)
-      v = 2.0_dp*v -1.0_dp ![(1.0_dp/(i + 1), i=1, 2*n - 1)]
+      allocate (v(2*n - 1), source=0.0_dp); call random_number(v)
+      v = 2.0_dp*v - 1.0_dp ![(1.0_dp/(i + 1), i=1, 2*n - 1)]
       A = Hankel(v, n, n)
 
       ! Solve with a single right-hand side vector.
@@ -206,7 +206,7 @@ contains
          call check(error, norm(matmul(A, x) - b, 2) <= sqrt(epsilon(1.0_dp)), &
                     "hankel solve with a single rhs failed.")
          call check(error, all_close(x, x_lu, abs_tol=sqrt(epsilon(1.0_dp))), &
-           "hankel solve with single rhs failed.")
+                    "hankel solve with single rhs failed.")
          if (allocated(error)) return
       end block
 
@@ -233,34 +233,33 @@ contains
          end do
 
          call check(error, all_close(x, x_lu, abs_tol=sqrt(epsilon(1.0_dp))), &
-           "hankel solve with multiple rhs failed.")
+                    "hankel solve with multiple rhs failed.")
       end block
 
       return
    end subroutine test_solve
 
-subroutine test_eigvalsh(error)
-   type(error_type), allocatable, intent(out) :: error
-   integer, parameter :: n = 10
-   real(dp), allocatable :: v(:)
-   real(dp), allocatable :: lambda(:), lambda_stdlib(:)
-   type(Hankel) :: A
+   subroutine test_eigvalsh(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer, parameter :: n = 10
+      real(dp), allocatable :: v(:)
+      real(dp), allocatable :: lambda(:), lambda_stdlib(:)
+      type(Hankel) :: A
 
-   ! Initialize matrix.
-   allocate(v(2*n - 1))
-   call random_number(v)
-   A = Hankel(v, n, n)
+      ! Initialize matrix.
+      allocate (v(2*n - 1))
+      call random_number(v)
+      A = Hankel(v, n, n)
 
-   ! Compute eigenvalues.
-   lambda = eigvalsh(A)
-   lambda_stdlib = eigvalsh(dense(A))
+      ! Compute eigenvalues.
+      lambda = eigvalsh(A)
+      lambda_stdlib = eigvalsh(dense(A))
 
-   ! Check error.
-   call check(error, all_close(lambda, lambda_stdlib), &
-              "hankel eigvalsh failed.")
+      ! Check error.
+      call check(error, all_close(lambda, lambda_stdlib), &
+                 "hankel eigvalsh failed.")
 
-end subroutine test_eigvalsh
-
+   end subroutine test_eigvalsh
 
    subroutine test_eigh(error)
       type(error_type), allocatable, intent(out) :: error
@@ -269,18 +268,17 @@ end subroutine test_eigvalsh
       type(Hankel) :: A
 
       ! Initialize array.
-      allocate(v(2*n - 1)); call random_number(v)
+      allocate (v(2*n - 1)); call random_number(v)
       A = Hankel(v, n, n)
       ! Compute singular value decomposition.
-      allocate (lambda(n), vectors(n,n))
+      allocate (lambda(n), vectors(n, n))
       call eigh(A, lambda, vectors=vectors)
       ! Check error.
       allocate (Amat(n, n)); Amat = 0.0_dp
-      Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors))) 
+      Amat = matmul(vectors, matmul(diag(lambda), transpose(vectors)))
       call check(error, all_close(dense(A), Amat), &
                  "hankel eigh failed.")
       return
    end subroutine test_eigh
-
 
 end module test_hankel

@@ -16,16 +16,16 @@ contains
    integer(ilp) :: maxiter_, kdim_
 
    ! Default values.
-   atol_    = epsilon(1.0_dp)
-   rtol_    = sqrt(atol_)
+   atol_ = epsilon(1.0_dp)
+   rtol_ = sqrt(atol_)
    maxiter_ = 1024
-   kdim_    = 32
+   kdim_ = 32
 
    ! User-provided values override defaults.
-   if (present(rtol))    rtol_ = rtol
-   if (present(atol))    atol_ = atol
+   if (present(rtol)) rtol_ = rtol
+   if (present(atol)) atol_ = atol
    if (present(maxiter)) maxiter_ = maxiter
-   if (present(kdim))    kdim_ = kdim
+   if (present(kdim)) kdim_ = kdim
 
    !> Sanity checks.
    m = size(A, 1); n = size(A, 2)
