@@ -3,7 +3,7 @@ module test_hankel
    use stdlib_math, only: is_close, all_close
    use stdlib_sorting, only: sort_index
    use stdlib_linalg_constants, only: dp, ilp
-   use stdlib_linalg, only: norm, svdvals, eye, mnorm, diag, eigvalsh, eigh
+   use stdlib_linalg, only: norm, svdvals, eye, mnorm, diag, eigvalsh, eigh, solve_lu
    ! Testdrive.
    use testdrive, only: new_unittest, unittest_type, error_type, check
    ! SpecialMatrices
@@ -192,35 +192,48 @@ contains
 
       ! Solve with a single right-hand side vector.
       block
-         real(dp), allocatable :: x(:), b(:)
-         allocate (b(n))
+         real(dp), allocatable :: x(:), b(:), x_lu(:)
+         real(dp), allocatable :: Amat(:, :)
+         allocate (b(n)); allocate (x_lu(n))
          ! Random rhs.
          call random_number(b); b = b/norm(b, 2)
+         Amat = dense(A)
          ! Solve with SpecialMatrices.
          x = solve(A, b)
+         ! Solve with LU factorization
+         call solve_lu(Amat, b, x_lu)
          ! Check error.
          call check(error, norm(matmul(A, x) - b, 2) <= sqrt(epsilon(1.0_dp)), &
                     "hankel solve with a single rhs failed.")
+         call check(error, all_close(x, x_lu, abs_tol=sqrt(epsilon(1.0_dp))), &
+           "hankel solve with single rhs failed.")
          if (allocated(error)) return
       end block
 
       ! Solve with multiple right-hand side vectors.
       block
-         real(dp), allocatable :: x(:, :), b(:, :)
+         real(dp), allocatable :: x(:, :), b(:, :), x_lu(:, :), Amat(:, :)
          allocate (b(n, n), source=0.0_dp)
+         allocate (x_lu(n, n))
          ! Random rhs.
          call random_number(b)
          do i = 1, n
             b(:, i) = b(:, i)/norm(b(:, i), 2)
          end do
+         Amat = dense(A)
          ! Solve with SpecialMatrices.
          x = solve(A, b)
+         ! Solve with LU factorization
+         call solve_lu(Amat, b, x_lu)
          ! Check error.
          do i = 1, n
             call check(error, norm(matmul(A, x(:, i)) - b(:, i), 2) <= sqrt(epsilon(1.0_dp)), &
                        "hankel solve with multiple rhs failed.")
             if (allocated(error)) return
          end do
+
+         call check(error, all_close(x, x_lu, abs_tol=sqrt(epsilon(1.0_dp))), &
+           "hankel solve with multiple rhs failed.")
       end block
 
       return
