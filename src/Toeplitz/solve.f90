@@ -12,6 +12,21 @@ contains
    type(stdlib_linop_t) :: linop, precond
    type(Circulant) :: P
 
+   real(dp) :: atol_, rtol_
+   integer(ilp) :: maxiter_, kdim_
+
+   ! Default values.
+   atol_ = epsilon(1.0_dp)
+   rtol_ = sqrt(atol_)
+   maxiter_ = 1024
+   kdim_ = 32
+
+   ! User-provided values override defaults.
+   if (present(rtol)) rtol_ = rtol
+   if (present(atol)) atol_ = atol
+   if (present(maxiter)) maxiter_ = maxiter
+   if (present(kdim)) kdim_ = kdim
+
    !> Sanity checks.
    m = size(A, 1); n = size(A, 2)
    if (m /= n) error stop "Matrix is not square."
@@ -27,14 +42,10 @@ contains
 
    !> Solve the linear system with preconditioned GMRES.
    block
-      real(dp), parameter :: atol = epsilon(1.0_dp)
-      real(dp), parameter :: rtol = sqrt(atol)
-      integer(ilp), parameter :: maxiter = 1024
-      integer(ilp), parameter :: kdim = 32
       type(workspace_t) :: workspace
       logical(lk), parameter :: compact = .true.
-      allocate (workspace%tmp(n, stdlib_size_wksp_gmres(kdim, compact)), source=0.0_dp)
-      call stdlib_gmres(linop, precond, b, x, rtol, atol, maxiter, kdim, workspace, compact)
+      allocate (workspace%tmp(n, stdlib_size_wksp_gmres(kdim_, compact)), source=0.0_dp)
+      call stdlib_gmres(linop, precond, b, x, rtol_, atol_, maxiter_, kdim_, workspace, compact)
    end block
 contains
    pure subroutine matvec(x, y, alpha, beta, op)
